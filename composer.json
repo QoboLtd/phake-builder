@@ -1,12 +1,20 @@
 {
 	"name": "qobo/phake-builder",
+	"description": "A set of build and deploy files, based on jaz303/phake",
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Leonid Mamchenkov",
+			"email": "l.mamchenkov@qobo.biz",
+			"role": "Developer"
+		}
+	],
 	"repositories": [
 		{
 			"type": "git",
 			"url": "http://qb01.cloudapp.net/gitlab/internal-projects/phake-builder"
 		}
 	],
-	"version": "1.0.0",
 	"require": {
 		"jaz303/phake": "*",
 		"vlucas/phpdotenv": "*"
