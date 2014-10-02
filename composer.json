@@ -1,0 +1,14 @@
+{
+	"name": "qobo/phake-builder",
+	"repositories": [
+		{
+			"type": "git",
+			"url": "http://qb01.cloudapp.net/gitlab/internal-projects/phake-builder"
+		}
+	],
+	"version": "1.0.0",
+	"require": {
+		"jaz303/phake": "*",
+		"vlucas/phpdotenv": "*"
+	}
+}
