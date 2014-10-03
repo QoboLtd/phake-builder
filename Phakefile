@@ -42,12 +42,24 @@ group('git', function() {
 	task('pull', ':builder:init', function() {
 
 		Dotenv::required(['GIT_REMOTE', 'GIT_BRANCH']);
-		$result = exec(implode(' ', ['git', 'pull', getenv('GIT_REMOTE'), getenv('GIT_BRANCH')]), $output, $return);
+		$result = exec(implode(' ', ['git', 'pull', getenv('GIT_REMOTE'), getenv('GIT_BRANCH'), '2>&1']), $output, $return);
 		if ($return > 0) {
-			throw new RuntimeException("Failed to pull from git: $result");
+			throw new RuntimeException("Failed to pull from git: " . implode("\n", $output));
 		}
-		writeln(green(implose("\n", $output)));
+		writeln(green(implode("\n", $output)));
 	});
+	
+	desc('Git push');
+	task('push', ':builder:init', function() {
+
+		Dotenv::required(['GIT_REMOTE', 'GIT_BRANCH']);
+		$result = exec(implode(' ', ['git', 'push', getenv('GIT_REMOTE'), getenv('GIT_BRANCH'), '2>&1']), $output, $return);
+		if ($return > 0) {
+			throw new RuntimeException("Failed to push to git: " . implode("\n", $output));
+		}
+		writeln(green(implode("\n", $output)));
+	});
+
 });
 
 # vi:ft=php
