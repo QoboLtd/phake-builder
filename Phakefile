@@ -1,6 +1,19 @@
 <?php
 require_once 'vendor/autoload.php';
 
+function doShellCommand($command) {
+	$command .= ' 2>&1';
+	
+	writeln(purple("Executing shell command: $command"));
+	
+	unset($output);
+	$result = exec($command, $output, $return);
+	if ($return > 0) {
+		throw new RuntimeException("Failed! " . implode("\n", $output));
+	}
+	writeln(green("Success. Output: \n" . implode("\n", $output)));
+}
+
 // Generic phake-builder tasks
 group('builder', function() {
 	
@@ -37,27 +50,23 @@ group('mysql', function() {
 
 // Git related tasks
 group('git', function() {
+	
+	desc('Git checkout');
+	task('checkout', ':builder:init', function() {
+		Dotenv::required(['GIT_BRANCH']);
+		doShellCommand(implode(' ', ['git', 'checkout', getenv('GIT_BRANCH')]));
+	});
 
 	desc('Git pull');
 	task('pull', ':builder:init', function() {
-
 		Dotenv::required(['GIT_REMOTE', 'GIT_BRANCH']);
-		$result = exec(implode(' ', ['git', 'pull', getenv('GIT_REMOTE'), getenv('GIT_BRANCH'), '2>&1']), $output, $return);
-		if ($return > 0) {
-			throw new RuntimeException("Failed to pull from git: " . implode("\n", $output));
-		}
-		writeln(green(implode("\n", $output)));
+		doShellCommand(implode(' ', ['git', 'pull', getenv('GIT_REMOTE'), getenv('GIT_BRANCH')]));
 	});
 	
 	desc('Git push');
 	task('push', ':builder:init', function() {
-
 		Dotenv::required(['GIT_REMOTE', 'GIT_BRANCH']);
-		$result = exec(implode(' ', ['git', 'push', getenv('GIT_REMOTE'), getenv('GIT_BRANCH'), '2>&1']), $output, $return);
-		if ($return > 0) {
-			throw new RuntimeException("Failed to push to git: " . implode("\n", $output));
-		}
-		writeln(green(implode("\n", $output)));
+		doShellCommand(implode(' ', ['git', 'push', getenv('GIT_REMOTE'), getenv('GIT_BRANCH')]));
 	});
 
 });
