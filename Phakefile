@@ -5,19 +5,47 @@ require_once 'vendor/autoload.php';
  * Execute a shell command
  * 
  * @param string $command Command to execute
+ * @param string|array $privateInfo One or more strings to remove from screen output
  * @return void
  */
-function doShellCommand($command) {
+function doShellCommand($command, $privateInfo = null) {
 	$command .= ' 2>&1';
 	
-	writeln(purple("Executing shell command: $command"));
+	writeln(purple("Executing shell command: " . secureString($command, $privateInfo)));
 	
 	unset($output);
 	$result = exec($command, $output, $return);
+	$output = secureString(implode("\n", $output), $privateInfo);
 	if ($return > 0) {
-		throw new RuntimeException("Failed! " . implode("\n", $output));
+		throw new RuntimeException("Failed! " . $output);
 	}
-	writeln(green("Success. Output: \n" . implode("\n", $output)));
+	writeln(green("Success. Output: \n" . $output));
+}
+
+/**
+ * Secure string for screen output
+ * 
+ * @param string $string String to secure
+ * @param string|array $privateInfo One or more strings to replace
+ * @return string
+ */
+function secureString($string, $privateInfo) {
+	$result = $string;
+
+	if (empty($privateInfo)) {
+		return $result;
+	}
+
+	if (!is_array($privateInfo)) {
+		$privateInfo = [ $privateInfo ];
+	}
+
+	foreach ($privateInfo as $privateString) {
+		$replacement = str_repeat('x', strlen($privateString));
+		$result = str_replace($privateString, $replacement, $result);
+	}
+
+	return $result;
 }
 
 // Generic phake-builder tasks
