@@ -1,12 +1,22 @@
 <?php
 require_once 'vendor/autoload.php';
-Dotenv::load(getcwd());
 
-group('db', function() {
+// Generic phake-builder tasks
+group('builder', function() {
+	
+	desc('Initialize builder configuration');
+	task('init', function() {
+		Dotenv::load(getcwd());
+	});
+	
+});
 
-	desc('Test database connection');
-	task('connect', function() {
-		writeln('Testing database connection with given credentials');
+// MySQL utiility tasks
+group('mysql', function() {
+
+	desc('Test MySQL database connection');
+	task('connect', ':builder:init', function() {
+		writeln('Testing MySQL database connection with given credentials');
 
 		Dotenv::required(['DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME']);
 		
