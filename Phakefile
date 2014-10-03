@@ -1,6 +1,51 @@
 <?php
 require_once 'vendor/autoload.php';
 
+///////////////////////
+// Utility functions //
+///////////////////////
+
+/**
+ * Find a value for configuration parameter
+ * 
+ * @param $string $param Name of the configuration parameter
+ * @param $array $app Application command line parameters
+ * @return string
+ */
+function getValue($param, $app = null) {
+	$result = null;
+
+	$defaults = array(
+		'GIT_REMOTE' => 'origin',
+		'GIT_BRANCH' => 'master',
+
+		'DB_HOST' => 'localhost',
+		'DB_USER' => 'root',
+		'DB_PASS' => '',
+	);
+
+	// Command-line arguments are first
+	if (!empty($app) && isset($app[$param])) {
+		$result = $app[$param];
+		return $result;
+	}
+
+	// .env file is second
+	$result = getenv($param);
+	if ($result !== false) {
+		return $result;
+	}
+	
+	// Default is third
+	if (isset($defaults[$param])) {
+		writeln(yellow("No value for $param has been given.  Assuming default"));
+		$result = $defaults[$param];
+	}
+
+	// Null is last
+	return $result;
+}
+
 /**
  * Execute a shell command
  * 
@@ -48,31 +93,35 @@ function secureString($string, $privateInfo) {
 	return $result;
 }
 
+/////////////////////////
+// Phake-builder tasks //
+/////////////////////////
+
 // Generic phake-builder tasks
 group('builder', function() {
 	
 	desc('Initialize builder configuration');
-	task('init', function() {
+	task('init', function($app) {
 		Dotenv::load(getcwd());
 	});
-	
+
 });
 
 // MySQL utiility tasks
 group('mysql', function() {
 
 	desc('Test MySQL database connection');
-	task('connect', ':builder:init', function() {
+	task('connect', ':builder:init', function($app) {
 		writeln('Testing MySQL database connection with given credentials');
 
-		Dotenv::required(['DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME']);
+		Dotenv::required(['DB_NAME']);
 		
 		writeln(yellow('TODO: switch to mysqli or PDO'));
-		$db = mysql_connect(getenv('DB_HOST'), getenv('DB_USER'), getenv('DB_PASS'));
+		$db = mysql_connect(getValue('DB_HOST', $app), getValue('DB_USER', $app), getValue('DB_PASS', $app));
 		if (!is_resource($db)) {
 			throw new RuntimeException("Failed to connect to the database: " . mysql_error());
 		}
-		if (!mysql_select_db(getenv('DB_NAME'), $db)) {
+		if (!mysql_select_db(getValue('DB_NAME', $app), $db)) {
 			throw new RuntimeException("Failed to select the database: " . mysql_error());
 		}
 		mysql_close($db);
@@ -86,21 +135,18 @@ group('mysql', function() {
 group('git', function() {
 	
 	desc('Git checkout');
-	task('checkout', ':builder:init', function() {
-		Dotenv::required(['GIT_BRANCH']);
-		doShellCommand(implode(' ', ['git', 'checkout', getenv('GIT_BRANCH')]));
+	task('checkout', ':builder:init', function($app) {
+		doShellCommand(implode(' ', ['git', 'checkout', getValue('GIT_BRANCH', $app)]));
 	});
 
 	desc('Git pull');
-	task('pull', ':builder:init', function() {
-		Dotenv::required(['GIT_REMOTE', 'GIT_BRANCH']);
-		doShellCommand(implode(' ', ['git', 'pull', getenv('GIT_REMOTE'), getenv('GIT_BRANCH')]));
+	task('pull', ':builder:init', function($app) {
+		doShellCommand(implode(' ', ['git', 'pull', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
 	});
 	
 	desc('Git push');
-	task('push', ':builder:init', function() {
-		Dotenv::required(['GIT_REMOTE', 'GIT_BRANCH']);
-		doShellCommand(implode(' ', ['git', 'push', getenv('GIT_REMOTE'), getenv('GIT_BRANCH')]));
+	task('push', ':builder:init', function($app) {
+		doShellCommand(implode(' ', ['git', 'push', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
 	});
 
 });
