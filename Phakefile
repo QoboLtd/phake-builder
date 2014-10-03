@@ -35,5 +35,19 @@ group('mysql', function() {
 
 });
 
+// Git related tasks
+group('git', function() {
+
+	desc('Git pull');
+	task('pull', ':builder:init', function() {
+
+		Dontenv::required(['GIT_REMOTE', 'GIT_BRANCH']);
+		exec(implode(' ', ['git', 'pull', getenv('GIT_REMOTE'), getenv('GIT_BRANCH')]), $output, $return);
+		if ($return > 0) {
+			throw new RuntimeException("Failed to pull from git:" . implode("\n", $output));
+		}
+	});
+});
+
 # vi:ft=php
 ?>
