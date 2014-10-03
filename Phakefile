@@ -1,6 +1,12 @@
 <?php
 require_once 'vendor/autoload.php';
 
+/**
+ * Execute a shell command
+ * 
+ * @param string $command Command to execute
+ * @return void
+ */
 function doShellCommand($command) {
 	$command .= ' 2>&1';
 	
