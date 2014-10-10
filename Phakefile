@@ -47,6 +47,22 @@ function getValue($param, $app = null) {
 }
 
 /**
+ * Find a required value for configuration parameter
+ * 
+ * @param $string $param Name of the configuration parameter
+ * @param $array $app Application command line parameters
+ * @return string
+ */
+function requireValue($param, $app = null) {
+	$result = getValue($param, $app);
+	if (empty($result)) {
+		throw new RuntimeException("Missing required configuration parameter for $param");
+	}
+
+	return $result;
+}
+
+/**
  * Execute a shell command
  * 
  * @param string $command Command to execute
@@ -119,14 +135,14 @@ group('mysql', function() {
 	task('connect', ':builder:init', function($app) {
 		writeln('Testing MySQL database connection with given credentials');
 
-		Dotenv::required(['DB_NAME']);
+		$dbName = requireValue('DB_NAME', $app);
 		
 		writeln(yellow('TODO: switch to mysqli or PDO'));
 		$db = mysql_connect(getValue('DB_HOST', $app), getValue('DB_USER', $app), getValue('DB_PASS', $app));
 		if (!is_resource($db)) {
 			throw new RuntimeException("Failed to connect to the database: " . mysql_error());
 		}
-		if (!mysql_select_db(getValue('DB_NAME', $app), $db)) {
+		if (!mysql_select_db($dbName, $db)) {
 			throw new RuntimeException("Failed to select the database: " . mysql_error());
 		}
 		mysql_close($db);
@@ -141,7 +157,7 @@ group('git', function() {
 	
 	desc('Git checkout');
 	task('checkout', ':builder:init', function($app) {
-		doShellCommand(implode(' ', ['git', 'checkout', getValue('GIT_BRANCH', $app)]));
+		doShellCommand(implode(' ', ['git', 'checkout', requireValue('GIT_BRANCH', $app)]));
 	});
 
 	desc('Git pull');
@@ -161,12 +177,12 @@ group('system', function() {
 
 	desc('Start system service');
 	task('service-start', ':builder:init', function($app) {
-		doShellCommand(implode(' ', ['service', getValue('SYSTEM_SERVICE', $app), 'start']));
+		doShellCommand(implode(' ', ['service', requireValue('SYSTEM_SERVICE', $app), 'start']));
 	});
 	
 	desc('Stop system service');
 	task('service-stop', ':builder:init', function($app) {
-		doShellCommand(implode(' ', ['service', getValue('SYSTEM_SERVICE', $app), 'stop']));
+		doShellCommand(implode(' ', ['service', requireValue('SYSTEM_SERVICE', $app), 'stop']));
 	});
 	
 	desc('Restart system service');
