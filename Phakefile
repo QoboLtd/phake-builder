@@ -156,6 +156,24 @@ group('git', function() {
 
 });
 
+// Operating system tasks
+group('system', function() {
+
+	desc('Start system service');
+	task('service-start', ':builder:init', function($app) {
+		doShellCommand(implode(' ', ['service', getValue('SYSTEM_SERVICE', $app), 'start']));
+	});
+	
+	desc('Stop system service');
+	task('service-stop', ':builder:init', function($app) {
+		doShellCommand(implode(' ', ['service', getValue('SYSTEM_SERVICE', $app), 'stop']));
+	});
+	
+	desc('Restart system service');
+	task('service-restart', ':builder:init', ':system:service-stop', ':system:service-start');
+
+});
+
 desc('Default target');
 task('default', 'builder:hello');
 # vi:ft=php
