@@ -63,7 +63,21 @@ group('mysql', function() {
 		$db->close();
 		writeln(green('Database successfully dropped'));
 	});
+	
+	desc('Import database');
+	task('database-import', ':builder:init', function($app) {
+		writeln('Importing database');
 
+		$host = (getValue('DB_HOST', $app)) ? '-h ' . getValue('DB_HOST', $app) : '';
+		$user = (getValue('DB_USER', $app)) ? '-u ' . getValue('DB_USER', $app) : '';
+		$pass = (getValue('DB_PASS', $app)) ? "-p '" . getValue('DB_PASS', $app) . "'" : '';
+		$name = requireValue('DB_NAME', $app);
+		$path = "-e 'SOURCE " . requireValue('DB_DUMP_PATH', $app) . "'";
+
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_MYSQL', $app), $host, $user, $pass, $name, $path]));
+		writeln(green('Database imported created'));
+	});
+	
 	desc('Grant access');
 	task('access-grant', ':builder:init', function($app) {
 		writeln('Granting access');
@@ -166,7 +180,7 @@ group('mysql', function() {
 		}
 
 		$db->close();
-		writeln(green('Access successfully granted'));
+		writeln(green('Access successfully revoked'));
 	});
 
 });
