@@ -63,6 +63,23 @@ function requireValue($param, $app = null) {
 }
 
 /**
+ * Check if the current user needs sudo
+ * 
+ * root user doesn't need sudo.  Everybody else does.
+ * 
+ * This functionality is outside of targets for future
+ * proof.  One day we might need a more complex way to
+ * figure the answer to this question.  For example,
+ * based on a while of some parameter.
+ * 
+ * @return boolean True if needs, false otherwise
+ */
+function needsSudo() {
+	$result = (posix_getuid() == 0) ? false : true; 
+	return $result;
+}
+
+/**
  * Execute a shell command
  * 
  * @param string $command Command to execute
@@ -177,12 +194,14 @@ group('system', function() {
 
 	desc('Start system service');
 	task('service-start', ':builder:init', function($app) {
-		doShellCommand(implode(' ', ['service', requireValue('SYSTEM_SERVICE', $app), 'start']));
+		$command = needsSudo() ? 'sudo service' : 'service';
+		doShellCommand(implode(' ', [$command, requireValue('SYSTEM_SERVICE', $app), 'start']));
 	});
 	
 	desc('Stop system service');
 	task('service-stop', ':builder:init', function($app) {
-		doShellCommand(implode(' ', ['service', requireValue('SYSTEM_SERVICE', $app), 'stop']));
+		$command = needsSudo() ? 'sudo service' : 'service';
+		doShellCommand(implode(' ', [$command, requireValue('SYSTEM_SERVICE', $app), 'stop']));
 	});
 	
 	desc('Restart system service');
