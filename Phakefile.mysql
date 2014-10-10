@@ -1,0 +1,28 @@
+<?php
+require_once 'vendor/autoload.php';
+
+// MySQL utiility tasks
+group('mysql', function() {
+
+	desc('Test MySQL database connection');
+	task('connect', ':builder:init', function($app) {
+		writeln('Testing MySQL database connection with given credentials');
+
+		$dbName = requireValue('DB_NAME', $app);
+		
+		writeln(yellow('TODO: switch to mysqli or PDO'));
+		$db = mysql_connect(getValue('DB_HOST', $app), getValue('DB_USER', $app), getValue('DB_PASS', $app));
+		if (!is_resource($db)) {
+			throw new RuntimeException("Failed to connect to the database: " . mysql_error());
+		}
+		if (!mysql_select_db($dbName, $db)) {
+			throw new RuntimeException("Failed to select the database: " . mysql_error());
+		}
+		mysql_close($db);
+		
+		writeln(green('DB connection successfully established'));
+	});
+
+});
+# vi:ft=php
+?>

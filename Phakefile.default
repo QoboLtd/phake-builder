@@ -1,0 +1,7 @@
+<?php
+require_once 'vendor/autoload.php';
+
+desc('Default target');
+task('default', 'builder:hello');
+# vi:ft=php
+?>
