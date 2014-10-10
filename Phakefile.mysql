@@ -78,6 +78,22 @@ group('mysql', function() {
 		writeln(green('Database imported created'));
 	});
 	
+	desc('Find and replace across the database');
+	task('find-replace', ':builder:init', function($app) {
+		writeln('Finding and replacing');
+
+		$host = (getValue('DB_HOST', $app)) ? 'hostname=' . getValue('DB_HOST', $app) : '';
+		$user = (getValue('DB_USER', $app)) ? 'username=' . getValue('DB_USER', $app) : '';
+		$pass = (getValue('DB_PASS', $app)) ? "password='" . getValue('DB_PASS', $app) . "'" : '';
+		$name = (requireValue('DB_NAME', $app)) ? 'database=' . getValue('DB_NAME', $app) : '';
+		
+		$find = (getValue('DB_FIND', $app)) ? "find='" . getValue('DB_FIND', $app) . "'" : '';
+		$replace = (getValue('DB_REPLACE', $app)) ? "replace='" . getValue('DB_REPLACE', $app) . "'" : '';
+
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_MYSQL_REPLACE', $app), $host, $user, $pass, $name, $find, $replace]));
+		writeln(green('Replace successful'));
+	});
+
 	desc('Grant access');
 	task('access-grant', ':builder:init', function($app) {
 		writeln('Granting access');

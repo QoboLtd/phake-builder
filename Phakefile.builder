@@ -26,6 +26,7 @@ function getDefaultValue($param) {
 		'SYSTEM_COMMAND_LINK' => '/usr/bin/ln -s',
 		'SYSTEM_COMMAND_MKDIR' => '/usr/bin/mkdir -p',
 		'SYSTEM_COMMAND_MYSQL' => '/usr/bin/mysql',
+		'SYSTEM_COMMAND_MYSQL_REPLACE' => 'vendor/bin/mysql-replace.php',
 		'SYSTEM_COMMAND_RM' => '/usr/bin/rm -r',
 		'SYSTEM_COMMAND_SERVICE' => '/usr/sbin/service',
 		'SYSTEM_COMMAND_SUDO' => '/usr/bin/sudo',
