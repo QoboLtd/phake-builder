@@ -22,6 +22,49 @@ group('mysql', function() {
 		writeln(green('DB connection successfully established'));
 	});
 
+	desc('Create database');
+	task('create-database', ':builder:init', function($app) {
+		writeln('Creating database');
+
+		$host = getValue('DB_HOST', $app);
+		$user = (getValue('DB_ADMIN_USER', $app)) ? getValue('DB_ADMIN_USER', $app) : getValue('DB_USER');
+		$pass = (getValue('DB_ADMIN_PASS', $app)) ? getValue('DB_ADMIN_PASS', $app) : getValue('DB_PASS');
+		$name = requireValue('DB_NAME', $app);
+
+		$db = mysqli_connect($host, $user, $pass);
+		if ($db->connect_error) {
+			throw new RuntimeException("Failed to connect to database server: " . $db->connect_error);
+		}
+		$result = $db->query('CREATE DATABASE ' . $db->escape_string($name));
+		if (!$result) {
+			throw new RuntimeException("Failed to create database: " . $db->error);
+		}
+		$db->close();
+		writeln(green('Database successfully created'));
+	});
+	
+	desc('Drop database');
+	task('drop-database', ':builder:init', function($app) {
+		writeln('Dropping database');
+
+		$host = getValue('DB_HOST', $app);
+		$user = (getValue('DB_ADMIN_USER', $app)) ? getValue('DB_ADMIN_USER', $app) : getValue('DB_USER');
+		$pass = (getValue('DB_ADMIN_PASS', $app)) ? getValue('DB_ADMIN_PASS', $app) : getValue('DB_PASS');
+		$name = requireValue('DB_NAME', $app);
+
+		$db = mysqli_connect($host, $user, $pass);
+		if ($db->connect_error) {
+			throw new RuntimeException("Failed to connect to database server: " . $db->connect_error);
+		}
+		$result = $db->query('DROP DATABASE ' . $db->escape_string($name));
+		if (!$result) {
+			throw new RuntimeException("Failed to drop database: " . $db->error);
+		}
+		$db->close();
+		writeln(green('Database successfully dropped'));
+	});
+
+
 });
 # vi:ft=php
 ?>
