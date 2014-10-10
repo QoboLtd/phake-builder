@@ -8,17 +8,16 @@ group('mysql', function() {
 	task('connect', ':builder:init', function($app) {
 		writeln('Testing MySQL database connection with given credentials');
 
-		$dbName = requireValue('DB_NAME', $app);
+		$host = getValue('DB_HOST', $app);
+		$user = getValue('DB_USER', $app);
+		$pass = getValue('DB_PASS', $app);
+		$name = getValue('DB_NAME', $app);
 		
-		writeln(yellow('TODO: switch to mysqli or PDO'));
-		$db = mysql_connect(getValue('DB_HOST', $app), getValue('DB_USER', $app), getValue('DB_PASS', $app));
-		if (!is_resource($db)) {
-			throw new RuntimeException("Failed to connect to the database: " . mysql_error());
-		}
-		if (!mysql_select_db($dbName, $db)) {
-			throw new RuntimeException("Failed to select the database: " . mysql_error());
-		}
-		mysql_close($db);
+		$db = mysqli_connect($host, $user, $pass, $name);
+		if ($db->connect_error) {
+			throw new RuntimeException("Failed to connect to the database: " . $db->connect_error);
+		}	
+		$db->close();
 		
 		writeln(green('DB connection successfully established'));
 	});
