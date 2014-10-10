@@ -5,14 +5,9 @@
 	"authors": [
 		{
 			"name": "Leonid Mamchenkov",
-			"email": "l.mamchenkov@qobo.biz",
+			"email": "leonid@mamchenkov.net",
+			"homepage": "http://mamchenkov.net",
 			"role": "Developer"
-		}
-	],
-	"repositories": [
-		{
-			"type": "git",
-			"url": "http://qb01.cloudapp.net/gitlab/internal-projects/phake-builder"
 		}
 	],
 	"require": {
