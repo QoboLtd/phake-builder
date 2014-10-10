@@ -6,15 +6,14 @@ require_once 'vendor/autoload.php';
 ///////////////////////
 
 /**
- * Find a value for configuration parameter
+ * Get default configuration value for given parameter
  * 
- * @param $string $param Name of the configuration parameter
- * @param $array $app Application command line parameters
- * @return string
+ * @param string $param Parameter to get default value for
+ * @return string|null String if found, null otherwise
  */
-function getValue($param, $app = null) {
+function getDefaultValue($param) {
 	$result = null;
-
+	
 	$defaults = array(
 		'GIT_REMOTE' => 'origin',
 		'GIT_BRANCH' => 'master',
@@ -23,6 +22,23 @@ function getValue($param, $app = null) {
 		'DB_USER' => 'root',
 		'DB_PASS' => '',
 	);
+
+	if (isset($defaults[$param])) {
+		$result = $defaults[$param];
+	}
+
+	return $result;
+}
+
+/**
+ * Find a value for configuration parameter
+ * 
+ * @param $string $param Name of the configuration parameter
+ * @param $array $app Application command line parameters
+ * @return string
+ */
+function getValue($param, $app = null) {
+	$result = null;
 
 	// Command-line arguments are first
 	if (!empty($app) && isset($app[$param])) {
@@ -37,9 +53,10 @@ function getValue($param, $app = null) {
 	}
 	
 	// Default is third
-	if (isset($defaults[$param])) {
-		writeln(yellow("No value for $param has been given.  Assuming default"));
-		$result = $defaults[$param];
+	$default = getDefaultValue($param);
+	if ($default !== null) {
+		writeln(yellow("No value for $param has been given.  Using default."));
+		$result = $default;
 	}
 
 	// Null is last
