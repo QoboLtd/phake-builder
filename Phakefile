@@ -101,8 +101,13 @@ function secureString($string, $privateInfo) {
 group('builder', function() {
 	
 	desc('Initialize builder configuration');
-	task('init', function($app) {
+	task('init', ':builder:hello', function($app) {
 		Dotenv::load(getcwd());
+	});
+
+	desc('Print welcome message');
+	task('hello', function($app) {
+		writeln(green('Welcome to phake-builder! Use "phake -T" to list all commands. More info at https://github.com/QoboLtd/phake-builder'));
 	});
 
 });
@@ -151,5 +156,7 @@ group('git', function() {
 
 });
 
+desc('Default target');
+task('default', 'builder:hello');
 # vi:ft=php
 ?>
