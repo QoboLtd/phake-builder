@@ -1,0 +1,24 @@
+<?php
+require_once 'vendor/autoload.php';
+
+// Git related tasks
+group('git', function() {
+	
+	desc('Git checkout');
+	task('checkout', ':builder:init', function($app) {
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_GIT', $app), 'checkout', requireValue('GIT_BRANCH', $app)]));
+	});
+
+	desc('Git pull');
+	task('pull', ':builder:init', function($app) {
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_GIT', $app), 'pull', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
+	});
+	
+	desc('Git push');
+	task('push', ':builder:init', function($app) {
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_GIT', $app), 'push', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
+	});
+
+});
+# vi:ft=php
+?>
