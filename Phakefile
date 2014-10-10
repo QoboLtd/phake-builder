@@ -21,6 +21,10 @@ function getDefaultValue($param) {
 		'DB_HOST' => 'localhost',
 		'DB_USER' => 'root',
 		'DB_PASS' => '',
+
+		'SYSTEM_COMMAND_GIT' => '/usr/bin/git',	
+		'SYSTEM_COMMAND_SUDO' => '/usr/bin/sudo',
+		'SYSTEM_COMMAND_SERVICE' => '/usr/sbin/service',
 	);
 
 	if (isset($defaults[$param])) {
@@ -104,7 +108,7 @@ function needsSudo() {
  * @return void
  */
 function doShellCommand($command, $privateInfo = null) {
-	$command .= ' 2>&1';
+	$command .= trim($command) . ' 2>&1';
 	
 	writeln(purple("Executing shell command: " . secureString($command, $privateInfo)));
 	
@@ -191,17 +195,17 @@ group('git', function() {
 	
 	desc('Git checkout');
 	task('checkout', ':builder:init', function($app) {
-		doShellCommand(implode(' ', ['git', 'checkout', requireValue('GIT_BRANCH', $app)]));
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_GIT', $app), 'checkout', requireValue('GIT_BRANCH', $app)]));
 	});
 
 	desc('Git pull');
 	task('pull', ':builder:init', function($app) {
-		doShellCommand(implode(' ', ['git', 'pull', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_GIT', $app), 'pull', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
 	});
 	
 	desc('Git push');
 	task('push', ':builder:init', function($app) {
-		doShellCommand(implode(' ', ['git', 'push', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_GIT', $app), 'push', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
 	});
 
 });
@@ -211,14 +215,14 @@ group('system', function() {
 
 	desc('Start system service');
 	task('service-start', ':builder:init', function($app) {
-		$command = needsSudo() ? 'sudo service' : 'service';
-		doShellCommand(implode(' ', [$command, requireValue('SYSTEM_SERVICE', $app), 'start']));
+		$sudo = needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
+		doShellCommand(implode(' ', [$sudo, requireValue('SYSTEM_COMMAND_SERVICE', $app), requireValue('SYSTEM_SERVICE', $app), 'start']));
 	});
 	
 	desc('Stop system service');
 	task('service-stop', ':builder:init', function($app) {
-		$command = needsSudo() ? 'sudo service' : 'service';
-		doShellCommand(implode(' ', [$command, requireValue('SYSTEM_SERVICE', $app), 'stop']));
+		$sudo = needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
+		doShellCommand(implode(' ', [$sudo, requireValue('SYSTEM_COMMAND_SERVICE', $app), requireValue('SYSTEM_SERVICE', $app), 'stop']));
 	});
 	
 	desc('Restart system service');
