@@ -25,6 +25,11 @@ function getDefaultValue($param) {
 		'SYSTEM_COMMAND_GIT' => '/usr/bin/git',	
 		'SYSTEM_COMMAND_SUDO' => '/usr/bin/sudo',
 		'SYSTEM_COMMAND_SERVICE' => '/usr/sbin/service',
+
+		'SYSTEM_COMMAND_TOUCH' => '/usr/bin/touch',
+		'SYSTEM_COMMAND_LINK' => '/usr/bin/ln -s',
+		'SYSTEM_COMMAND_RM' => '/usr/bin/rm -r',
+		'SYSTEM_COMMAND_MKDIR' => '/usr/bin/mkdir -p',
 	);
 
 	if (isset($defaults[$param])) {

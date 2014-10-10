@@ -1,0 +1,30 @@
+<?php
+require_once 'vendor/autoload.php';
+
+// Filesystem related tasks
+group('file', function() {
+
+	desc('Create empty file or update timestamp of existing');
+	task('touch', ':builder:init', function($app) {
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_TOUCH', $app), requireValue('TOUCH_PATH', $app)]));
+	});
+	
+	desc('Create symbolic link');
+	task('link', ':builder:init', function($app) {
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_LINK', $app), requireValue('LINK_SRC', $app), requireValue('LINK_DST', $app)]));
+	});
+	
+	desc('Recursively remove file or folder');
+	task('rm', ':builder:init', function($app) {
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_RM', $app), requireValue('RM_PATH', $app)]));
+	});
+	
+	desc('Create folder');
+	task('mkdir', ':builder:init', function($app) {
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_MKDIR', $app), requireValue('MKDIR_PATH', $app)]));
+	});
+
+});
+
+# vi:ft=php
+?>
