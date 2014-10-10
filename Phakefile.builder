@@ -23,13 +23,14 @@ function getDefaultValue($param) {
 		'DB_PASS' => '',
 
 		'SYSTEM_COMMAND_GIT' => '/usr/bin/git',	
-		'SYSTEM_COMMAND_SUDO' => '/usr/bin/sudo',
-		'SYSTEM_COMMAND_SERVICE' => '/usr/sbin/service',
-
-		'SYSTEM_COMMAND_TOUCH' => '/usr/bin/touch',
 		'SYSTEM_COMMAND_LINK' => '/usr/bin/ln -s',
-		'SYSTEM_COMMAND_RM' => '/usr/bin/rm -r',
 		'SYSTEM_COMMAND_MKDIR' => '/usr/bin/mkdir -p',
+		'SYSTEM_COMMAND_MYSQL' => '/usr/bin/mysql',
+		'SYSTEM_COMMAND_MYSQL_REPLACE' => 'vendor/bin/mysql-replace.php',
+		'SYSTEM_COMMAND_RM' => '/usr/bin/rm -r',
+		'SYSTEM_COMMAND_SERVICE' => '/usr/sbin/service',
+		'SYSTEM_COMMAND_SUDO' => '/usr/bin/sudo',
+		'SYSTEM_COMMAND_TOUCH' => '/usr/bin/touch',
 	);
 
 	if (isset($defaults[$param])) {
@@ -113,7 +114,7 @@ function needsSudo() {
  * @return void
  */
 function doShellCommand($command, $privateInfo = null) {
-	$command .= trim($command) . ' 2>&1';
+	$command = trim($command) . ' 2>&1';
 	
 	writeln(purple("Executing shell command: " . secureString($command, $privateInfo)));
 	

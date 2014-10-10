@@ -12,6 +12,7 @@
 	],
 	"require": {
 		"jaz303/phake": "*",
-		"vlucas/phpdotenv": "*"
+		"vlucas/phpdotenv": "*",
+		"mamchenkov/mysql-find-and-replace": "1.0.*"
 	}
 }

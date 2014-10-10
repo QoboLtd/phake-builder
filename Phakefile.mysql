@@ -8,19 +8,195 @@ group('mysql', function() {
 	task('connect', ':builder:init', function($app) {
 		writeln('Testing MySQL database connection with given credentials');
 
-		$dbName = requireValue('DB_NAME', $app);
+		$host = getValue('DB_HOST', $app);
+		$user = getValue('DB_USER', $app);
+		$pass = getValue('DB_PASS', $app);
+		$name = getValue('DB_NAME', $app);
 		
-		writeln(yellow('TODO: switch to mysqli or PDO'));
-		$db = mysql_connect(getValue('DB_HOST', $app), getValue('DB_USER', $app), getValue('DB_PASS', $app));
-		if (!is_resource($db)) {
-			throw new RuntimeException("Failed to connect to the database: " . mysql_error());
-		}
-		if (!mysql_select_db($dbName, $db)) {
-			throw new RuntimeException("Failed to select the database: " . mysql_error());
-		}
-		mysql_close($db);
+		$db = mysqli_connect($host, $user, $pass, $name);
+		if ($db->connect_error) {
+			throw new RuntimeException("Failed to connect to the database: " . $db->connect_error);
+		}	
+		$db->close();
 		
 		writeln(green('DB connection successfully established'));
+	});
+
+	desc('Create database');
+	task('database-create', ':builder:init', function($app) {
+		writeln('Creating database');
+
+		$host = getValue('DB_HOST', $app);
+		$user = (getValue('DB_ADMIN_USER', $app)) ? getValue('DB_ADMIN_USER', $app) : getValue('DB_USER');
+		$pass = (getValue('DB_ADMIN_PASS', $app)) ? getValue('DB_ADMIN_PASS', $app) : getValue('DB_PASS');
+		$name = requireValue('DB_NAME', $app);
+
+		$db = mysqli_connect($host, $user, $pass);
+		if ($db->connect_error) {
+			throw new RuntimeException("Failed to connect to database server: " . $db->connect_error);
+		}
+		$result = $db->query('CREATE DATABASE ' . $db->escape_string($name));
+		if (!$result) {
+			throw new RuntimeException("Failed to create database: " . $db->error);
+		}
+		$db->close();
+		writeln(green('Database successfully created'));
+	});
+	
+	desc('Drop database');
+	task('database-drop', ':builder:init', function($app) {
+		writeln('Dropping database');
+
+		$host = getValue('DB_HOST', $app);
+		$user = (getValue('DB_ADMIN_USER', $app)) ? getValue('DB_ADMIN_USER', $app) : getValue('DB_USER');
+		$pass = (getValue('DB_ADMIN_PASS', $app)) ? getValue('DB_ADMIN_PASS', $app) : getValue('DB_PASS');
+		$name = requireValue('DB_NAME', $app);
+
+		$db = mysqli_connect($host, $user, $pass);
+		if ($db->connect_error) {
+			throw new RuntimeException("Failed to connect to database server: " . $db->connect_error);
+		}
+		$result = $db->query('DROP DATABASE ' . $db->escape_string($name));
+		if (!$result) {
+			throw new RuntimeException("Failed to drop database: " . $db->error);
+		}
+		$db->close();
+		writeln(green('Database successfully dropped'));
+	});
+	
+	desc('Import database');
+	task('database-import', ':builder:init', function($app) {
+		writeln('Importing database');
+
+		$host = (getValue('DB_HOST', $app)) ? '-h ' . getValue('DB_HOST', $app) : '';
+		$user = (getValue('DB_USER', $app)) ? '-u ' . getValue('DB_USER', $app) : '';
+		$pass = (getValue('DB_PASS', $app)) ? "-p '" . getValue('DB_PASS', $app) . "'" : '';
+		$name = requireValue('DB_NAME', $app);
+		$path = "-e 'SOURCE " . requireValue('DB_DUMP_PATH', $app) . "'";
+
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_MYSQL', $app), $host, $user, $pass, $name, $path]));
+		writeln(green('Database imported created'));
+	});
+	
+	desc('Find and replace across the database');
+	task('find-replace', ':builder:init', function($app) {
+		writeln('Finding and replacing');
+
+		$host = (getValue('DB_HOST', $app)) ? 'hostname=' . getValue('DB_HOST', $app) : '';
+		$user = (getValue('DB_USER', $app)) ? 'username=' . getValue('DB_USER', $app) : '';
+		$pass = (getValue('DB_PASS', $app)) ? "password='" . getValue('DB_PASS', $app) . "'" : '';
+		$name = (requireValue('DB_NAME', $app)) ? 'database=' . getValue('DB_NAME', $app) : '';
+		
+		$find = (getValue('DB_FIND', $app)) ? "find='" . getValue('DB_FIND', $app) . "'" : '';
+		$replace = (getValue('DB_REPLACE', $app)) ? "replace='" . getValue('DB_REPLACE', $app) . "'" : '';
+
+		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_MYSQL_REPLACE', $app), $host, $user, $pass, $name, $find, $replace]));
+		writeln(green('Replace successful'));
+	});
+
+	desc('Grant access');
+	task('access-grant', ':builder:init', function($app) {
+		writeln('Granting access');
+
+		$admin_user = (getValue('DB_ADMIN_USER', $app)) ? getValue('DB_ADMIN_USER', $app) : getValue('DB_USER', $app);
+		$admin_pass = (getValue('DB_ADMIN_PASS', $app)) ? getValue('DB_ADMIN_PASS', $app) : null;
+		
+		$host = getValue('DB_HOST', $app);
+		$user = getValue('DB_USER', $app);
+		$pass = getValue('DB_PASS', $app);
+		$name = requireValue('DB_NAME', $app);
+
+		$db = mysqli_connect($host, $admin_user, $admin_pass);
+		if ($db->connect_error) {
+			throw new RuntimeException("Failed to connect to database server: " . $db->connect_error);
+		}
+
+		/**
+		 * We shouldn't mess with root user's access
+		 */
+		if (strtolower($user) <> 'root') {
+			// Grant access
+			$result = $db->query('GRANT ALL' 
+				. ' ON ' .  $db->escape_string($name) . '.*' 
+				. " TO '" . $db->escape_string($user) . "'@'%'"
+				. " IDENTIFIED BY '" . $db->escape_string($pass) . "'");
+			if (!$result) {
+				throw new RuntimeException("Failed to grant access: " . $db->error);
+			}
+		}
+		else {
+			writeln(yellow('Skipping GRANT statement for root user'));
+		}
+		
+		// Allow file-based operations like import and export.
+		// The fact that MySQL doesn't have it built-in is annoying.
+		$result = $db->query('USE mysql'); 
+		if (!$result) {
+			throw new RuntimeException("Failed to switch to mysql database: " . $db->error);
+		}
+		$result = $db->query('UPDATE user SET File_priv = "Y" WHERE User = "' . $db->escape_string($user) . '"'); 
+		if (!$result) {
+			throw new RuntimeException("Failed to give file operations access: " . $db->error);
+		}
+		$result = $db->query('FLUSH PRIVILEGES'); 
+		if (!$result) {
+			throw new RuntimeException("Failed to flush privileges: " . $db->error);
+		}
+
+		$db->close();
+		writeln(green('Access successfully granted'));
+	});
+	
+	desc('Revoke access');
+	task('access-revoke', ':builder:init', function($app) {
+		writeln('Revoking access');
+
+		$admin_user = (getValue('DB_ADMIN_USER', $app)) ? getValue('DB_ADMIN_USER', $app) : getValue('DB_USER', $app);
+		$admin_pass = (getValue('DB_ADMIN_PASS', $app)) ? getValue('DB_ADMIN_PASS', $app) : null;
+		
+		$host = getValue('DB_HOST', $app);
+		$user = getValue('DB_USER', $app);
+		//$pass = getValue('DB_PASS', $app); # We don't really need user password for revoking his access
+		$name = requireValue('DB_NAME', $app);
+
+		$db = mysqli_connect($host, $admin_user, $admin_pass);
+		if ($db->connect_error) {
+			throw new RuntimeException("Failed to connect to database server: " . $db->connect_error);
+		}
+
+		/**
+		 * Yeah, that's right, we never take access from root.
+		 */
+		if (strtolower($user) <> 'root') {
+			// Revoke access
+			$result = $db->query('REVOKE ALL' 
+				. ' ON ' .  $db->escape_string($name) . '.*' 
+				. " FROM '" . $db->escape_string($user) . "'@'%'");
+			if (!$result) {
+				throw new RuntimeException("Failed to revoke access: " . $db->error);
+			}
+			
+			// Deny file-based operations like import and export
+			$result = $db->query('USE mysql'); 
+			if (!$result) {
+				throw new RuntimeException("Failed to switch to mysql database: " . $db->error);
+			}
+			$result = $db->query('UPDATE user SET File_priv = "N" WHERE User = "' . $db->escape_string($user) . '"'); 
+			if (!$result) {
+				throw new RuntimeException("Failed to give file operations access: " . $db->error);
+			}
+			$result = $db->query('FLUSH PRIVILEGES'); 
+			if (!$result) {
+				throw new RuntimeException("Failed to flush privileges: " . $db->error);
+			}
+
+		}
+		else {
+			writeln(yellow('Skipping REVOKE statement for root user'));
+		}
+
+		$db->close();
+		writeln(green('Access successfully revoked'));
 	});
 
 });
