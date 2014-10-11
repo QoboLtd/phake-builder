@@ -260,7 +260,12 @@ group('builder', function() {
 	
 	desc('Initialize builder configuration');
 	task('init', ':builder:hello', function($app) {
-		Dotenv::load(getcwd());
+		try {
+			Dotenv::load(getcwd());
+		}
+		catch (Exception $e) {
+			printWarning("Failed to load .env configuration file");
+		}
 	});
 
 	desc('Print welcome message');
