@@ -1,18 +1,19 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'System.php';
 
 // Operating system tasks
 group('system', function() {
 
 	desc('Start system service');
 	task('service-start', ':builder:init', function($app) {
-		$sudo = needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
+		$sudo = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
 		doShellCommand(implode(' ', [$sudo, requireValue('SYSTEM_COMMAND_SERVICE', $app), requireValue('SYSTEM_SERVICE', $app), 'start']));
 	});
 	
 	desc('Stop system service');
 	task('service-stop', ':builder:init', function($app) {
-		$sudo = needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
+		$sudo = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
 		doShellCommand(implode(' ', [$sudo, requireValue('SYSTEM_COMMAND_SERVICE', $app), requireValue('SYSTEM_SERVICE', $app), 'stop']));
 	});
 	

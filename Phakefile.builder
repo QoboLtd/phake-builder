@@ -1,44 +1,10 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'System.php';
 
 ///////////////////////
 // Utility functions //
 ///////////////////////
-
-/**
- * Get default configuration value for given parameter
- * 
- * @param string $param Parameter to get default value for
- * @return string|null String if found, null otherwise
- */
-function getDefaultValue($param) {
-	$result = null;
-	
-	$defaults = array(
-		'GIT_REMOTE' => 'origin',
-		'GIT_BRANCH' => 'master',
-
-		'DB_HOST' => 'localhost',
-		'DB_USER' => 'root',
-		'DB_PASS' => '',
-
-		'SYSTEM_COMMAND_GIT' => '/usr/bin/git',	
-		'SYSTEM_COMMAND_LINK' => '/usr/bin/ln -s',
-		'SYSTEM_COMMAND_MKDIR' => '/usr/bin/mkdir -p',
-		'SYSTEM_COMMAND_MYSQL' => '/usr/bin/mysql',
-		'SYSTEM_COMMAND_MYSQL_REPLACE' => 'vendor/bin/mysql-replace.php',
-		'SYSTEM_COMMAND_RM' => '/usr/bin/rm -r',
-		'SYSTEM_COMMAND_SERVICE' => '/usr/sbin/service',
-		'SYSTEM_COMMAND_SUDO' => '/usr/bin/sudo',
-		'SYSTEM_COMMAND_TOUCH' => '/usr/bin/touch',
-	);
-
-	if (isset($defaults[$param])) {
-		$result = $defaults[$param];
-	}
-
-	return $result;
-}
 
 /**
  * Find a value for configuration parameter
@@ -63,7 +29,7 @@ function getValue($param, $app = null) {
 	}
 	
 	// Default is third
-	$default = getDefaultValue($param);
+	$default = \PhakeBuilder\System::getDefaultValue($param);
 	if ($default !== null) {
 		writeln(yellow("No value for $param has been given.  Using default."));
 		$result = $default;
@@ -90,23 +56,6 @@ function requireValue($param, $app = null) {
 }
 
 /**
- * Check if the current user needs sudo
- * 
- * root user doesn't need sudo.  Everybody else does.
- * 
- * This functionality is outside of targets for future
- * proof.  One day we might need a more complex way to
- * figure the answer to this question.  For example,
- * based on a while of some parameter.
- * 
- * @return boolean True if needs, false otherwise
- */
-function needsSudo() {
-	$result = (posix_getuid() == 0) ? false : true; 
-	return $result;
-}
-
-/**
  * Execute a shell command
  * 
  * @param string $command Command to execute
@@ -116,42 +65,19 @@ function needsSudo() {
 function doShellCommand($command, $privateInfo = null) {
 	$command = trim($command) . ' 2>&1';
 	
-	writeln(purple("Executing shell command: " . secureString($command, $privateInfo)));
+	writeln(purple("Executing shell command: " . \PhakeBuilder\System::secureString($command, $privateInfo)));
 	
-	unset($output);
-	$result = exec($command, $output, $return);
-	$output = secureString(implode("\n", $output), $privateInfo);
-	if ($return > 0) {
-		throw new RuntimeException("Failed! " . $output);
+	try {
+		$result = \PhakeBuilder\System::doShellCommand($command);
+		$result = green(\PhakeBuilder\system::secureString($result, $privateInfo));
 	}
-	writeln(green("Success. Output: \n" . $output));
+	catch (Exception $e) {
+		$result = red(\PhakeBuilder\System::secureString($e->getMessage(), $privateInfo));
+		throw new RuntimeException("FAILED! " . $result);
+	}
+	writeln($result);
 }
 
-/**
- * Secure string for screen output
- * 
- * @param string $string String to secure
- * @param string|array $privateInfo One or more strings to replace
- * @return string
- */
-function secureString($string, $privateInfo) {
-	$result = $string;
-
-	if (empty($privateInfo)) {
-		return $result;
-	}
-
-	if (!is_array($privateInfo)) {
-		$privateInfo = [ $privateInfo ];
-	}
-
-	foreach ($privateInfo as $privateString) {
-		$replacement = str_repeat('x', strlen($privateString));
-		$result = str_replace($privateString, $replacement, $result);
-	}
-
-	return $result;
-}
 
 
 // Generic phake-builder tasks
