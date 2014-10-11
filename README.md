@@ -1,6 +1,8 @@
 phake-builder
 =============
 
+[![Build Status](https://travis-ci.org/QoboLtd/phake-builder.svg?branch=master)](https://travis-ci.org/QoboLtd/phake-builder)
+
 A set of build and deploy files, based on jaz303/phake.
 
 Install
