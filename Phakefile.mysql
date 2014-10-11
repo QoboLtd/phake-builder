@@ -6,6 +6,7 @@ group('mysql', function() {
 
 	desc('Test MySQL database connection');
 	task('connect', ':builder:init', function($app) {
+		printSeparator();
 		printInfo('Testing MySQL database connection');
 
 		$query = "SELECT NOW() AS ServerTime";
@@ -14,6 +15,7 @@ group('mysql', function() {
 
 	desc('Create database');
 	task('database-create', ':builder:init', function($app) {
+		printSeparator();
 		printInfo('Creating database');
 
 		$query = "CREATE DATABASE " . requireValue('DB_NAME', $app);
@@ -22,6 +24,7 @@ group('mysql', function() {
 	
 	desc('Drop database');
 	task('database-drop', ':builder:init', function($app) {
+		printSeparator();
 		printInfo('Dropping database');
 		
 		$query = "DROP DATABASE " . requireValue('DB_NAME', $app);
@@ -30,6 +33,7 @@ group('mysql', function() {
 	
 	desc('Import database');
 	task('database-import', ':builder:init', function($app) {
+		printSeparator();
 		printInfo('Importing database');
 		
 		$query = "SOURCE " . requireValue('DB_DUMP_PATH', $app);
@@ -38,6 +42,7 @@ group('mysql', function() {
 	
 	desc('Find and replace across the database');
 	task('find-replace', ':builder:init', function($app) {
+		printSeparator();
 		printInfo('Finding and replacing');
 
 		doMySQLCommand($app, null, true, false, 'SYSTEM_COMMAND_MYSQL_REPLACE');
@@ -45,6 +50,7 @@ group('mysql', function() {
 
 	desc('Grant access');
 	task('access-grant', ':builder:init', function($app) {
+		printSeparator();
 		printInfo('Granting access');
 
 		if (requireValue('DB_USER', $app) <> 'root') {
@@ -61,6 +67,7 @@ group('mysql', function() {
 	
 	desc('Allow file operation');
 	task('access-file-allow', ':builder:init', function($app) {
+		printSeparator();
 		printInfo('Allowing file operations');
 
 		$query = "GRANT FILE " 
@@ -74,6 +81,7 @@ group('mysql', function() {
 
 	desc('Revoke access');
 	task('access-revoke', ':builder:init', function($app) {
+		printSeparator();
 		printInfo('Revoking access');
 
 		if (requireValue('DB_USER', $app) <> 'root') {
@@ -89,6 +97,7 @@ group('mysql', function() {
 	
 	desc('Deny file operation');
 	task('access-file-deny', ':builder:init', function($app) {
+		printSeparator();
 		printInfo('Denying file operations');
 
 		$query = "REVOKE FILE " 

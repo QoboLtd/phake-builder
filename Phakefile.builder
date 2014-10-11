@@ -7,53 +7,109 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Syst
 ///////////////////////
 
 /**
- * Print error message
+ * Print separator
  * 
- * @param string $message Message to show as error
+ * This is mighty useful in long outputs
+ * 
+ * @param string $string String to use for separator
+ * @param integer $length Length of the separator line
  * @return void
  */
-function printError($message) {
-	writeln(red($message));
+function printSeparator($character = '-', $length = 70) {
+	writeln(white(str_repeat($character, $length), true));
+}
+
+/**
+ * Format output message
+ * 
+ * @param string $message Message text
+ * @param string $prefix Prefix text, like DEBUG or INF
+ * @param string $dateFormat Date format to use. If null, no date is used
+ * @return string
+ */
+function formatMessage($message, $prefix, $dateFormat = '[Y-m-d H:i:s]') {
+	$result = $prefix . ' ' . $message;
+	if ($dateFormat) {
+		$result = date($dateFormat) . ' ' . $result;
+	}
+	return $result;
+}
+
+/**
+ * Print error message
+ * 
+ * Error messages are different from all the other ones
+ * because they might be thrown by exceptions.
+ * 
+ * @param string $message Message to show as error
+ * @param boolean $format Format the message or print as is
+ * @return void
+ */
+function printError($message, $format = true, $returnNoPrint = false) {
+	if ($format) {
+		$message = formatMessage($message, ':ERROR:');
+	}
+	
+	if ($returnNoPrint) {
+		return $message;
+	}
+	writeln(red($message, true));
 }
 
 /**
  * Print success message
  * 
  * @param string $message Message to show as success
+ * @param boolean $format Format the message or print as is
  * @return void
  */
-function printSuccess($message) {
-	writeln(green($message));
+function printSuccess($message, $format = true) {
+	if ($format) {
+		$message = formatMessage($message, ':OK   :');
+	}
+	writeln(green($message, true));
 }
 
 /**
  * Print warning message
  * 
  * @param string $message Message to show as warning
+ * @param boolean $format Format the message or print as is
  * @return void
  */
-function printWarning($message) {
-	writeln(yellow($message));
+function printWarning($message, $format = true) {
+	if ($format) {
+		$message = formatMessage($message, ':WARN :');
+	}
+	writeln(yellow($message, true));
 }
 
 /**
  * Print info message
  * 
  * @param string $message Message to show as info
+ * @param boolean $format Format the message or print as is
  * @return void
  */
-function printInfo($message) {
-	writeln(cyan($message));
+function printInfo($message, $format = true) {
+	if ($format) {
+		$message = formatMessage($message, ':INFO :');
+	}
+	writeln(cyan($message, true));
 }
 
 /**
  * Print debug message
  * 
  * @param string $message Message to show as debug
+ * @param boolean $format Format the message or print as is
  * @return void
  */
-function prinDebug($message) {
-	writeln(purple($message));
+function prinDebug($message, $format = true) {
+	if ($format) {
+		$message = formatMessage($message, ':DEBUG:');
+	}
+	writeln(purple($message, true));
 }
 
 /**
@@ -99,7 +155,7 @@ function getValue($param, $app = null) {
 function requireValue($param, $app = null) {
 	$result = getValue($param, $app);
 	if (empty($result)) {
-		throw new RuntimeException("Missing required configuration parameter for $param");
+		throw new RuntimeException(printError("Missing required configuration parameter for $param", true, true));
 	}
 
 	return $result;
@@ -125,7 +181,7 @@ function doShellCommand($command, $privateInfo = null) {
 	}
 	catch (Exception $e) {
 		$result = \PhakeBuilder\System::secureString($e->getMessage(), $privateInfo);
-		throw new RuntimeException("FAILED! Output: " . $result);
+		throw new RuntimeException(printError($result, true, true));
 	}
 	printSuccess("SUCCESS! Output: " . $result);
 }
@@ -163,7 +219,7 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
 		// /usr/bin/mysql -u root -p foo -h localhost -e 'select now();'
 		case 'SYSTEM_COMMAND_MYSQL':
 			if (empty($query)) {
-				throw new RuntimeException("No SQL query given");
+				throw new RuntimeException(printError("No SQL query given", true, true));
 			}
 			$command = escapeshellcmd(requireValue($command, $app));
 			$command .= ($host) ? ' -h' . escapeshellarg($host) : '';
@@ -186,7 +242,7 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
 			$command .= " replace='" . $replace . "'";
 			break;
 		default:
-			throw new RuntimeException("$command is not supported");
+			throw new RuntimeException(printError("$command is not supported", true, true));
 			break;
 	}
 	
@@ -209,7 +265,10 @@ group('builder', function() {
 
 	desc('Print welcome message');
 	task('hello', function($app) {
-		printSuccess('Welcome to phake-builder! Use "phake -T" to list all commands. More info at https://github.com/QoboLtd/phake-builder');
+		printSuccess('Welcome to phake-builder!', false);
+		printSuccess('Use "phake -T" to list all commands.', false); 
+		printSuccess('More info at https://github.com/QoboLtd/phake-builder', false);
+		printSeparator();
 	});
 
 });

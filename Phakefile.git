@@ -6,6 +6,7 @@ group('git', function() {
 	
 	desc('Git checkout');
 	task('checkout', ':builder:init', function($app) {
+		printSeparator();
 		printInfo("Git checkout");
 		$parts = array();
 		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);
@@ -16,6 +17,7 @@ group('git', function() {
 
 	desc('Git pull');
 	task('pull', ':builder:init', function($app) {
+		printSeparator();
 		printInfo("Git pull");
 		$parts = array();
 		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);
@@ -27,6 +29,7 @@ group('git', function() {
 	
 	desc('Git push');
 	task('push', ':builder:init', function($app) {
+		printSeparator();
 		printInfo("Git push");
 		$parts = array();
 		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);

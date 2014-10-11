@@ -7,6 +7,7 @@ group('system', function() {
 
 	desc('Start system service');
 	task('service-start', ':builder:init', function($app) {
+		printSeparator();
 		printInfo("Starting system service");
 		
 		$parts = array();
@@ -19,6 +20,7 @@ group('system', function() {
 	
 	desc('Stop system service');
 	task('service-stop', ':builder:init', function($app) {
+		printSeparator();
 		printInfo("Stopping system service");
 		
 		$parts = array();
