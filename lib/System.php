@@ -103,7 +103,7 @@ class System {
 		}
 
 		if (!is_array($privateInfo)) {
-			$privateInfo = [ $privateInfo ];
+			$privateInfo = array($privateInfo);
 		}
 
 		foreach ($privateInfo as $privateString) {
