@@ -6,22 +6,39 @@ group('file', function() {
 
 	desc('Create empty file or update timestamp of existing');
 	task('touch', ':builder:init', function($app) {
-		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_TOUCH', $app), requireValue('TOUCH_PATH', $app)]));
+		printInfo("Touching file");
+		$parts = array();
+		$parts[] = requireValue('SYSTEM_COMMAND_TOUCH', $app);
+		$parts[] = requireValue('TOUCH_PATH', $app);
+		doShellCommand($parts);
 	});
 	
 	desc('Create symbolic link');
 	task('link', ':builder:init', function($app) {
-		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_LINK', $app), requireValue('LINK_SRC', $app), requireValue('LINK_DST', $app)]));
+		printInfo("Creating link");
+		$parts = array();
+		$parts[] = requireValue('SYSTEM_COMMAND_LINK', $app);
+		$parts[] = requireValue('LINK_SRC', $app);
+		$parts[] = requireValue('LINK_DST', $app);
+		doShellCommand($parts);
 	});
 	
 	desc('Recursively remove file or folder');
 	task('rm', ':builder:init', function($app) {
-		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_RM', $app), requireValue('RM_PATH', $app)]));
+		printInfo("Removing file or folder");
+		$parts = array();
+		$parts[] = requireValue('SYSTEM_COMMAND_RM', $app);
+		$parts[] = requireValue('RM_PATH', $app);
+		doShellCommand($parts);
 	});
 	
 	desc('Create folder');
 	task('mkdir', ':builder:init', function($app) {
-		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_MKDIR', $app), requireValue('MKDIR_PATH', $app)]));
+		printInfo("Creating folder");
+		$parts = array();
+		$parts[] = requireValue('SYSTEM_COMMAND_MKDIR', $app);
+		$parts[] = requireValue('MKDIR_PATH', $app);
+		doShellCommand($parts);
 	});
 
 });

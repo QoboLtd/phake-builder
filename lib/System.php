@@ -24,6 +24,9 @@ class System {
 			'DB_USER' => 'root',
 			'DB_PASS' => '',
 
+			'DB_ADMIN_USER' => 'root',
+			'DB_ADMIN_PASS' => '',
+
 			'SYSTEM_COMMAND_GIT' => '/usr/bin/git',	
 			'SYSTEM_COMMAND_LINK' => '/usr/bin/ln -s',
 			'SYSTEM_COMMAND_MKDIR' => '/usr/bin/mkdir -p',
@@ -67,7 +70,7 @@ class System {
 	 * throw a RuntimeException with the full output
 	 * as the exception message.
 	 * 
-	 * @throws RuntimeException
+	 * @throws \RuntimeException
 	 * @param string $command Command to execute
 	 * @return string Output
 	 */
@@ -78,7 +81,7 @@ class System {
 		$result = exec($command, $output, $return);
 		$result = implode("\n", $output);
 		if ($return > 0) {
-			throw new RuntimeException($output);
+			throw new \RuntimeException($result);
 		}
 
 		return $result;

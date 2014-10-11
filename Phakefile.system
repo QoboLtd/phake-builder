@@ -7,14 +7,26 @@ group('system', function() {
 
 	desc('Start system service');
 	task('service-start', ':builder:init', function($app) {
-		$sudo = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
-		doShellCommand(implode(' ', [$sudo, requireValue('SYSTEM_COMMAND_SERVICE', $app), requireValue('SYSTEM_SERVICE', $app), 'start']));
+		printInfo("Starting system service");
+		
+		$parts = array();
+		$parts[] = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
+		$parts[] = requireValue('SYSTEM_COMMAND_SERVICE', $app);
+		$parts[] = requireValue('SYSTEM_SERVICE', $app);
+		$parts[] = 'start';
+		doShellCommand($parts);
 	});
 	
 	desc('Stop system service');
 	task('service-stop', ':builder:init', function($app) {
-		$sudo = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
-		doShellCommand(implode(' ', [$sudo, requireValue('SYSTEM_COMMAND_SERVICE', $app), requireValue('SYSTEM_SERVICE', $app), 'stop']));
+		printInfo("Stopping system service");
+		
+		$parts = array();
+		$parts[] = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
+		$parts[] = requireValue('SYSTEM_COMMAND_SERVICE', $app);
+		$parts[] = requireValue('SYSTEM_SERVICE', $app);
+		$parts[] = 'stop';
+		doShellCommand($parts);
 	});
 	
 	desc('Restart system service');

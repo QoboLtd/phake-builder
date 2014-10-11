@@ -6,17 +6,34 @@ group('git', function() {
 	
 	desc('Git checkout');
 	task('checkout', ':builder:init', function($app) {
-		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_GIT', $app), 'checkout', requireValue('GIT_BRANCH', $app)]));
+		printInfo("Git checkout");
+		$parts = array();
+		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);
+		$parts[] = 'checkout';
+		$parts[] = requireValue('GIT_BRANCH', $app);
+		doShellCommand($parts);
 	});
 
 	desc('Git pull');
 	task('pull', ':builder:init', function($app) {
-		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_GIT', $app), 'pull', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
+		printInfo("Git pull");
+		$parts = array();
+		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);
+		$parts[] = 'pull';
+		$parts[] = requireValue('GIT_REMOTE', $app);
+		$parts[] = requireValue('GIT_BRANCH', $app);
+		doShellCommand($parts);
 	});
 	
 	desc('Git push');
 	task('push', ':builder:init', function($app) {
-		doShellCommand(implode(' ', [requireValue('SYSTEM_COMMAND_GIT', $app), 'push', getValue('GIT_REMOTE', $app), getValue('GIT_BRANCH', $app)]));
+		printInfo("Git push");
+		$parts = array();
+		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);
+		$parts[] = 'push';
+		$parts[] = requireValue('GIT_REMOTE', $app);
+		$parts[] = requireValue('GIT_BRANCH', $app);
+		doShellCommand($parts);
 	});
 
 });
