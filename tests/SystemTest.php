@@ -16,6 +16,13 @@ class SystemTest extends \PHPUnit_Framework_TestCase {
 		$this->assertNull($result);
 	}
 
+	public function test_needsSudo() {
+		$uid = posix_getuid();
+		$result = System::needsSudo();
+		$expected = ($uid == 0) ? false : true;
+		$this->assertEquals($expected, $result);
+	}
+	
 	/**
 	 * @expectedException \RuntimeException
 	 */
