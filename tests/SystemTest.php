@@ -42,7 +42,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase {
 		$result = System::secureString('foobar', '');
 		$this->assertEquals('foobar', $result);
 
-		$result = System::secureString('foobar', ['foo','bar']);
+		$result = System::secureString('foobar', array('foo','bar'));
 		$this->assertEquals('xxxxxx', $result);
 
 		$result = System::secureString('foobar', 'bar', '*');
