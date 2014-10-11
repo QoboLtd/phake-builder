@@ -1,43 +1,115 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'System.php';
 
 ///////////////////////
 // Utility functions //
 ///////////////////////
 
 /**
- * Get default configuration value for given parameter
+ * Print separator
  * 
- * @param string $param Parameter to get default value for
- * @return string|null String if found, null otherwise
+ * This is mighty useful in long outputs
+ * 
+ * @param string $string String to use for separator
+ * @param integer $length Length of the separator line
+ * @return void
  */
-function getDefaultValue($param) {
-	$result = null;
-	
-	$defaults = array(
-		'GIT_REMOTE' => 'origin',
-		'GIT_BRANCH' => 'master',
+function printSeparator($character = '-', $length = 70) {
+	writeln(white(str_repeat($character, $length), true));
+}
 
-		'DB_HOST' => 'localhost',
-		'DB_USER' => 'root',
-		'DB_PASS' => '',
-
-		'SYSTEM_COMMAND_GIT' => '/usr/bin/git',	
-		'SYSTEM_COMMAND_LINK' => '/usr/bin/ln -s',
-		'SYSTEM_COMMAND_MKDIR' => '/usr/bin/mkdir -p',
-		'SYSTEM_COMMAND_MYSQL' => '/usr/bin/mysql',
-		'SYSTEM_COMMAND_MYSQL_REPLACE' => 'vendor/bin/mysql-replace.php',
-		'SYSTEM_COMMAND_RM' => '/usr/bin/rm -r',
-		'SYSTEM_COMMAND_SERVICE' => '/usr/sbin/service',
-		'SYSTEM_COMMAND_SUDO' => '/usr/bin/sudo',
-		'SYSTEM_COMMAND_TOUCH' => '/usr/bin/touch',
-	);
-
-	if (isset($defaults[$param])) {
-		$result = $defaults[$param];
+/**
+ * Format output message
+ * 
+ * @param string $message Message text
+ * @param string $prefix Prefix text, like DEBUG or INF
+ * @param string $dateFormat Date format to use. If null, no date is used
+ * @return string
+ */
+function formatMessage($message, $prefix, $dateFormat = '[Y-m-d H:i:s]') {
+	$result = $prefix . ' ' . $message;
+	if ($dateFormat) {
+		$result = date($dateFormat) . ' ' . $result;
 	}
-
 	return $result;
+}
+
+/**
+ * Print error message
+ * 
+ * Error messages are different from all the other ones
+ * because they might be thrown by exceptions.
+ * 
+ * @param string $message Message to show as error
+ * @param boolean $format Format the message or print as is
+ * @return void
+ */
+function printError($message, $format = true, $returnNoPrint = false) {
+	if ($format) {
+		$message = formatMessage($message, ':ERROR:');
+	}
+	
+	if ($returnNoPrint) {
+		return $message;
+	}
+	writeln(red($message, true));
+}
+
+/**
+ * Print success message
+ * 
+ * @param string $message Message to show as success
+ * @param boolean $format Format the message or print as is
+ * @return void
+ */
+function printSuccess($message, $format = true) {
+	if ($format) {
+		$message = formatMessage($message, ':OK   :');
+	}
+	writeln(green($message, true));
+}
+
+/**
+ * Print warning message
+ * 
+ * @param string $message Message to show as warning
+ * @param boolean $format Format the message or print as is
+ * @return void
+ */
+function printWarning($message, $format = true) {
+	if ($format) {
+		$message = formatMessage($message, ':WARN :');
+	}
+	writeln(yellow($message, true));
+}
+
+/**
+ * Print info message
+ * 
+ * @param string $message Message to show as info
+ * @param boolean $format Format the message or print as is
+ * @return void
+ */
+function printInfo($message, $format = true) {
+	if ($format) {
+		$message = formatMessage($message, ':INFO :');
+	}
+	writeln(cyan($message, true));
+}
+
+/**
+ * Print debug message
+ * 
+ * @param string $message Message to show as debug
+ * @param boolean $format Format the message or print as is
+ * @return void
+ */
+function prinDebug($message, $format = true) {
+	if ($format) {
+		$message = formatMessage($message, ':DEBUG:');
+	}
+	writeln(purple($message, true));
 }
 
 /**
@@ -63,9 +135,9 @@ function getValue($param, $app = null) {
 	}
 	
 	// Default is third
-	$default = getDefaultValue($param);
+	$default = \PhakeBuilder\System::getDefaultValue($param);
 	if ($default !== null) {
-		writeln(yellow("No value for $param has been given.  Using default."));
+		printWarning("No value for $param has been given.  Using default.");
 		$result = $default;
 	}
 
@@ -83,76 +155,105 @@ function getValue($param, $app = null) {
 function requireValue($param, $app = null) {
 	$result = getValue($param, $app);
 	if (empty($result)) {
-		throw new RuntimeException("Missing required configuration parameter for $param");
+		throw new RuntimeException(printError("Missing required configuration parameter for $param", true, true));
 	}
 
-	return $result;
-}
-
-/**
- * Check if the current user needs sudo
- * 
- * root user doesn't need sudo.  Everybody else does.
- * 
- * This functionality is outside of targets for future
- * proof.  One day we might need a more complex way to
- * figure the answer to this question.  For example,
- * based on a while of some parameter.
- * 
- * @return boolean True if needs, false otherwise
- */
-function needsSudo() {
-	$result = (posix_getuid() == 0) ? false : true; 
 	return $result;
 }
 
 /**
  * Execute a shell command
  * 
- * @param string $command Command to execute
+ * @param string|array $command Command to execute (as full string or parts)
  * @param string|array $privateInfo One or more strings to remove from screen output
  * @return void
  */
 function doShellCommand($command, $privateInfo = null) {
-	$command = trim($command) . ' 2>&1';
-	
-	writeln(purple("Executing shell command: " . secureString($command, $privateInfo)));
-	
-	unset($output);
-	$result = exec($command, $output, $return);
-	$output = secureString(implode("\n", $output), $privateInfo);
-	if ($return > 0) {
-		throw new RuntimeException("Failed! " . $output);
+	if (is_array($command)) {
+		$command = implode(' ', array_map('trim', $command));
 	}
-	writeln(green("Success. Output: \n" . $output));
+	$command = trim($command) . ' 2>&1';
+	prinDebug("Executing shell command: " . \PhakeBuilder\System::secureString($command, $privateInfo));
+	
+	try {
+		$result = \PhakeBuilder\System::doShellCommand($command);
+		$result = \PhakeBuilder\system::secureString($result, $privateInfo);
+	}
+	catch (Exception $e) {
+		$result = \PhakeBuilder\System::secureString($e->getMessage(), $privateInfo);
+		throw new RuntimeException(printError($result, true, true));
+	}
+	printSuccess("SUCCESS! Output: " . $result);
 }
 
 /**
- * Secure string for screen output
+ * Execute a MySQL command
  * 
- * @param string $string String to secure
- * @param string|array $privateInfo One or more strings to replace
- * @return string
+ * @param string $query MySQL query to execute
+ * @return voi
  */
-function secureString($string, $privateInfo) {
-	$result = $string;
+function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $command = 'SYSTEM_COMMAND_MYSQL') {
 
-	if (empty($privateInfo)) {
-		return $result;
+	// Host is never required, but always nice to have
+	$host = getValue('DB_HOST', $app);
+
+	// Use admin credentials for admin operations
+	if ($asAdmin) {
+		$user = requireValue('DB_ADMIN_USER', $app);
+		$pass = getValue('DB_ADMIN_PASS', $app);
+	}
+	// use regular user credentials for everything else
+	else {
+		$user = getValue('DB_USER', $app);
+		$pass = getValue('DB_PASS', $app);
+	}
+	
+	// Not everything requires a known database name parameter
+	$name = null;
+	if ($requireDB) {
+		$name = requireValue('DB_NAME', $app);
 	}
 
-	if (!is_array($privateInfo)) {
-		$privateInfo = [ $privateInfo ];
+	// Build command line strings for different commands
+	switch ($command) {
+		// /usr/bin/mysql -u root -p foo -h localhost -e 'select now();'
+		case 'SYSTEM_COMMAND_MYSQL':
+			if (empty($query)) {
+				throw new RuntimeException(printError("No SQL query given", true, true));
+			}
+			$command = escapeshellcmd(requireValue($command, $app));
+			$command .= ($host) ? ' -h' . escapeshellarg($host) : '';
+			$command .= ($user) ? ' -u' . escapeshellarg($user) : '';
+			$command .= ($pass) ? ' -p' . escapeshellarg($pass) : '';
+			$command .= ($name) ? ' ' . escapeshellarg($name) : '';
+			$command .= ' -e ' . escapeshellarg($query);
+			break;
+		// ./vendor/bin/mysql-replace.php database=foo find=blah relace=bleh
+		case 'SYSTEM_COMMAND_MYSQL_REPLACE':
+			$find = requireValue('DB_FIND', $app);
+			$replace = requireValue('DB_REPLACE', $app);
+			
+			$command = requireValue($command, $app);
+			$command .= ($host) ? ' hostname=' . $host : '';
+			$command .= ($user) ? ' username=' . $user : '';
+			$command .= ($pass) ? " password='" . $pass . "'" : '';
+			$command .= ($name) ? ' database=' . $host : '';
+			$command .= " find='" . $find . "'";
+			$command .= " replace='" . $replace . "'";
+			break;
+		default:
+			throw new RuntimeException(printError("$command is not supported", true, true));
+			break;
 	}
+	
+	// Just in case, always pad user and admin passwords
+	$secureStrings = array(
+		getValue('DB_PASS', $app), 
+		getValue('DB_ADMIN_PASS', $app),
+	);
 
-	foreach ($privateInfo as $privateString) {
-		$replacement = str_repeat('x', strlen($privateString));
-		$result = str_replace($privateString, $replacement, $result);
-	}
-
-	return $result;
+	doShellCommand($command, $secureStrings);
 }
-
 
 // Generic phake-builder tasks
 group('builder', function() {
@@ -164,7 +265,10 @@ group('builder', function() {
 
 	desc('Print welcome message');
 	task('hello', function($app) {
-		writeln(green('Welcome to phake-builder! Use "phake -T" to list all commands. More info at https://github.com/QoboLtd/phake-builder'));
+		printSuccess('Welcome to phake-builder!', false);
+		printSuccess('Use "phake -T" to list all commands.', false); 
+		printSuccess('More info at https://github.com/QoboLtd/phake-builder', false);
+		printSeparator();
 	});
 
 });
