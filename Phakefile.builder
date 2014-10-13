@@ -237,7 +237,7 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
 			$command .= ($host) ? ' hostname=' . $host : '';
 			$command .= ($user) ? ' username=' . $user : '';
 			$command .= ($pass) ? " password='" . $pass . "'" : '';
-			$command .= ($name) ? ' database=' . $host : '';
+			$command .= ($name) ? ' database=' . $name : '';
 			$command .= " find='" . $find . "'";
 			$command .= " replace='" . $replace . "'";
 			break;
