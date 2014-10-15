@@ -27,6 +27,7 @@ class System {
 			'DB_ADMIN_USER' => 'root',
 			'DB_ADMIN_PASS' => '',
 
+			'SYSTEM_COMMAND_COMPOSER' => '/usr/bin/composer',
 			'SYSTEM_COMMAND_GIT' => '/usr/bin/git',	
 			'SYSTEM_COMMAND_LINK' => '/usr/bin/ln -s',
 			'SYSTEM_COMMAND_MKDIR' => '/usr/bin/mkdir -p',
