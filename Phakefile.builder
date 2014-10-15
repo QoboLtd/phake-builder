@@ -105,7 +105,7 @@ function printInfo($message, $format = true) {
  * @param boolean $format Format the message or print as is
  * @return void
  */
-function prinDebug($message, $format = true) {
+function printDebug($message, $format = true) {
 	if ($format) {
 		$message = formatMessage($message, ':DEBUG:');
 	}
@@ -173,7 +173,7 @@ function doShellCommand($command, $privateInfo = null) {
 		$command = implode(' ', array_map('trim', $command));
 	}
 	$command = trim($command) . ' 2>&1';
-	prinDebug("Executing shell command: " . \PhakeBuilder\System::secureString($command, $privateInfo));
+	printDebug("Executing shell command: " . \PhakeBuilder\System::secureString($command, $privateInfo));
 	
 	try {
 		$result = \PhakeBuilder\System::doShellCommand($command);
