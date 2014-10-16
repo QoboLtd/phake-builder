@@ -234,12 +234,12 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
 			$replace = requireValue('DB_REPLACE', $app);
 			
 			$command = requireValue($command, $app);
-			$command .= ($host) ? ' hostname=' . $host : '';
-			$command .= ($user) ? ' username=' . $user : '';
-			$command .= ($pass) ? " password='" . $pass . "'" : '';
-			$command .= ($name) ? ' database=' . $name : '';
-			$command .= " find='" . $find . "'";
-			$command .= " replace='" . $replace . "'";
+			$command .= ' -h ' . $host ;
+			$command .= ' -u ' . $user;
+			$command .= " -p '" . $pass . "'";
+			$command .= ' -n ' . $name;
+			$command .= " -s '" . $find . "'";
+			$command .= " -r '" . $replace . "'";
 			break;
 		default:
 			throw new RuntimeException(printError("$command is not supported", true, true));
