@@ -13,6 +13,6 @@
 	"require": {
 		"jaz303/phake": "*",
 		"vlucas/phpdotenv": "*",
-		"mamchenkov/mysql-find-and-replace": "1.0.*"
+		"interconnectit/search-replace-db": "~3.0"
 	}
 }
