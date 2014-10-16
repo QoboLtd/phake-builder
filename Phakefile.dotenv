@@ -1,0 +1,69 @@
+<?php
+require_once 'vendor/autoload.php';
+
+// Dotenv related tasks
+group('dotenv', function() {
+
+	desc('Create .env file');
+	task('create', ':builder:init', function($app) {
+		printSeparator();
+		printInfo("Creating .env file");
+
+		$envFile = getcwd() . DIRECTORY_SEPARATOR . '.env';
+		$templateFile = getcwd() . DIRECTORY_SEPARATOR . '.env.example';
+		
+		if (!file_exists($templateFile)) {
+			throw new \RuntimeException(".env template file ($templateFile) does not exist");
+		}
+		if (!is_file($templateFile)) {
+			throw new \RuntimeException(".env template file ($templateFile) is not a file");
+		}
+		if (!is_readable($templateFile)) {
+			throw new \RuntimeException(".env template file ($templateFile) is not readable");
+		}
+		$linesIn = file($templateFile);
+		$linesOut = array();
+
+		$count = 0;
+		foreach ($linesIn as $line) {
+			$count++;
+			trim($line);
+			if (!preg_match('#^(.*)?=(.*)?$#', $line, $matches)) {
+				$linesOut[] = $line;
+				continue;
+			}
+			$name = $matches[1];
+			$value = getValue($name, $app) ? getValue($name, $app) : $matches[2];
+			$linesOut[] = $name . '=' . $value;
+		}
+		$bytes = file_put_contents($envFile, implode("\n", $linesOut));
+		if (!$bytes) {
+			throw new \RuntimeException("Failed to save $count lines to $envFile");
+		}
+		printSuccess("Saved $count lines to $envFile");
+	});
+	
+	desc('Delete .env file');
+	task('delete', ':builder:init', function($app) {
+		printSeparator();
+		printInfo("Deleting .env file");
+		
+		$envFile = getcwd() . DIRECTORY_SEPARATOR . '.env';
+		if (file_exists($envFile)) {
+			$result = unlink($envFile);
+			if ($result) {
+				printSuccess("Removed $envFile");
+			}
+			else {
+				throw new \RuntimeException("Failed to remove $envFile");
+			}
+		}
+		else {
+			printWarning("File $envFile does not exist");
+		}
+	});
+	
+});
+
+# vi:ft=php
+?>
