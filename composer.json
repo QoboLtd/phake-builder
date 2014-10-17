@@ -13,6 +13,7 @@
 	"require": {
 		"jaz303/phake": "*",
 		"vlucas/phpdotenv": "*",
-		"interconnectit/search-replace-db": "~3.0"
+		"interconnectit/search-replace-db": "~3.0",
+		"qobo/pattern": "~1.0"
 	}
 }

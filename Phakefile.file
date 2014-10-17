@@ -4,6 +4,44 @@ require_once 'vendor/autoload.php';
 // Filesystem related tasks
 group('file', function() {
 
+	desc('Process template file');
+	task('process', ':builder:init', function ($app) {
+		printSeparator();
+		printInfo('Processing template');
+
+		$src = requireValue('TEMPLATE_SRC', $app);
+		$dst = requireValue('TEMPLATE_DST', $app);
+
+		if (!file_exists($src)) {
+			throw new \RuntimeException("Template file [$src] does not exist");
+		}
+		if (!is_file($src)) {
+			throw new \RuntimeException("Template file [$src] is not a file");
+		}
+		if (!is_readable($src)) {
+			throw new \RuntimeException("Template file [$src] is not readable");
+		}
+
+		$src = file_get_contents($src);
+
+		$pattern = new \Qobo\Pattern\Pattern($src);
+		$placeholders = $pattern->getPlaceholders();
+		if (empty($placeholders)) {
+			printWarning("Template file [$src] has no placeholders");
+		}
+		else {
+			$data = array();
+			foreach ($placeholders as $placeholder) {
+				$data[$placeholder] = getValue($placeholder, $app);
+			}
+		}
+
+		$bytes = file_put_contents($dst, $pattern->parse($data));
+		if (!$bytes) {
+			throw new \RuntimeException("Failed to write to template destination [$dst]");
+		}
+	});
+	
 	desc('Create empty file or update timestamp of existing');
 	task('touch', ':builder:init', function($app) {
 		printSeparator();
