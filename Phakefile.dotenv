@@ -42,6 +42,16 @@ group('dotenv', function() {
 		}
 		printSuccess("Saved $count lines to $envFile");
 	});
+
+	desc('Reload settings from .env');
+	task('reload', ':builder:init', function($app) {
+		printSeparator();
+		printInfo("Reloading .env configuration");
+
+		Dotenv::makeMutable();
+		Dotenv::load(getcwd());
+		Dotenv::makeImmutable();
+	});
 	
 	desc('Delete .env file');
 	task('delete', ':builder:init', function($app) {
