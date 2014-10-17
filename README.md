@@ -13,7 +13,7 @@ Install with composer as so:
 ```
 {
     "require": {
-      "qobo/phake-builder": "1.0.*"
+      "qobo/phake-builder": "~1.0"
     }
 }
 ```
