@@ -46,41 +46,64 @@ group('file', function() {
 	task('touch', ':builder:init', function($app) {
 		printSeparator();
 		printInfo("Touching file");
-		$parts = array();
-		$parts[] = requireValue('SYSTEM_COMMAND_TOUCH', $app);
-		$parts[] = requireValue('TOUCH_PATH', $app);
-		doShellCommand($parts);
+		
+		$file = requireValue('TOUCH_PATH', $app);
+		$result = touch($file);
+		if (!$result) {
+			throw new \RuntimeException("Failed to touch file");
+		}
 	});
 	
 	desc('Create symbolic link');
 	task('link', ':builder:init', function($app) {
 		printSeparator();
 		printInfo("Creating link");
-		$parts = array();
-		$parts[] = requireValue('SYSTEM_COMMAND_LINK', $app);
-		$parts[] = requireValue('LINK_SRC', $app);
-		$parts[] = requireValue('LINK_DST', $app);
-		doShellCommand($parts);
+		$src = requireValue('LINK_SRC', $app);
+		$dst = requireValue('LINK_DST', $app);
+		$result = symlink($src, $dst);
+		if (!$result) {
+			throw new \RuntimeException("Failed to create symbolic link");
+		}
 	});
 	
 	desc('Recursively remove file or folder');
 	task('rm', ':builder:init', function($app) {
 		printSeparator();
 		printInfo("Removing file or folder");
-		$parts = array();
-		$parts[] = requireValue('SYSTEM_COMMAND_RM', $app);
-		$parts[] = requireValue('RM_PATH', $app);
-		doShellCommand($parts);
+		$path = requireValue('RM_PATH', $app);
+		if (is_dir($path)) {
+			# Thanks to: http://stackoverflow.com/a/15111679/151647
+			$it = new \RecursiveIteratorIterator(
+				new \RecursiveDirectoryIterator(
+					$path, 
+					\FilesystemIterator::SKIP_DOTS
+				), 
+				\RecursiveIteratorIterator::CHILD_FIRST
+			);
+			foreach($it as $item) {
+				$item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname());
+			}
+			$result = rmdir($path);	
+		}
+		else {
+			$result = unlink($path);
+		}
+		if (!$result) {
+			throw new \RuntimeException("Failed to remove path");
+		}
+		
 	});
 	
 	desc('Create folder');
 	task('mkdir', ':builder:init', function($app) {
 		printSeparator();
 		printInfo("Creating folder");
-		$parts = array();
-		$parts[] = requireValue('SYSTEM_COMMAND_MKDIR', $app);
-		$parts[] = requireValue('MKDIR_PATH', $app);
-		doShellCommand($parts);
+		$path = requireValue('MKDIR_PATH', $app);
+		$mode = requireValue('MKDIR_MODE', $app);
+		$result = mkdir($path, $mode, true);
+		if (!$result) {
+			throw new \RuntimeException("Failed to create directory");
+		}
 	});
 
 });
