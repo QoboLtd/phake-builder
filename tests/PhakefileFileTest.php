@@ -33,7 +33,7 @@ class PhakefileFileTest extends \PHPUnit_Framework_TestCase {
 		$command = $this->phake . " file:touch TOUCH_PATH=$tmpFile";
 		
 		$result = exec($command);
-		$this->assertTrue(file_exists($tmpFile), "File was not created");
+		$this->assertTrue(file_exists($tmpFile), "File [$tmpFile] was not created");
 
 		unlink($tmpFile);
 	}
@@ -45,12 +45,12 @@ class PhakefileFileTest extends \PHPUnit_Framework_TestCase {
 
 		$command = $this->phake . " file:touch TOUCH_PATH=$tmpFile";
 		$result = exec($command);
-		$this->assertTrue(file_exists($tmpFile), "File was not created");
+		$this->assertTrue(file_exists($tmpFile), "File [$tmpFile] was not created");
 		
 		$command = $this->phake . " file:link LINK_SRC=$tmpFile LINK_DST=$tmpLink";
 		$result = exec($command);
-		$this->assertTrue(file_exists($tmpLink), "Link was not created");
-		$this->assertTrue(is_link($tmpLink), "Link is not a link");
+		$this->assertTrue(file_exists($tmpLink), "Link [$tmpLink] was not created");
+		$this->assertTrue(is_link($tmpLink), "Link [$tmpLink] is not a link");
 
 		unlink($tmpLink);
 		unlink($tmpFile);
@@ -62,11 +62,11 @@ class PhakefileFileTest extends \PHPUnit_Framework_TestCase {
 		$command = $this->phake . " file:touch TOUCH_PATH=$tmpFile";
 		
 		$result = exec($command);
-		$this->assertTrue(file_exists($tmpFile), "File was not created");
+		$this->assertTrue(file_exists($tmpFile), "File [$tmpFile] was not created");
 	
 		$command = $this->phake . " file:rm RM_PATH=$tmpFile";
 		$result = exec($command);
-		$this->assertFalse(file_exists($tmpFile), "File was not removed");
+		$this->assertFalse(file_exists($tmpFile), "File [$tmpFile] was not removed");
 	}
 	
 	public function test__file_rm_mkdir() {
@@ -80,7 +80,7 @@ class PhakefileFileTest extends \PHPUnit_Framework_TestCase {
 	
 		$command = $this->phake . " file:rm RM_PATH=$tmpDir";
 		$result = exec($command);
-		$this->assertFalse(file_exists($tmpDir), "Directory was not removed");
+		$this->assertFalse(file_exists($tmpDir), "Directory [$tmpDir] was not removed");
 	}
 	
 	public function test__file_rm_mkdir_recursive() {
@@ -89,18 +89,18 @@ class PhakefileFileTest extends \PHPUnit_Framework_TestCase {
 		$command = $this->phake . " file:mkdir MKDIR_PATH=$tmpDir";
 		
 		$result = exec($command);
-		$this->assertTrue(file_exists($tmpDir), "Directory was not created");
-		$this->assertTrue(is_dir($tmpDir), "Folder is not a folder");
+		$this->assertTrue(file_exists($tmpDir), "Directory [$tmpDir] was not created");
+		$this->assertTrue(is_dir($tmpDir), "Directory [$tmpDir] is not a folder");
 	
 		$tmpFile = tempnam($tmpDir, 'phakeTest_');
 		$command = $this->phake . " file:touch TOUCH_PATH=$tmpFile";
 		
 		$result = exec($command);
-		$this->assertTrue(file_exists($tmpFile), "File was not created");
+		$this->assertTrue(file_exists($tmpFile), "File [$tmpFile] was not created");
 		
 		$command = $this->phake . " file:rm RM_PATH=$tmpDir";
 		$result = exec($command);
-		$this->assertFalse(file_exists($tmpDir), "Directory was not removed");
+		$this->assertFalse(file_exists($tmpDir), "Directory [$tmpDir] was not removed");
 	}
 
 }
