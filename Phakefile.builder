@@ -5,6 +5,47 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Syst
 ///////////////////////
 // Utility functions //
 ///////////////////////
+/**
+ * Get logger object
+ * 
+ * @return object
+ */
+function getLogger() {
+	$result = new \Monolog\Logger("log");
+	$result->pushHandler(new \Monolog\Handler\StdoutHandler(\Monolog\Logger::INFO));
+	$result->pushProcessor(function ($record) {
+		$color = 'blue';  // Should never happen
+		switch ($record['level']) {
+			case \Monolog\Logger::DEBUG:
+				$color = 'purple';
+				break;
+			case \Monolog\Logger::INFO:
+				$color = 'white';
+				break;
+			case \Monolog\Logger::NOTICE:
+				$color = 'green';
+				break;
+			case \Monolog\Logger::WARNING:
+				$color = 'yellow';
+				break;
+			case \Monolog\Logger::ERROR:
+				$color = 'red';
+				break;
+			case \Monolog\Logger::CRITICAL:
+				$color = 'red';
+				break;
+			case \Monolog\Logger::ALERT:
+				$color = 'red';
+				break;
+			case \Monolog\Logger::EMERGENCY:
+				$color = 'red';
+				break;
+		}
+		$record['message'] = '[c=' . $color . ']' . $record['message'] . '[/c]';
+		return $record;
+	});
+	return $result;
+}
 
 /**
  * Print separator
@@ -16,7 +57,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Syst
  * @return void
  */
 function printSeparator($character = '-', $length = 70) {
-	writeln(white(str_repeat($character, $length), true));
+	printInfo(str_repeat($character, $length), false);
 }
 
 /**
@@ -53,21 +94,7 @@ function printError($message, $format = true, $returnNoPrint = false) {
 	if ($returnNoPrint) {
 		return $message;
 	}
-	writeln(red($message, true));
-}
-
-/**
- * Print success message
- * 
- * @param string $message Message to show as success
- * @param boolean $format Format the message or print as is
- * @return void
- */
-function printSuccess($message, $format = true) {
-	if ($format) {
-		$message = formatMessage($message, ':OK   :');
-	}
-	writeln(green($message, true));
+	getLogger()->error($message);
 }
 
 /**
@@ -81,7 +108,21 @@ function printWarning($message, $format = true) {
 	if ($format) {
 		$message = formatMessage($message, ':WARN :');
 	}
-	writeln(yellow($message, true));
+	getLogger()->warning($message);
+}
+
+/**
+ * Print success message
+ * 
+ * @param string $message Message to show as success
+ * @param boolean $format Format the message or print as is
+ * @return void
+ */
+function printSuccess($message, $format = true) {
+	if ($format) {
+		$message = formatMessage($message, ':OK   :');
+	}
+	getLogger()->notice($message);
 }
 
 /**
@@ -95,7 +136,7 @@ function printInfo($message, $format = true) {
 	if ($format) {
 		$message = formatMessage($message, ':INFO :');
 	}
-	writeln(cyan($message, true));
+	getLogger()->info($message);
 }
 
 /**
@@ -109,7 +150,7 @@ function printDebug($message, $format = true) {
 	if ($format) {
 		$message = formatMessage($message, ':DEBUG:');
 	}
-	writeln(purple($message, true));
+	getLogger()->debug($message);
 }
 
 /**
@@ -137,7 +178,7 @@ function getValue($param, $app = null) {
 	// Default is third
 	$default = \PhakeBuilder\System::getDefaultValue($param);
 	if ($default !== null) {
-		printWarning("No value for $param has been given.  Using default.");
+		printDebug("No value for $param has been given.  Using default.");
 		$result = $default;
 	}
 
@@ -270,9 +311,9 @@ group('builder', function() {
 
 	desc('Print welcome message');
 	task('hello', function($app) {
-		printSuccess('Welcome to phake-builder!', false);
-		printSuccess('Use "phake -T" to list all commands.', false); 
-		printSuccess('More info at https://github.com/QoboLtd/phake-builder', false);
+		printInfo('Welcome to phake-builder!', false);
+		printInfo('Use "phake -T" to list all commands.', false); 
+		printInfo('More info at https://github.com/QoboLtd/phake-builder', false);
 		printSeparator();
 	});
 
