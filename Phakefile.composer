@@ -10,7 +10,7 @@ group('composer', function() {
 		printInfo("Composer install");
 		$parts = array();
 		$parts[] = requireValue('SYSTEM_COMMAND_COMPOSER', $app);
-		$parts[] = 'install';
+		$parts[] = 'install --no-dev';
 		doShellCommand($parts);
 	});
 	
@@ -20,7 +20,7 @@ group('composer', function() {
 		printInfo("Composer update");
 		$parts = array();
 		$parts[] = requireValue('SYSTEM_COMMAND_COMPOSER', $app);
-		$parts[] = 'update';
+		$parts[] = 'update --no-dev';
 		doShellCommand($parts);
 	});
 	
