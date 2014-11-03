@@ -72,7 +72,7 @@ class Git {
 	 * @return string
 	 */
 	public function checkout($target) {
-		$command = $this->get . ' checkout ' . $target;
+		$command = $this->git . ' checkout ' . $target;
 		$result = System::doShellCommand($command);
 		return $result;
 	}
@@ -85,7 +85,7 @@ class Git {
 	 * @return string
 	 */
 	public function pull($remote = null, $branch = null) {
-		$command = $this->get . ' pull ' . $remote . ' ' . $branch;
+		$command = $this->git . ' pull ' . $remote . ' ' . $branch;
 		$result = System::doShellCommand($command);
 		return $result;
 	}
@@ -98,7 +98,7 @@ class Git {
 	 * @return string
 	 */
 	public function push($remote = null, $branch = null) {
-		$command = $this->get . ' push ' . $remote . ' ' . $branch;
+		$command = $this->git . ' push ' . $remote . ' ' . $branch;
 		$result = System::doShellCommand($command);
 		return $result;
 	}
