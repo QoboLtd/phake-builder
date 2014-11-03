@@ -1,5 +1,7 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'System.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Git.php';
 
 // Git related tasks
 group('git', function() {
@@ -8,33 +10,44 @@ group('git', function() {
 	task('checkout', ':builder:init', function($app) {
 		printSeparator();
 		printInfo("Git checkout");
-		$parts = array();
-		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);
-		$parts[] = 'checkout';
-		$parts[] = requireValue('GIT_BRANCH', $app);
-		doShellCommand($parts);
+
+		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
+		$currentBranch = $git->getCurrentBranch();
+		printInfo("Current branch: [$currentBranch]");
+		
+		$requiredBranch = requireValue('GIT_BRANCH', $app);
+		
+		if ($currentBranch == $requiredBranch) {
+			printDebug("Skipping git checkout - already on branch [$requiredBranch]");
+		}
+		else {
+			$git->checkout($requiredBranch);
+		}
 	});
 
 	desc('Git pull');
 	task('pull', ':builder:init', function($app) {
 		printSeparator();
 		printInfo("Git pull");
-		$parts = array();
-		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);
-		$parts[] = 'pull';
-		doShellCommand($parts);
+		
+		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
+		$currentHash = $git->getCurrentHash();
+		$git->pull();
+
+		printInfo("Changelog");
+		$git->changelog($currentHash);
 	});
 	
 	desc('Git push');
 	task('push', ':builder:init', function($app) {
 		printSeparator();
 		printInfo("Git push");
-		$parts = array();
-		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);
-		$parts[] = 'push';
-		$parts[] = requireValue('GIT_REMOTE', $app);
-		$parts[] = requireValue('GIT_BRANCH', $app);
-		doShellCommand($parts);
+		
+		$remote = requireValue('GIT_REMOTE', $app);
+		$branch = requireValue('GIT_BRANCH', $app);
+		
+		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
+		$git->push($remote, $branch);
 	});
 
 });

@@ -207,7 +207,7 @@ function requireValue($param, $app = null) {
  * 
  * @param string|array $command Command to execute (as full string or parts)
  * @param string|array $privateInfo One or more strings to remove from screen output
- * @return void
+ * @return string
  */
 function doShellCommand($command, $privateInfo = null) {
 	if (is_array($command)) {
@@ -225,6 +225,7 @@ function doShellCommand($command, $privateInfo = null) {
 		throw new RuntimeException(printError($result, true, true));
 	}
 	printSuccess("SUCCESS! Output: " . $result);
+	return $result;
 }
 
 /**
