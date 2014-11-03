@@ -1,5 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'System.php';
 
 // MySQL utiility tasks
 group('mysql', function() {
