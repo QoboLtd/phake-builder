@@ -22,8 +22,6 @@ group('git', function() {
 		$parts = array();
 		$parts[] = requireValue('SYSTEM_COMMAND_GIT', $app);
 		$parts[] = 'pull';
-		$parts[] = requireValue('GIT_REMOTE', $app);
-		$parts[] = requireValue('GIT_BRANCH', $app);
 		doShellCommand($parts);
 	});
 	
