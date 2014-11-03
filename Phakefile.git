@@ -12,8 +12,8 @@ group('git', function() {
 		printInfo("Git checkout");
 
 		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
-		$currentBranch = $git->getCurrentBranch();
-		printInfo("Current branch: [$currentBranch]");
+		$currentBranch = doShellCommand($git->getCurrentBranch());
+		printDebug("Current branch: [$currentBranch]");
 		
 		$requiredBranch = requireValue('GIT_BRANCH', $app);
 		
@@ -21,7 +21,7 @@ group('git', function() {
 			printDebug("Skipping git checkout - already on branch [$requiredBranch]");
 		}
 		else {
-			$git->checkout($requiredBranch);
+			doShellCommand($git->checkout($requiredBranch));
 		}
 	});
 
@@ -31,11 +31,11 @@ group('git', function() {
 		printInfo("Git pull");
 		
 		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
-		$currentHash = $git->getCurrentHash();
-		$git->pull();
+		$currentHash = doShellCommand($git->getCurrentHash());
+		doShellCommand($git->pull());
 
 		printInfo("Changelog");
-		$git->changelog($currentHash);
+		doShellCommand($git->changelog($currentHash));
 	});
 	
 	desc('Git push');
@@ -47,7 +47,7 @@ group('git', function() {
 		$branch = requireValue('GIT_BRANCH', $app);
 		
 		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
-		$git->push($remote, $branch);
+		doShellCommand($git->push($remote, $branch));
 	});
 
 });

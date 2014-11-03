@@ -28,8 +28,7 @@ class Git {
 	 * @return string
 	 */
 	public function getCurrentHash() {
-		$command = $this->git . ' log -1 --pretty=format:"%h"';
-		$result = System::doShellCommand($command);
+		$result = $this->git . ' log -1 --pretty=format:"%h"';
 		return $result;
 	}
 
@@ -42,8 +41,7 @@ class Git {
 	 * @return string
 	 */
 	public function getCurrentBranch() {
-		$command = $this->git . ' rev-parse --abbrev-ref HEAD';
-		$result = System::doShellCommand($command);
+		$result = $this->git . ' rev-parse --abbrev-ref HEAD';
 		return $result;
 	}
 
@@ -60,8 +58,7 @@ class Git {
 	 * @return string
 	 */
 	public function getChangelog($from, $to = 'HEAD', $format = '--no-merges --format=%B') {
-		$command = $this->git . ' log ' . $from . '..' . $to . ' ' . $format;
-		$result = System::doShellCommand($command);
+		$result = $this->git . ' log ' . $from . '..' . $to . ' ' . $format;
 		return $result;
 	}
 
@@ -72,8 +69,7 @@ class Git {
 	 * @return string
 	 */
 	public function checkout($target) {
-		$command = $this->git . ' checkout ' . $target;
-		$result = System::doShellCommand($command);
+		$result = $this->git . ' checkout ' . $target;
 		return $result;
 	}
 
@@ -85,8 +81,7 @@ class Git {
 	 * @return string
 	 */
 	public function pull($remote = null, $branch = null) {
-		$command = $this->git . ' pull ' . $remote . ' ' . $branch;
-		$result = System::doShellCommand($command);
+		$result = $this->git . ' pull ' . $remote . ' ' . $branch;
 		return $result;
 	}
 	
@@ -98,8 +93,7 @@ class Git {
 	 * @return string
 	 */
 	public function push($remote = null, $branch = null) {
-		$command = $this->git . ' push ' . $remote . ' ' . $branch;
-		$result = System::doShellCommand($command);
+		$result = $this->git . ' push ' . $remote . ' ' . $branch;
 		return $result;
 	}
 
