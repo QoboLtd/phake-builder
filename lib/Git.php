@@ -57,7 +57,7 @@ class Git {
 	 * @param string $format Format
 	 * @return string
 	 */
-	public function getChangelog($from, $to = 'HEAD', $format = '--no-merges --format=%B') {
+	public function changelog($from, $to = 'HEAD', $format = '--no-merges --format=%B') {
 		$result = $this->git . ' log ' . $from . '..' . $to . ' ' . $format;
 		return $result;
 	}
