@@ -57,7 +57,7 @@ class Git {
 	 * @param string $format Format
 	 * @return string
 	 */
-	public function changelog($from, $to = 'HEAD', $format = '--reverse --no-merges --pretty=format:"* %<(50,trunc)%s (%ad, %an)" --date=short') {
+	public function changelog($from, $to = 'HEAD', $format = '--reverse --no-merges --pretty=format:"* %<(72,trunc)%s (%ad, %an)" --date=short') {
 		$result = $this->git . ' log ' . $from . '..' . $to . ' ' . $format;
 		return $result;
 	}
