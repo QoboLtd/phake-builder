@@ -272,8 +272,13 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
 			break;
 		// ./vendor/bin/mysql-replace.php database=foo find=blah relace=bleh
 		case 'SYSTEM_COMMAND_MYSQL_REPLACE':
-			$find = requireValue('DB_FIND', $app);
-			$replace = requireValue('DB_REPLACE', $app);
+			$find = getValue('DB_FIND', $app);
+			$replace = getValue('DB_REPLACE', $app);
+
+			if (empty($find)) {
+				printDebug("Nothing to find.  Skipping replace.");
+				return;
+			}
 			
 			$command = requireValue($command, $app);
 			$command .= ' -h ' . $host ;
