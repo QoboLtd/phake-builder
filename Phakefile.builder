@@ -12,38 +12,30 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Syst
  */
 function getLogger() {
 	$result = new \Monolog\Logger("log");
-	$result->pushHandler(new \Monolog\Handler\StdoutHandler(\Monolog\Logger::INFO));
+
+	$formatter = new \Monolog\Formatter\ColorLineFormatter("[c=%color%]%message%[/c]\n", null, true, true);
+	
+	$stdoutHandler = new \Monolog\Handler\StdoutHandler(\Monolog\Logger::INFO);
+	$stdoutHandler->setFormatter($formatter);
+	
+	$result->pushHandler($stdoutHandler);
 	$result->pushProcessor(function ($record) {
-		$color = 'blue';  // Should never happen
-		switch ($record['level']) {
-			case \Monolog\Logger::DEBUG:
-				$color = 'purple';
-				break;
-			case \Monolog\Logger::INFO:
-				$color = 'white';
-				break;
-			case \Monolog\Logger::NOTICE:
-				$color = 'green';
-				break;
-			case \Monolog\Logger::WARNING:
-				$color = 'yellow';
-				break;
-			case \Monolog\Logger::ERROR:
-				$color = 'red';
-				break;
-			case \Monolog\Logger::CRITICAL:
-				$color = 'red';
-				break;
-			case \Monolog\Logger::ALERT:
-				$color = 'red';
-				break;
-			case \Monolog\Logger::EMERGENCY:
-				$color = 'red';
-				break;
-		}
-		$record['message'] = '[c=' . $color . ']' . $record['message'] . '[/c]';
+		
+		$colors = array(
+			\Monolog\Logger::DEBUG     => 'purple',
+			\Monolog\Logger::INFO      => 'white',
+			\Monolog\Logger::NOTICE    => 'green',
+			\Monolog\Logger::WARNING   => 'yellow',
+			\Monolog\Logger::ERROR     => 'red',
+			\Monolog\Logger::CRITICAL  => 'red',
+			\Monolog\Logger::ALERT     => 'red',
+			\Monolog\Logger::EMERGENCY => 'red',
+		);
+		
+		$record['color'] = $colors[ $record['level'] ] ?: 'blue';
 		return $record;
 	});
+	
 	return $result;
 }
 
