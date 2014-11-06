@@ -12,7 +12,13 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Syst
  */
 function getLogger() {
 	$result = new \Monolog\Logger("log");
-	$result->pushHandler(new \Monolog\Handler\StdoutHandler(\Monolog\Logger::INFO));
+
+	$formatter = new \Monolog\Formatter\ColorLineFormatter(\Monolog\Handler\StdoutHandler::FORMAT, null, true, true);
+	
+	$stdoutHandler = new \Monolog\Handler\StdoutHandler(\Monolog\Logger::INFO);
+	$stdoutHandler->setFormatter($formatter);
+	
+	$result->pushHandler($stdoutHandler);
 	$result->pushProcessor(function ($record) {
 		$color = 'blue';  // Should never happen
 		switch ($record['level']) {
