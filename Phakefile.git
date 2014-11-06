@@ -24,6 +24,24 @@ group('git', function() {
 			doShellCommand($git->checkout($requiredBranch));
 		}
 	});
+	
+	desc('Git changelog');
+	task('changelog', ':builder:init', function($app) {
+		printSeparator();
+		printInfo("Git changelog");
+		
+		$oldHash = requireValue('GIT_OLD_HASH', $app);
+		$newHash = requireValue('GIT_NEW_HASH', $app);
+		printInfo("Old hash: $oldHash");
+		printInfo("New hash: $newHash");
+	
+		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
+		
+		$changelog = doShellCommand($git->changelog($oldHash, $newHash), null, true);
+		$changelog = $changelog ?: 'Not available';
+		
+		printInfo("Changelog\n$changelog");
+	});
 
 	desc('Git pull');
 	task('pull', ':builder:init', function($app) {
@@ -31,11 +49,13 @@ group('git', function() {
 		printInfo("Git pull");
 		
 		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
-		$currentHash = doShellCommand($git->getCurrentHash());
+		$oldHash = doShellCommand($git->getCurrentHash(), null, true);
 		doShellCommand($git->pull());
 
-		printInfo("Changelog");
-		doShellCommand($git->changelog($currentHash));
+		$newHash = doShellCommand($git->getCurrentHash(), null, true);
+		$changelog = doShellCommand($git->changelog($oldHash, $newHash), null, true);
+		$changelog = $changelog ?: 'Not available';
+		printInfo("Changelog\n$changelog");
 	});
 	
 	desc('Git push');

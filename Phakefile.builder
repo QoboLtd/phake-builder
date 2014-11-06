@@ -199,9 +199,10 @@ function requireValue($param, $app = null) {
  * 
  * @param string|array $command Command to execute (as full string or parts)
  * @param string|array $privateInfo One or more strings to remove from screen output
+ * @param boolean $silent Whether or not to supress output
  * @return string
  */
-function doShellCommand($command, $privateInfo = null) {
+function doShellCommand($command, $privateInfo = null, $silent = false) {
 	if (is_array($command)) {
 		$command = implode(' ', array_map('trim', $command));
 	}
@@ -216,7 +217,9 @@ function doShellCommand($command, $privateInfo = null) {
 		$result = \PhakeBuilder\System::secureString($e->getMessage(), $privateInfo);
 		throw new RuntimeException(printError($result, true, true));
 	}
-	printSuccess("SUCCESS! Output: " . $result);
+	if (!$silent) {
+		printSuccess("SUCCESS! Output: " . $result);
+	}
 	return $result;
 }
 
