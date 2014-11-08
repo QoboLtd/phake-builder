@@ -166,6 +166,7 @@ function getValue($param, $app = null) {
 	if ($result !== false) {
 		return $result;
 	}
+	$result = null;
 	
 	// Default is third
 	$default = \PhakeBuilder\System::getDefaultValue($param);

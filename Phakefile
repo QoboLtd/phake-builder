@@ -1,7 +1,5 @@
 <?php
 require_once 'vendor/autoload.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'System.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Git.php';
 
 /**
  * Load Phakefile parts
