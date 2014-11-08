@@ -1,5 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'FileSystem.php';
 
 // Filesystem related tasks
 group('file', function() {
@@ -71,23 +72,7 @@ group('file', function() {
 		printSeparator();
 		printInfo("Removing file or folder");
 		$path = requireValue('RM_PATH', $app);
-		if (is_dir($path)) {
-			# Thanks to: http://stackoverflow.com/a/15111679/151647
-			$it = new \RecursiveIteratorIterator(
-				new \RecursiveDirectoryIterator(
-					$path, 
-					\FilesystemIterator::SKIP_DOTS
-				), 
-				\RecursiveIteratorIterator::CHILD_FIRST
-			);
-			foreach($it as $item) {
-				$item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname());
-			}
-			$result = rmdir($path);	
-		}
-		else {
-			$result = unlink($path);
-		}
+		$result = \PhakeBuilder\FileSystem::removePath($path);
 		if (!$result) {
 			throw new \RuntimeException("Failed to remove path");
 		}
@@ -98,9 +83,10 @@ group('file', function() {
 	task('mkdir', ':builder:init', function($app) {
 		printSeparator();
 		printInfo("Creating folder");
+		
 		$path = requireValue('MKDIR_PATH', $app);
-		$mode = requireValue('MKDIR_MODE', $app);
-		$result = mkdir($path, $mode, true);
+		$mode = getValue('MKDIR_MODE', $app);
+		$result = \PhakeBuilder\FileSystem::makeDir($path, $mode);
 		if (!$result) {
 			throw new \RuntimeException("Failed to create directory");
 		}

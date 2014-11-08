@@ -27,8 +27,6 @@ class System {
 			'DB_ADMIN_USER' => 'root',
 			'DB_ADMIN_PASS' => '',
 
-			'MKDIR_MODE' => 0755,
-
 			'SYSTEM_COMMAND_MYSQL' => '/usr/bin/mysql',
 			'SYSTEM_COMMAND_MYSQL_REPLACE' => '/usr/bin/php vendor/interconnectit/search-replace-db/srdb.cli.php',
 			'SYSTEM_COMMAND_SERVICE' => '/usr/sbin/service',
