@@ -11,7 +11,7 @@ group('composer', function() {
 		printSeparator();
 		printInfo("Composer install");
 
-		$composer = new \Phakebuilder\Composer(requireValue('SYSTEM_COMMAND_COMPOSER', $app));
+		$composer = new \Phakebuilder\Composer(getValue('SYSTEM_COMMAND_COMPOSER', $app));
 		doShellCommand($composer->install());
 	});
 	
@@ -20,7 +20,7 @@ group('composer', function() {
 		printSeparator();
 		printInfo("Composer update");
 		
-		$composer = new \Phakebuilder\Composer(requireValue('SYSTEM_COMMAND_COMPOSER', $app));
+		$composer = new \Phakebuilder\Composer(getValue('SYSTEM_COMMAND_COMPOSER', $app));
 		doShellCommand($composer->install());
 	});
 	

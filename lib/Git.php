@@ -7,6 +7,8 @@ namespace PhakeBuilder;
  */
 class Git {
 
+	const DEFAULT_COMMAND = '/usr/bin/git';
+
 	protected $command;
 
 	/**
@@ -15,8 +17,8 @@ class Git {
 	 * @param string $command Path to git executable
 	 * @return object
 	 */
-	public function __construct($command = '/usr/bin/git') {
-		$this->command = $command;
+	public function __construct($command = self::DEFAULT_COMMAND) {
+		$this->command = $command ?: self::DEFAULT_COMMAND;
 	}
 
 	/**

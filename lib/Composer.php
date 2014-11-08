@@ -7,6 +7,8 @@ namespace Phakebuilder;
  */
 class Composer {
 
+	const DEFAULT_COMMAND = '/usr/bin/composer';
+
 	protected $command;
 
 	/**
@@ -15,8 +17,8 @@ class Composer {
 	 * @param string $command Path to executable
 	 * @return object
 	 */
-	public function __construct($command = '/usr/bin/composer') {
-		$this->command = $command;
+	public function __construct($command = self::DEFAULT_COMMAND) {
+		$this->command = $command ?: self::DEFAULT_COMMAND;
 	}
 
 	/**
