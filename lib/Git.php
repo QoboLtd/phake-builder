@@ -7,16 +7,16 @@ namespace PhakeBuilder;
  */
 class Git {
 
-	protected $git;
+	protected $command;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param string $git Path to git executable
+	 * @param string $command Path to git executable
 	 * @return object
 	 */
-	public function __construct($git = '/usr/bin/git') {
-		$this->git = $git;
+	public function __construct($command = '/usr/bin/git') {
+		$this->command = $command;
 	}
 
 	/**
@@ -28,7 +28,7 @@ class Git {
 	 * @return string
 	 */
 	public function getCurrentHash() {
-		$result = $this->git . ' log -1 --pretty=format:"%h"';
+		$result = $this->command . ' log -1 --pretty=format:"%h"';
 		return $result;
 	}
 
@@ -41,7 +41,7 @@ class Git {
 	 * @return string
 	 */
 	public function getCurrentBranch() {
-		$result = $this->git . ' rev-parse --abbrev-ref HEAD';
+		$result = $this->command . ' rev-parse --abbrev-ref HEAD';
 		return $result;
 	}
 
@@ -58,7 +58,7 @@ class Git {
 	 * @return string
 	 */
 	public function changelog($from, $to = 'HEAD', $format = '--reverse --no-merges --pretty=format:"* %<(72,trunc)%s (%ad, %an)" --date=short') {
-		$result = $this->git . ' log ' . $from . '..' . $to . ' ' . $format;
+		$result = $this->command . ' log ' . $from . '..' . $to . ' ' . $format;
 		return $result;
 	}
 
@@ -69,7 +69,7 @@ class Git {
 	 * @return string
 	 */
 	public function checkout($target) {
-		$result = $this->git . ' checkout ' . $target;
+		$result = $this->command . ' checkout ' . $target;
 		return $result;
 	}
 
@@ -81,7 +81,7 @@ class Git {
 	 * @return string
 	 */
 	public function pull($remote = null, $branch = null) {
-		$result = $this->git . ' pull ' . $remote . ' ' . $branch;
+		$result = $this->command . ' pull ' . $remote . ' ' . $branch;
 		return $result;
 	}
 	
@@ -93,7 +93,7 @@ class Git {
 	 * @return string
 	 */
 	public function push($remote = null, $branch = null) {
-		$result = $this->git . ' push ' . $remote . ' ' . $branch;
+		$result = $this->command . ' push ' . $remote . ' ' . $branch;
 		return $result;
 	}
 
