@@ -1,0 +1,42 @@
+<?php
+namespace Phakebuilder;
+/**
+ * Composer class
+ * 
+ * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
+ */
+class Composer {
+
+	protected $command;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param string $command Path to executable
+	 * @return object
+	 */
+	public function __construct($command = '/usr/bin/composer') {
+		$this->command = $command;
+	}
+
+	/**
+	 * Install composer dependecies
+	 * 
+	 * @return string
+	 */
+	public function install() {
+		$result = $this->command . ' install --no-dev';
+		return $result;
+	}
+	
+	/**
+	 * Update composer dependecies
+	 * 
+	 * @return string
+	 */
+	public function update() {
+		$result = $this->command . ' update --no-dev';
+		return $result;
+	}
+
+}
