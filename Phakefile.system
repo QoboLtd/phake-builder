@@ -1,6 +1,7 @@
 <?php
 require_once 'vendor/autoload.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'System.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Service.php';
 
 // Operating system tasks
 group('system', function() {
@@ -10,12 +11,11 @@ group('system', function() {
 		printSeparator();
 		printInfo("Starting system service");
 		
-		$parts = array();
-		$parts[] = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
-		$parts[] = requireValue('SYSTEM_COMMAND_SERVICE', $app);
-		$parts[] = requireValue('SYSTEM_SERVICE', $app);
-		$parts[] = 'start';
-		doShellCommand($parts);
+		$serviceCommand = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
+		$serviceCommand .= ' ' . requireValue('SYSTEM_COMMAND_SERVICE', $app);
+
+		$service = new \PhakeBuilder\Service($serviceCommand);
+		doShellCommand($service->start(requireValue('SYSTEM_SERVICE', $app)));
 	});
 	
 	desc('Stop system service');
@@ -23,12 +23,11 @@ group('system', function() {
 		printSeparator();
 		printInfo("Stopping system service");
 		
-		$parts = array();
-		$parts[] = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
-		$parts[] = requireValue('SYSTEM_COMMAND_SERVICE', $app);
-		$parts[] = requireValue('SYSTEM_SERVICE', $app);
-		$parts[] = 'stop';
-		doShellCommand($parts);
+		$serviceCommand = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
+		$serviceCommand .= ' ' . requireValue('SYSTEM_COMMAND_SERVICE', $app);
+
+		$service = new \PhakeBuilder\Service($serviceCommand);
+		doShellCommand($service->stop(requireValue('SYSTEM_SERVICE', $app)));
 	});
 	
 	desc('Restart system service');
