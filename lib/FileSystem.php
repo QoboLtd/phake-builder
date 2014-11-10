@@ -16,13 +16,17 @@ class FileSystem {
 	/**
 	 * Make directory (recursively)
 	 * 
+	 * Thanks to: http://stackoverflow.com/questions/6229353/permissions-with-mkdir-wont-work
+	 * 
 	 * @param string $path Path to make
 	 * @param numeric $mode Permission mask
 	 * @return boolean True on success, false otherwise
 	 */
 	public static function makeDir($path, $mode = self::DEFAULT_DIR_MODE) {
 		$mode = $mode ? self::valueToOct($mode) : self::DEFAULT_DIR_MODE;
-		$result = mkdir($path, octdec($mode), true);
+		$oldUmask = umask(0);
+		$result = mkdir($path, $mode, true);
+		umask($oldUmask);
 		return $result;
 	}
 
