@@ -219,7 +219,7 @@ function doShellCommand($command, $privateInfo = null, $silent = false) {
 		throw new RuntimeException(printError($result, true, true));
 	}
 	if (!$silent) {
-		printSuccess("SUCCESS! Output: " . $result);
+		printSuccess("SUCCESS! Output:\n" . $result);
 	}
 	return $result;
 }

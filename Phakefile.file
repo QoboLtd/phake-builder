@@ -1,6 +1,7 @@
 <?php
 require_once 'vendor/autoload.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'FileSystem.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Template.php';
 
 // Filesystem related tasks
 group('file', function() {
@@ -23,10 +24,8 @@ group('file', function() {
 			throw new \RuntimeException("Template file [$src] is not readable");
 		}
 
-		$src = file_get_contents($src);
-
-		$pattern = new \Qobo\Pattern\Pattern($src);
-		$placeholders = $pattern->getPlaceholders();
+		$template = new \PhakeBuilder\Template($src);
+		$placeholders = $template->getPlaceholders();
 		if (empty($placeholders)) {
 			printWarning("Template file [$src] has no placeholders");
 		}
@@ -37,7 +36,7 @@ group('file', function() {
 			}
 		}
 
-		$bytes = file_put_contents($dst, $pattern->parse($data));
+		$bytes = $template->parseToFile($dst, $data);
 		if (!$bytes) {
 			throw new \RuntimeException("Failed to write to template destination [$dst]");
 		}

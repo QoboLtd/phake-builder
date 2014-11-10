@@ -43,11 +43,35 @@ The output should look something like this:
 
 ```
 (in /path/to/your/project)
-builder:init     Initialize builder configuration
-git:checkout     Git checkout
-git:pull         Git pull
-git:push         Git push
-mysql:connect    Test MySQL database connection
+builder:hello              Print welcome message
+builder:init               Initialize builder configuration
+composer:install           Install composer dependencies
+composer:update            Update composer dependencies
+default                    Default target
+dotenv:create              Create .env file
+dotenv:delete              Delete .env file
+dotenv:reload              Reload settings from .env
+file:link                  Create symbolic link
+file:mkdir                 Create folder
+file:process               Process template file
+file:rm                    Recursively remove file or folder
+file:touch                 Create empty file or update timestamp of existing
+git:changelog              Git changelog
+git:checkout               Git checkout
+git:pull                   Git pull
+git:push                   Git push
+mysql:access-file-allow    Allow file operation
+mysql:access-file-deny     Deny file operation
+mysql:access-grant         Grant access
+mysql:access-revoke        Revoke access
+mysql:connect              Test MySQL database connection
+mysql:database-create      Create database
+mysql:database-drop        Drop database
+mysql:database-import      Import database
+mysql:find-replace         Find and replace across the database
+system:service-restart     Restart system service
+system:service-start       Start system service
+system:service-stop        Stop system service
 ```
 
 You can run any of these targets like so:
@@ -62,6 +86,12 @@ to the provided example file like so:
 
 ```
 $ ln -s vendor/qobo/phake-builder/.env.example
+```
+
+Alternatively, you can pass parameters from the command line. For example:
+
+```
+$ ./vendor/bin/phake mysql:connect DB_HOST=localhost DB_USER=root
 ```
 
 Now you are ready to create your own build targets.  To keep these visually
