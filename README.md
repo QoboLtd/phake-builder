@@ -106,7 +106,7 @@ group('app', function() {
 
   desc("This is a test");
   task('install', 'db:connect', function() {
-    writeln(green('Awesome!'));
+    printSuccess('Awesome!');
   });
 
 });
