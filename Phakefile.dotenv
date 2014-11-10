@@ -40,7 +40,7 @@ group('dotenv', function() {
 		if (!$bytes) {
 			throw new \RuntimeException("Failed to save $count lines to $envFile");
 		}
-		printSuccess("Saved $count lines to $envFile");
+		printSuccess("SUCCESS! Saved $count lines to $envFile");
 	});
 
 	desc('Reload settings from .env');
@@ -51,6 +51,8 @@ group('dotenv', function() {
 		Dotenv::makeMutable();
 		Dotenv::load(getcwd());
 		Dotenv::makeImmutable();
+		
+		printSuccess("SUCCESS!");
 	});
 	
 	desc('Delete .env file');
@@ -62,7 +64,7 @@ group('dotenv', function() {
 		if (file_exists($envFile)) {
 			$result = unlink($envFile);
 			if ($result) {
-				printSuccess("Removed $envFile");
+				printSuccess("SUCCESS! Removed $envFile");
 			}
 			else {
 				throw new \RuntimeException("Failed to remove $envFile");
