@@ -94,6 +94,49 @@ group('file', function() {
 		}
 		printSuccess("SUCCESS!");
 	});
+	
+	desc('Change permissions on path');
+	task('chmod', ':builder:init', function($app) {
+		printSeparator();
+		printInfo("Changing permissions");
+		
+		$path = requireValue('CHMOD_PATH', $app);
+		$dirMode = getValue('CHMOD_DIR_MODE', $app);
+		$fileMode = getValue('CHMOD_FILE_MODE', $app);
+		$result = \PhakeBuilder\FileSystem::chmodPath($path, $dirMode, $fileMode);
+		if (!$result) {
+			throw new \RuntimeException("Failed to change permissions");
+		}
+		printSuccess("SUCCESS!");
+	});
+	
+	desc('Change user ownership on path');
+	task('chown', ':builder:init', function($app) {
+		printSeparator();
+		printInfo("Changing user ownership");
+		
+		$path = requireValue('CHOWN_PATH', $app);
+		$user = getValue('CHOWN_USER', $app);
+		$result = \PhakeBuilder\FileSystem::chownPath($path, $user);
+		if (!$result) {
+			throw new \RuntimeException("Failed to change user ownership");
+		}
+		printSuccess("SUCCESS!");
+	});
+	
+	desc('Change group ownership on path');
+	task('chgrp', ':builder:init', function($app) {
+		printSeparator();
+		printInfo("Changing group ownership");
+		
+		$path = requireValue('CHGRP_PATH', $app);
+		$group = getValue('CHGRP_GROUP', $app);
+		$result = \PhakeBuilder\FileSystem::chownPath($path, $group);
+		if (!$result) {
+			throw new \RuntimeException("Failed to change group ownership");
+		}
+		printSuccess("SUCCESS!");
+	});
 
 });
 
