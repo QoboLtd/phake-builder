@@ -11,7 +11,7 @@ group('git', function() {
 		printSeparator();
 		printInfo("Git checkout");
 
-		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
+		$git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
 		$currentBranch = doShellCommand($git->getCurrentBranch());
 		printDebug("Current branch: [$currentBranch]");
 		
@@ -35,7 +35,7 @@ group('git', function() {
 		printInfo("Old hash: $oldHash");
 		printInfo("New hash: $newHash");
 	
-		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
+		$git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
 		
 		$changelog = doShellCommand($git->changelog($oldHash, $newHash), null, true);
 		$changelog = $changelog ?: 'Not available';
@@ -48,7 +48,7 @@ group('git', function() {
 		printSeparator();
 		printInfo("Git pull");
 		
-		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
+		$git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
 		$oldHash = doShellCommand($git->getCurrentHash(), null, true);
 		doShellCommand($git->pull());
 
@@ -66,7 +66,7 @@ group('git', function() {
 		$remote = requireValue('GIT_REMOTE', $app);
 		$branch = requireValue('GIT_BRANCH', $app);
 		
-		$git = new \Phakebuilder\Git(requireValue('SYSTEM_COMMAND_GIT', $app));
+		$git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
 		doShellCommand($git->push($remote, $branch));
 	});
 
