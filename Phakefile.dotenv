@@ -24,6 +24,12 @@ group('dotenv', function() {
 		$linesIn = file($templateFile);
 		$linesOut = array();
 
+		// Know all available parameters via App
+		$appParams = array();
+		foreach ($app as $key => $value) {
+			$appParams[] = $key;
+		}
+
 		$count = 0;
 		foreach ($linesIn as $line) {
 			$count++;
@@ -35,7 +41,22 @@ group('dotenv', function() {
 			$name = $matches[1];
 			$value = getValue($name, $app) ? getValue($name, $app) : $matches[2];
 			$linesOut[] = $name . '=' . $value;
+			
+			// Remove current parameter from the all known parameters list
+			if (in_array($name, $appParams)) {
+				unset($appParams[$name]);
+			}
 		}
+
+		// If anything is left in known parameters list, append it to the file
+		if (!empty($appParams)) {
+			foreach ($appParams as $param) {
+				$linesOut[] = '';
+				$value = getValue($param, $app);
+				$linesOut[] = $param . '=' . $value;
+			}
+		}
+		
 		$bytes = file_put_contents($envFile, implode("\n", $linesOut));
 		if (!$bytes) {
 			throw new \RuntimeException("Failed to save $count lines to $envFile");
