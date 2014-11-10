@@ -7,7 +7,8 @@ namespace Phakebuilder;
  */
 class Composer {
 
-	const DEFAULT_COMMAND = '/usr/bin/composer';
+	// Shorter form of --no-interaction
+	const DEFAULT_COMMAND = '/usr/bin/composer -n';
 
 	protected $command;
 
