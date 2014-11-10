@@ -12,7 +12,7 @@ group('git', function() {
 		printInfo("Git checkout");
 
 		$git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
-		$currentBranch = doShellCommand($git->getCurrentBranch());
+		$currentBranch = doShellCommand($git->getCurrentBranch(), null, true);
 		printDebug("Current branch: [$currentBranch]");
 		
 		$requiredBranch = requireValue('GIT_BRANCH', $app);
