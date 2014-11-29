@@ -69,6 +69,20 @@ group('file', function() {
 		printSuccess("SUCCESS!");
 	});
 	
+	desc('Rename file or folder');
+	task('mv', ':builder:init', function($app) {
+		printSeparator();
+		printInfo("Renaming file or folder");
+		
+		$src = requireValue('MV_SRC', $app);
+		$dst = requireValue('MV_DST', $app);
+		$result = rename($src, $dst);
+		if (!$result) {
+			throw new \RuntimeException("Failed to rename file or folder");
+		}
+		printSuccess("SUCCESS!");
+	});
+
 	desc('Recursively remove file or folder');
 	task('rm', ':builder:init', function($app) {
 		printSeparator();
