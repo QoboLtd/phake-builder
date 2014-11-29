@@ -137,6 +137,19 @@ group('file', function() {
 		}
 		printSuccess("SUCCESS!");
 	});
+	
+	desc('Download file from URL');
+	task('download', ':builder:init', function($app) {
+		printSeparator();
+		printInfo("Download file");
+		$src = requireValue('DOWNLOAD_SRC', $app);
+		$dst = requireValue('DOWNLOAD_DST', $app);
+		$result = \PhakeBuilder\FileSystem::downloadFile($src, $dst);
+		if (!$result) {
+			throw new \RuntimeException("Failed to download file");
+		}
+		printSuccess("SUCCESS!");
+	});
 
 });
 

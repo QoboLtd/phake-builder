@@ -172,6 +172,32 @@ class FileSystem {
 	}
 
 	/**
+	 * Download remote file using CURL
+	 * 
+	 * @param string $src URL to file
+	 * @param string $dst Filepath to the local result
+	 * @return boolean True on success, false otherwise
+	 */
+	public static function downloadFile($src, $dst) {
+		$result = false;
+
+		$fh = fopen($dst, 'w');
+		if (!is_resource($fh)) {
+			return $result;
+		}
+
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $src);
+		curl_setopt($curl, CURLOPT_FILE, $fh);
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+		$result = curl_exec($curl);
+		curl_close($curl);
+		fclose($fh);
+
+		return $result;
+	}
+	
+	/**
 	 * Convert a given value to octal
 	 * 
 	 * Thanks to: http://stackoverflow.com/questions/13112934/ishex-and-isocta-functions
