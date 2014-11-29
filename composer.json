@@ -16,6 +16,7 @@
 		"interconnectit/search-replace-db": "~3.0",
 		"qobo/pattern": "~1.0",
 		"monolog/monolog": "~1.11",
-		"kmelia/monolog-stdout-handler": "~1.2"
+		"kmelia/monolog-stdout-handler": "~1.2",
+		"zetacomponents/archive": "1.5"
 	}
 }

@@ -142,6 +142,7 @@ group('file', function() {
 	task('download', ':builder:init', function($app) {
 		printSeparator();
 		printInfo("Download file");
+		
 		$src = requireValue('DOWNLOAD_SRC', $app);
 		$dst = requireValue('DOWNLOAD_DST', $app);
 		$result = \PhakeBuilder\FileSystem::downloadFile($src, $dst);
