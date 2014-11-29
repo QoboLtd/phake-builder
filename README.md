@@ -3,7 +3,7 @@ phake-builder
 
 [![Build Status](https://travis-ci.org/QoboLtd/phake-builder.svg?branch=master)](https://travis-ci.org/QoboLtd/phake-builder)
 
-A set of build and deploy files, based on jaz303/phake.
+A set of build and deploy files, based on [jaz303/phake](https://github.com/jaz303/phake).
 
 Install
 -------
@@ -30,7 +30,7 @@ require_once 'vendor/qobo/phake-builder/Phakefile';
 ```
 
 *NOTE* : the vendor Phakefile is not autoloaded, as it would be useless 
-and annoying in every part of your project, except for the deployment 
+and annoying in every part of your project, except for the build 
 configuration.  So, include it manually only in this one place.
 
 Now you can see the liset of available build targets by running:
@@ -43,6 +43,8 @@ The output should look something like this:
 
 ```
 (in /path/to/your/project)
+archive:compress           Create ZIP or TAR archive
+archive:extract            Extract ZIP or TAR archive
 builder:hello              Print welcome message
 builder:init               Initialize builder configuration
 composer:install           Install composer dependencies
@@ -51,8 +53,13 @@ default                    Default target
 dotenv:create              Create .env file
 dotenv:delete              Delete .env file
 dotenv:reload              Reload settings from .env
+file:chgrp                 Change group ownership on path
+file:chmod                 Change permissions on path
+file:chown                 Change user ownership on path
+file:download              Download file from URL
 file:link                  Create symbolic link
 file:mkdir                 Create folder
+file:mv                    Rename file or folder
 file:process               Process template file
 file:rm                    Recursively remove file or folder
 file:touch                 Create empty file or update timestamp of existing
@@ -81,11 +88,11 @@ $ ./vendor/bin/phake mysql:connect
 ```
 
 Most of the included build targets require some parameters.  You can provide
-those parameters via the ```.env``` file.  For starters, you can just symlink
-to the provided example file like so:
+those parameters via the ```.env``` file.  For starters, you can just copy
+the provided example file.  You can even do so with phake-builder:
 
 ```
-$ ln -s vendor/qobo/phake-builder/.env.example
+$ ./vendor/bin/phake dotenv:create
 ```
 
 Alternatively, you can pass parameters from the command line. For example:
