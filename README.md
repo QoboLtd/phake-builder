@@ -5,6 +5,11 @@ phake-builder
 
 A set of build and deploy files, based on [jaz303/phake](https://github.com/jaz303/phake).
 
+If you find this useful, have a look at other project templates, based on this one:
+
+* [project-template-wordpress](https://github.com/QoboLtd/project-template-wordpress) - an automated setup for WordPress CMS
+* [project-template-magento](https://github.com/QoboLtd/project-template-magento) - an automated setup for Magento Ecommerce Platform
+
 Install
 -------
 
