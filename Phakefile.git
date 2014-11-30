@@ -52,6 +52,7 @@ group('git', function() {
 		printSeparator();
 		printInfo("Git pull");
 		
+		$changelog = '';
 		try {
 			$git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
 			$oldHash = doShellCommand($git->getCurrentHash(), null, true);
