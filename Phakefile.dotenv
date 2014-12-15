@@ -31,6 +31,7 @@ group('dotenv', function() {
 		}
 
 		$count = 0;
+		$processedParams = array();
 		foreach ($linesIn as $line) {
 			$count++;
 			trim($line);
@@ -39,8 +40,11 @@ group('dotenv', function() {
 				continue;
 			}
 			$name = $matches[1];
-			$value = getValue($name, $app) ? getValue($name, $app) : $matches[2];
-			$linesOut[] = $name . '=' . $value;
+			if (!in_array($name, $processedParams)) {
+				$value = getValue($name, $app) ? getValue($name, $app) : $matches[2];
+				$linesOut[] = $name . '=' . $value;
+				$processedParams[] = $name;
+			}
 			
 			// Remove current parameter from the all known parameters list
 			if (in_array($name, $appParams)) {
@@ -52,8 +56,10 @@ group('dotenv', function() {
 		if (!empty($appParams)) {
 			foreach ($appParams as $param) {
 				$linesOut[] = '';
-				$value = getValue($param, $app);
-				$linesOut[] = $param . '=' . $value;
+				if (!in_array($param, $processedParams)) {
+					$value = getValue($param, $app);
+					$linesOut[] = $param . '=' . $value;
+				}
 			}
 		}
 		
