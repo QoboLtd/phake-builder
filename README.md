@@ -34,7 +34,7 @@ require_once 'vendor/qobo/phake-builder/Phakefile';
 ?>
 ```
 
-*NOTE* : the vendor Phakefile is not autoloaded, as it would be useless 
+**NOTE** : the vendor Phakefile is not autoloaded, as it would be useless 
 and annoying in every part of your project, except for the build 
 configuration.  So, include it manually only in this one place.
 
