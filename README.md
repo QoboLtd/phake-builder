@@ -34,7 +34,7 @@ require_once 'vendor/qobo/phake-builder/Phakefile';
 ?>
 ```
 
-*NOTE* : the vendor Phakefile is not autoloaded, as it would be useless 
+**NOTE** : the vendor Phakefile is not autoloaded, as it would be useless 
 and annoying in every part of your project, except for the build 
 configuration.  So, include it manually only in this one place.
 
@@ -105,6 +105,16 @@ Alternatively, you can pass parameters from the command line. For example:
 ```
 $ ./vendor/bin/phake mysql:connect DB_HOST=localhost DB_USER=root
 ```
+
+Look through the ```.env.example``` file for some examples and defaults for
+parameters.  Look through the task definitions in Phakefile.* in 
+```vendor/qobo/phake-builder``` to see which tasks accept which parameters.
+
+For those cases where you need to run a task several times with different
+parameters, you can create your own task, either handling the parameters
+differently, or simply calling the PHP functionality directly.  Have a look
+at the classes in ```vendor/qobo/phake-builder/lib``` folder, and associated
+unit tests.
 
 Now you are ready to create your own build targets.  To keep these visually
 separate in the list of all, it is recommended that you do so in the 'app'
