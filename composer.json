@@ -18,5 +18,8 @@
 		"monolog/monolog": "~1.11",
 		"kmelia/monolog-stdout-handler": "~1.2",
 		"zetacomponents/archive": "1.5"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "~4.3"
 	}
 }
