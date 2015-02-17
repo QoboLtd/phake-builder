@@ -103,4 +103,28 @@ class PhakefileFileTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse(file_exists($tmpDir), "Directory [$tmpDir] was not removed");
 	}
 
+	public function test__chmod_file() {
+		$tmpFile = tempnam(sys_get_temp_dir(), 'phakeTest_');
+		// Readable only
+		chmod($tmpFile, 0400);
+		$command = $this->phake . " file:chmod CHMOD_PATH=$tmpFile CHMOD_DIR_MODE='0600' CHMOD_FILE_MODE='0600'";
+		$result = exec($command);
+
+		$this->assertTrue(is_writeable($tmpFile), "File [$tmpFile] was not made writeable");
+		unlink($tmpFile);
+	}
+	
+	public function test__chmod_dir() {
+		$tmpDir = tempnam(sys_get_temp_dir(), 'phakeTest_');
+		unlink($tmpDir);
+		mkdir($tmpDir);
+		// Readable only
+		chmod($tmpDir, 0400);
+		$command = $this->phake . " file:chmod CHMOD_PATH=$tmpDir CHMOD_DIR_MODE='0600' CHMOD_FILE_MODE='0600'";
+		$result = exec($command);
+
+		$this->assertTrue(is_writeable($tmpDir), "Directory [$tmpDir] was not made writeable");
+		rmdir($tmpDir);
+	}
+
 }

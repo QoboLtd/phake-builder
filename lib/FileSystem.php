@@ -76,17 +76,12 @@ class FileSystem {
 		$dirMode = $dirMode ?: self::DEFAULT_DIR_MODE;
 		$fileMode = $fileMode ?: self::DEFAULT_FILE_MODE; 
 		
-		if ($recursive && is_dir($path)) {
-			$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
-		}
-		else {
-			$iterator = array(new \SplFileInfo($path));
-		}
-		
+		$iterator = self::getIteratorFromPath($path, $recursive);
+	
 		foreach($iterator as $item) {
 			$mode = $item->isDir() ? $dirMode : $fileMode;
 			$mode = self::valueToOct($mode);
-			$singleResult = self::processFile($item, 'chmod', array(octdec($mode)));
+			$singleResult = self::processFile($item, 'chmod', array($mode));
 			if ($singleResult) {
 				$result = true;
 			}
@@ -108,12 +103,7 @@ class FileSystem {
 		
 		$user = $user ?: self::DEFAULT_USER;
 		
-		if ($recursive && is_dir($path)) {
-			$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
-		}
-		else {
-			$iterator = array(new \SplFileInfo($path));
-		}
+		$iterator = self::getIteratorFromPath($path, $recursive);
 		
 		foreach($iterator as $item) {
 			$singleResult = self::processFile($item, 'chown', array($user));
@@ -138,12 +128,7 @@ class FileSystem {
 		
 		$group = $group ?: self::DEFAULT_GROUP;
 		
-		if ($recursive && is_dir($path)) {
-			$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
-		}
-		else {
-			$iterator = array(new \SplFileInfo($path));
-		}
+		$iterator = self::getIteratorFromPath($path, $recursive);
 		
 		foreach($iterator as $item) {
 			$singleResult = self::processFile($item, 'chgrp', array($group));
@@ -208,12 +193,45 @@ class FileSystem {
 	protected static function valueToOct($value) {
 		$result = $value;
 
+		// If the value is a string in a form '0777', then extract octal value
+		if (is_string($value) && (strpos($value, '0') === 0)) {
+			$value = intval($value, 8);
+		}
+		
 		// If the value is not octal, convert
 		if (decoct(octdec($value)) <> $value) {
 			$result = base_convert((string) $value, 10, 8);
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Return iterator (iteratable) from path
+	 * 
+	 * @param string $path Path to file or folder
+	 * @param boolean $recursive Recurse into path or not
+	 * @return RecursiveIteratorIterator|array
+	 */
+	protected static function getIteratorFromPath($path, $recursive = true) {
+		$result = null;
+		
+		if ($recursive && is_dir($path)) {
+			$result = new \RecursiveIteratorIterator(
+				new \RecursiveDirectoryIterator(
+					$path, \FilesystemIterator::SKIP_DOTS
+				), \RecursiveIteratorIterator::SELF_FIRST
+			);
+		}
+		else {
+			$result = array(new \SplFileInfo($path));
+		}
+		
+		if (is_object($result) && !$result->valid()) {
+			$result = array(new \SplFileInfo($path));
+		}
+
+		return $result;
 	}
 
 }
