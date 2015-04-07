@@ -145,7 +145,7 @@ group('file', function() {
 		
 		$path = requireValue('CHGRP_PATH', $app);
 		$group = getValue('CHGRP_GROUP', $app);
-		$result = \PhakeBuilder\FileSystem::chownPath($path, $group);
+		$result = \PhakeBuilder\FileSystem::chgrpPath($path, $group);
 		if (!$result) {
 			throw new \RuntimeException("Failed to change group ownership");
 		}
