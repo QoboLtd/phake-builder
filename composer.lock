@@ -237,16 +237,16 @@
         },
         {
             "name": "qobo/pattern",
-            "version": "v1.0.4",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/QoboLtd/PHP-Pattern.git",
-                "reference": "57668c86f0caf3e66447f7341c5ee060181aa5b3"
+                "reference": "eaf13a6d3ecd9631d3b7ca14dc2f9dabd65bdcb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/QoboLtd/PHP-Pattern/zipball/57668c86f0caf3e66447f7341c5ee060181aa5b3",
-                "reference": "57668c86f0caf3e66447f7341c5ee060181aa5b3",
+                "url": "https://api.github.com/repos/QoboLtd/PHP-Pattern/zipball/eaf13a6d3ecd9631d3b7ca14dc2f9dabd65bdcb9",
+                "reference": "eaf13a6d3ecd9631d3b7ca14dc2f9dabd65bdcb9",
                 "shasum": ""
             },
             "require": {
@@ -279,7 +279,7 @@
                 "strings",
                 "templating"
             ],
-            "time": "2014-10-12 11:38:58"
+            "time": "2015-04-08 11:07:16"
         },
         {
             "name": "vlucas/phpdotenv",
