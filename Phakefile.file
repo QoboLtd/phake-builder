@@ -14,16 +14,6 @@ group('file', function() {
 		$src = requireValue('TEMPLATE_SRC', $app);
 		$dst = requireValue('TEMPLATE_DST', $app);
 
-		if (!file_exists($src)) {
-			throw new \RuntimeException("Template file [$src] does not exist");
-		}
-		if (!is_file($src)) {
-			throw new \RuntimeException("Template file [$src] is not a file");
-		}
-		if (!is_readable($src)) {
-			throw new \RuntimeException("Template file [$src] is not readable");
-		}
-
 		$template = new \PhakeBuilder\Template($src);
 		$placeholders = $template->getPlaceholders();
 		if (empty($placeholders)) {

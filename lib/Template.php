@@ -18,7 +18,34 @@ class Template {
 	 * @return object
 	 */
 	public function __construct($src, $isFile = true) {
-		$this->src = ($isFile) ? file_get_contents($src) : $src;
+		if ($isFile) {
+			$this->checkFileReadable($src);
+			$this->src = file_get_contents($src);
+		}
+		else {
+			$this->src = $src;
+		}
+	}
+
+	/**
+	 * Check that a given file is readable
+	 * 
+	 * Check that the file exists and that we can read from it.
+	 * Otherwise throw an exception with a reason.
+	 * 
+	 * @throws RuntimeException
+	 * @return void
+	 */
+	protected function checkFileReadable($file) {
+		if (!file_exists($file)) {
+			throw new \RuntimeException("File [$file] does not exist");
+		}
+		if (!is_file($file)) {
+			throw new \RuntimeException("File [$file] is not a file");
+		}
+		if (!is_readable($file)) {
+			throw new \RuntimeException("File [$file] is not readable");
+		}
 	}
 
 	/**
