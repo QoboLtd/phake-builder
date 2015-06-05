@@ -17,6 +17,8 @@ class System {
 		$result = null;
 		
 		$defaults = array(
+			'PHAKE_BUILDER_LOG_LEVEL' => 'INFO',
+
 			'GIT_REMOTE' => 'origin',
 			'GIT_BRANCH' => 'master',
 

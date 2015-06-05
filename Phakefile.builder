@@ -13,10 +13,8 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Syst
 function getLogger() {
 	$result = new \Monolog\Logger("log");
 
-	$formatter = new \Monolog\Formatter\ColorLineFormatter("[c=%color%]%message%[/c]\n", null, true, true);
-	
-	$stdoutHandler = new \Monolog\Handler\StdoutHandler(\Monolog\Logger::INFO);
-	$stdoutHandler->setFormatter($formatter);
+	$formatter = getLogFormatter();
+	$stdoutHandler = getLogHandler($formatter);
 	
 	$result->pushHandler($stdoutHandler);
 	$result->pushProcessor(function ($record) {
@@ -36,6 +34,31 @@ function getLogger() {
 		return $record;
 	});
 	
+	return $result;
+}
+
+/**
+ * Get log formatter object
+ *
+ * @rturn object
+ */
+function getLogFormatter() {
+	return new \Monolog\Formatter\ColorLineFormatter("[c=%color%]%message%[/c]\n", null, true, true);
+}
+
+/**
+ * Get log handler
+ *
+ * @param object $formatter Formatter intance
+ * @return object
+ */
+function getLogHandler($formatter) {
+
+	$logLevel = getenv('PHAKE_BUILDER_LOG_LEVEL') ? getenv('PHAKE_BUILDER_LOG_LEVEL') : 'INFO';
+
+	$result = new \Monolog\Handler\StdoutHandler(constant("\Monolog\Logger::$logLevel"));
+	$result->setFormatter($formatter);
+
 	return $result;
 }
 
@@ -302,21 +325,30 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
 group('builder', function() {
 	
 	desc('Initialize builder configuration');
-	task('init', ':builder:hello', function($app) {
+	task('init', function($app) {
+
+		$hasDotEnv = false;
 		try {
 			Dotenv::load(getcwd());
+			$hasDotEnv = true;
 		}
 		catch (Exception $e) {
-			printWarning("Failed to load .env configuration file");
+			$hasDotEnv = false;
 		}
-	});
 
-	desc('Print welcome message');
-	task('hello', function($app) {
+		// Special treatment of log level to avoid 
+		// sending $app parameter to every log message
+		$logLevel = getValue('PHAKE_BUILDER_LOG_LEVEL', $app);
+		putenv("PHAKE_BUILDER_LOG_LEVEL=$logLevel");
+
 		printInfo('Welcome to phake-builder!', false);
 		printInfo('Use "phake -T" to list all commands.', false); 
 		printInfo('More info at https://github.com/QoboLtd/phake-builder', false);
 		printSeparator();
+		if (!$hasDotEnv) {
+			printWarning("Failed to load .env configuration file");
+		}
+		printDebug('Phake-builder initialized');
 	});
 
 });
