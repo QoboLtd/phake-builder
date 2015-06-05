@@ -5,7 +5,7 @@ phake-builder
 [![Latest Stable Version](https://poser.pugx.org/qobo/phake-builder/v/stable)](https://packagist.org/packages/qobo/phake-builder) 
 [![Total Downloads](https://poser.pugx.org/qobo/phake-builder/downloads)](https://packagist.org/packages/qobo/phake-builder) 
 [![Latest Unstable Version](https://poser.pugx.org/qobo/phake-builder/v/unstable)](https://packagist.org/packages/qobo/phake-builder) 
-[![License](https://poser.pugx.org/qobo/pattern/license)](https://packagist.org/packages/qobo/phake-builder)
+[![License](https://poser.pugx.org/qobo/phake-builder/license)](https://packagist.org/packages/qobo/phake-builder)
 
 A set of build and deploy files, based on [jaz303/phake](https://github.com/jaz303/phake).
 
