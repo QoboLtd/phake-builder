@@ -50,7 +50,6 @@ The output should look something like this:
 (in /path/to/your/project)
 archive:compress           Create ZIP or TAR archive
 archive:extract            Extract ZIP or TAR archive
-builder:hello              Print welcome message
 builder:init               Initialize builder configuration
 composer:install           Install composer dependencies
 composer:update            Update composer dependencies
