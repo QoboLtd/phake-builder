@@ -84,12 +84,10 @@ class FileSystem {
 			# Folders first
 			foreach (FileSystemManager::dirIterator($path) as $item) {
 				$result = chmod($item, self::valueToOct($dirMode));
-				if (!$result) { print "Failed to chmod $item\n"; }
 			}
 			# Files next
 			foreach (FileSystemManager::fileIterator($path) as $item) {
 				$result = chmod($item, self::valueToOct($fileMode));
-				if (!$result) { print "Failed to chmod $item\n"; }
 			}
 		}
 
