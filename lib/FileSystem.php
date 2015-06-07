@@ -1,5 +1,8 @@
 <?php
 namespace Phakebuilder;
+
+use \Heartsentwined\FileSystemManager\FileSystemManager;
+
 /**
  * File class
  * 
@@ -76,14 +79,17 @@ class FileSystem {
 		$dirMode = $dirMode ?: self::DEFAULT_DIR_MODE;
 		$fileMode = $fileMode ?: self::DEFAULT_FILE_MODE; 
 		
-		$iterator = self::getIteratorFromPath($path, $recursive);
-	
-		foreach($iterator as $item) {
-			$mode = $item->isDir() ? $dirMode : $fileMode;
-			$mode = self::valueToOct($mode);
-			$singleResult = self::processFile($item, 'chmod', array($mode));
-			if ($singleResult) {
-				$result = true;
+		$result = is_dir($path) ? chmod($path, self::valueToOct($dirMode)) : chmod($path, self::valueToOct($fileMode));
+		if ($recursive && is_dir($path)) {
+			# Folders first
+			foreach (FileSystemManager::dirIterator($path) as $item) {
+				$result = chmod($item, self::valueToOct($dirMode));
+				if (!$result) { print "Failed to chmod $item\n"; }
+			}
+			# Files next
+			foreach (FileSystemManager::fileIterator($path) as $item) {
+				$result = chmod($item, self::valueToOct($fileMode));
+				if (!$result) { print "Failed to chmod $item\n"; }
 			}
 		}
 
@@ -102,14 +108,11 @@ class FileSystem {
 		$result = false;
 		
 		$user = $user ?: self::DEFAULT_USER;
-		
-		$iterator = self::getIteratorFromPath($path, $recursive);
-		
-		foreach($iterator as $item) {
-			$singleResult = self::processFile($item, 'chown', array($user));
-			if ($singleResult) {
-				$result = true;
-			}
+		if ($recursive) {
+			$result = FileSystemManager::rchown($path, $user);
+		}
+		else {
+			$result = chown($path, $user);
 		}
 
 		return $result;
@@ -127,33 +130,14 @@ class FileSystem {
 		$result = false;
 		
 		$group = $group ?: self::DEFAULT_GROUP;
-		
-		$iterator = self::getIteratorFromPath($path, $recursive);
-		
-		foreach($iterator as $item) {
-			$singleResult = self::processFile($item, 'chgrp', array($group));
-			if ($singleResult) {
-				$result = true;
-			}
+		if ($recursive) {
+			$result = FileSystemManager::rchown($path, $group);
+		}
+		else {
+			$result = chgrp($path, $user);
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Process file or folder with given callback
-	 * 
-	 * This is a convenience method, where we'll prepend full
-	 * path to the array of given parameters.
-	 * 
-	 * @param SplFileInfo $file File or folder to process
-	 * @param callback $callback Callback
-	 * @param array $params Parameters
-	 * @result mixed
-	 */
-	public static function processFile($file, $callback, $params) {
-		array_unshift($params, $file->getRealPath());
-		return call_user_func_array($callback, $params);
 	}
 
 	/**
