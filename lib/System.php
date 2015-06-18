@@ -29,10 +29,10 @@ class System {
 			'DB_ADMIN_USER' => 'root',
 			'DB_ADMIN_PASS' => '',
 
-			'SYSTEM_COMMAND_MYSQL' => '/usr/bin/mysql',
-			'SYSTEM_COMMAND_MYSQL_REPLACE' => '/usr/bin/php vendor/interconnectit/search-replace-db/srdb.cli.php',
-			'SYSTEM_COMMAND_SERVICE' => '/usr/sbin/service',
-			'SYSTEM_COMMAND_SUDO' => '/usr/bin/sudo',
+			'SYSTEM_COMMAND_MYSQL' => 'mysql',
+			'SYSTEM_COMMAND_MYSQL_REPLACE' => 'php vendor/interconnectit/search-replace-db/srdb.cli.php',
+			'SYSTEM_COMMAND_SERVICE' => 'service',
+			'SYSTEM_COMMAND_SUDO' => 'sudo',
 		);
 
 		if (isset($defaults[$param])) {

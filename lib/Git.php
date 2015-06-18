@@ -7,7 +7,7 @@ namespace PhakeBuilder;
  */
 class Git {
 
-	const DEFAULT_COMMAND = '/usr/bin/git';
+	const DEFAULT_COMMAND = 'git';
 
 	protected $command;
 

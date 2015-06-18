@@ -7,7 +7,7 @@ namespace Phakebuilder;
  */
 class Service {
 
-	const DEFAULT_COMMAND = '/usr/sbin/service';
+	const DEFAULT_COMMAND = 'service';
 
 	protected $command;
 
