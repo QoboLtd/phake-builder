@@ -20,7 +20,7 @@ class System {
 			'PHAKE_BUILDER_LOG_LEVEL' => 'INFO',
 
 			'GIT_REMOTE' => 'origin',
-			'GIT_BRANCH' => 'master',
+			'GIT_BRANCH' => '',
 
 			'DB_HOST' => 'localhost',
 			'DB_USER' => 'root',

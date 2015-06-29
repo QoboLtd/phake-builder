@@ -8,8 +8,8 @@ class SystemTest extends \PHPUnit_Framework_TestCase {
 
 	public function test_getDefaultValue() {
 		// Known value
-		$result = System::getDefaultValue('GIT_BRANCH');
-		$this->assertEquals('master', $result);
+		$result = System::getDefaultValue('GIT_REMOTE');
+		$this->assertEquals('origin', $result);
 
 		// Unknown value
 		$result = System::getDefaultValue('THIS_VALUE_WILL_NEVER_EXIST');
