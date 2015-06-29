@@ -19,7 +19,7 @@ Install
 
 Install with composer as so:
 
-```
+```json
 {
     "require": {
       "qobo/phake-builder": "~1.0"
@@ -32,7 +32,7 @@ Usage
 
 In the root of your project, create a ```Phakefile``` with the following:
 
-```
+```php
 <?php
 require_once 'vendor/qobo/phake-builder/Phakefile';
 ?>
@@ -123,7 +123,7 @@ Now you are ready to create your own build targets.  To keep these visually
 separate in the list of all, it is recommended that you do so in the 'app'
 group.  Here is an example of such target for your own Phakefile:
 
-```
+```php
 <?php
 require_once 'vendor/qobo/phake-builder/Phakefile';
 
