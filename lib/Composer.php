@@ -8,7 +8,7 @@ namespace Phakebuilder;
 class Composer {
 
 	// Shorter form of --no-interaction
-	const DEFAULT_COMMAND = 'composer -n';
+	const DEFAULT_COMMAND = 'composer -n --no-dev';
 
 	protected $command;
 
@@ -28,7 +28,7 @@ class Composer {
 	 * @return string
 	 */
 	public function install() {
-		$result = $this->command . ' install --no-dev';
+		$result = $this->command . ' install';
 		return $result;
 	}
 	
@@ -38,7 +38,7 @@ class Composer {
 	 * @return string
 	 */
 	public function update() {
-		$result = $this->command . ' update --no-dev';
+		$result = $this->command . ' update';
 		return $result;
 	}
 
