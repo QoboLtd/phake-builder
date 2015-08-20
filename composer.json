@@ -13,7 +13,7 @@
 	"require": {
 		"jaz303/phake": "~0.6",
 		"vlucas/phpdotenv": "~1.1",
-		"interconnectit/search-replace-db": "~3.0",
+		"interconnectit/search-replace-db": "3.1",
 		"qobo/pattern": "~1.0",
 		"monolog/monolog": "~1.11",
 		"kmelia/monolog-stdout-handler": "~1.2",
