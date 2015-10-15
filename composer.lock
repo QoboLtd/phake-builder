@@ -4,9 +4,60 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "46105df5f9c4064faa1342d4186a688b",
-    "content-hash": "55f9926741b2fd5b958113a3206f1085",
+    "hash": "8dc382a260d227b6ff3875fabfda9427",
+    "content-hash": "f1f3823a6ad9c6b26f08a418e6cb88d1",
     "packages": [
+        {
+            "name": "gorkalaucirica/hipchat-v2-api-client",
+            "version": "v1.5.0",
+            "target-dir": "GorkaLaucirica/HipchatAPIv2Client",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gorkalaucirica/HipchatAPIv2Client.git",
+                "reference": "30ebdd77cca56e18afa41491eb62616486e076d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gorkalaucirica/HipchatAPIv2Client/zipball/30ebdd77cca56e18afa41491eb62616486e076d2",
+                "reference": "30ebdd77cca56e18afa41491eb62616486e076d2",
+                "shasum": ""
+            },
+            "require": {
+                "kriswallsmith/buzz": "0.10",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "henrikbjorn/phpspec-code-coverage": "1.0.*@dev",
+                "phpspec/phpspec": "2.0.*@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "GorkaLaucirica\\HipchatAPIv2Client": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gorka Laucirica",
+                    "email": "gorka.lauzirika@gmail.com",
+                    "homepage": "http://gorkalaucirica.net/"
+                }
+            ],
+            "description": "Hipchat v2 API client",
+            "homepage": "https://github.com/gorkalaucirica/HipchatAPIv2Client",
+            "keywords": [
+                "api",
+                "client",
+                "hipchat",
+                "library",
+                "v2"
+            ],
+            "time": "2015-10-08 21:36:23"
+        },
         {
             "name": "heartsentwined/arg-validator",
             "version": "1.1.3",
@@ -224,6 +275,54 @@
                 "stdout"
             ],
             "time": "2014-08-08 15:20:21"
+        },
+        {
+            "name": "kriswallsmith/buzz",
+            "version": "v0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kriswallsmith/Buzz.git",
+                "reference": "759432d66387e3433d3b06cb6f773b97225b9b17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/759432d66387e3433d3b06cb6f773b97225b9b17",
+                "reference": "759432d66387e3433d3b06cb6f773b97225b9b17",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "suggest": {
+                "ext-curl": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Buzz": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kris Wallsmith",
+                    "email": "kris.wallsmith@gmail.com",
+                    "homepage": "http://kriswallsmith.net/"
+                }
+            ],
+            "description": "Lightweight HTTP client",
+            "homepage": "https://github.com/kriswallsmith/Buzz",
+            "keywords": [
+                "curl",
+                "http client"
+            ],
+            "time": "2013-05-19 03:41:15"
         },
         {
             "name": "monolog/monolog",
