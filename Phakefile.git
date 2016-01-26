@@ -53,16 +53,16 @@ group('git', function() {
 		printInfo("Git pull");
 		
 		$changelog = '';
-		try {
-			$git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
-			$oldHash = doShellCommand($git->getCurrentHash(), null, true);
-			doShellCommand($git->pull());
 
-			$newHash = doShellCommand($git->getCurrentHash(), null, true);
-			$changelog = doShellCommand($git->changelog($oldHash, $newHash), null, true);
-		} catch (\Exception $e) {
-			printDebug("Either not a git repo or no remotes configured");
-		}
+		$git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
+		$oldHash = doShellCommand($git->getCurrentHash(), null, true);
+
+		doShellCommand($git->pull());
+
+		$newHash = doShellCommand($git->getCurrentHash(), null, true);
+		$changelog = doShellCommand($git->changelog($oldHash, $newHash), null, true);
+		printDebug("Either not a git repo or no remotes configured");
+
 		$changelog = $changelog ?: 'Not available';
 		printInfo("Changelog\n$changelog");
 	});
