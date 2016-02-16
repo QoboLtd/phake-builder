@@ -11,6 +11,8 @@ matrix:
         - php: 7.0
 
 install:
-    - composer install --no-dev
+    - composer install
       
-script: phpunit
+script: 
+    - ./vendor/bin/phpunit
+    - ./vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 lib/ tests/
