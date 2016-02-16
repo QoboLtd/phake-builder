@@ -3,111 +3,126 @@ require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'System.php';
 
 // MySQL utiility tasks
-group('mysql', function() {
+group(
+    'mysql', function () {
 
-	desc('Test MySQL database connection');
-	task('connect', ':builder:init', function($app) {
-		printSeparator();
-		printInfo('Testing MySQL database connection');
+        desc('Test MySQL database connection');
+        task(
+            'connect', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Testing MySQL database connection');
 
-		$query = "SELECT NOW() AS ServerTime";
-		doMySQLCommand($app, $query);
-	});
+                $query = "SELECT NOW() AS ServerTime";
+                doMySQLCommand($app, $query);
+            }
+        );
 
-	desc('Create database');
-	task('database-create', ':builder:init', function($app) {
-		printSeparator();
-		printInfo('Creating database');
+        desc('Create database');
+        task(
+            'database-create', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Creating database');
 
-		$query = "CREATE DATABASE " . requireValue('DB_NAME', $app);
-		doMySQLCommand($app, $query, false, true);
-	});
-	
-	desc('Drop database');
-	task('database-drop', ':builder:init', function($app) {
-		printSeparator();
-		printInfo('Dropping database');
-		
-		$query = "DROP DATABASE " . requireValue('DB_NAME', $app);
-		doMySQLCommand($app, $query, false, true);
-	});
-	
-	desc('Import database');
-	task('database-import', ':builder:init', function($app) {
-		printSeparator();
-		printInfo('Importing database');
-		
-		$query = "SOURCE " . requireValue('DB_DUMP_PATH', $app);
-		doMySQLCommand($app, $query);
-	});
-	
-	desc('Find and replace across the database');
-	task('find-replace', ':builder:init', function($app) {
-		printSeparator();
-		printInfo('Finding and replacing');
+                $query = "CREATE DATABASE " . requireValue('DB_NAME', $app);
+                doMySQLCommand($app, $query, false, true);
+            }
+        );
 
-		doMySQLCommand($app, null, true, false, 'SYSTEM_COMMAND_MYSQL_REPLACE');
-	});
+        desc('Drop database');
+        task(
+            'database-drop', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Dropping database');
 
-	desc('Grant access');
-	task('access-grant', ':builder:init', function($app) {
-		printSeparator();
-		printInfo('Granting access');
+                $query = "DROP DATABASE " . requireValue('DB_NAME', $app);
+                doMySQLCommand($app, $query, false, true);
+            }
+        );
 
-		if (requireValue('DB_USER', $app) <> 'root') {
-			$query = "GRANT ALL " 
-				. " ON " . requireValue('DB_NAME', $app) . ".*"
-				. " TO '" . requireValue('DB_USER', $app) . "'@'%'"
-				. " IDENTIFIED BY '" . requireValue('DB_PASS') . "'";
-			doMySQLCommand($app, $query, false, true);
-		}
-		else {
-			printWarning("Skipping GRANT statement for root user");
-		}
-	});
-	
-	desc('Allow file operation');
-	task('access-file-allow', ':builder:init', function($app) {
-		printSeparator();
-		printInfo('Allowing file operations');
+        desc('Import database');
+        task(
+            'database-import', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Importing database');
 
-		$query = "GRANT FILE " 
-			. " ON *.*"
-			. " TO '" . requireValue('DB_USER', $app) . "'@'%'";
-		doMySQLCommand($app, $query, false, true);
-		if (requireValue('DB_USER', $app) <> 'root') {
-			printWarning("File operations allowed to non-root user");
-		}
-	});
+                $query = "SOURCE " . requireValue('DB_DUMP_PATH', $app);
+                doMySQLCommand($app, $query);
+            }
+        );
 
-	desc('Revoke access');
-	task('access-revoke', ':builder:init', function($app) {
-		printSeparator();
-		printInfo('Revoking access');
+        desc('Find and replace across the database');
+        task(
+            'find-replace', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Finding and replacing');
 
-		if (requireValue('DB_USER', $app) <> 'root') {
-			$query = "REVOKE ALL " 
-				. " ON " . requireValue('DB_NAME', $app) . ".*"
-				. " FROM '" . requireValue('DB_USER', $app) . "'@'%'";
-			doMySQLCommand($app, $query, false, true);
-		}
-		else {
-			printWarning("Skipping REVOKE statement for root user");
-		}
-	});
-	
-	desc('Deny file operation');
-	task('access-file-deny', ':builder:init', function($app) {
-		printSeparator();
-		printInfo('Denying file operations');
+                doMySQLCommand($app, null, true, false, 'SYSTEM_COMMAND_MYSQL_REPLACE');
+            }
+        );
 
-		$query = "REVOKE FILE " 
-			. " ON *.*"
-			. " FROM '" . requireValue('DB_USER', $app) . "'@'%'";
-		doMySQLCommand($app, $query, false, true);
-	});
+        desc('Grant access');
+        task(
+            'access-grant', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Granting access');
 
+                if (requireValue('DB_USER', $app) <> 'root') {
+                    $query = "GRANT ALL "
+                    . " ON " . requireValue('DB_NAME', $app) . ".*"
+                    . " TO '" . requireValue('DB_USER', $app) . "'@'%'"
+                    . " IDENTIFIED BY '" . requireValue('DB_PASS') . "'";
+                    doMySQLCommand($app, $query, false, true);
+                } else {
+                    printWarning("Skipping GRANT statement for root user");
+                }
+            }
+        );
 
-});
-# vi:ft=php
-?>
+        desc('Allow file operation');
+        task(
+            'access-file-allow', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Allowing file operations');
+
+                $query = "GRANT FILE "
+                . " ON *.*"
+                . " TO '" . requireValue('DB_USER', $app) . "'@'%'";
+                doMySQLCommand($app, $query, false, true);
+                if (requireValue('DB_USER', $app) <> 'root') {
+                    printWarning("File operations allowed to non-root user");
+                }
+            }
+        );
+
+        desc('Revoke access');
+        task(
+            'access-revoke', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Revoking access');
+
+                if (requireValue('DB_USER', $app) <> 'root') {
+                    $query = "REVOKE ALL "
+                    . " ON " . requireValue('DB_NAME', $app) . ".*"
+                    . " FROM '" . requireValue('DB_USER', $app) . "'@'%'";
+                    doMySQLCommand($app, $query, false, true);
+                } else {
+                    printWarning("Skipping REVOKE statement for root user");
+                }
+            }
+        );
+
+        desc('Deny file operation');
+        task(
+            'access-file-deny', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Denying file operations');
+
+                $query = "REVOKE FILE "
+                . " ON *.*"
+                . " FROM '" . requireValue('DB_USER', $app) . "'@'%'";
+                doMySQLCommand($app, $query, false, true);
+            }
+        );
+    }
+);
+// vi:ft=php
