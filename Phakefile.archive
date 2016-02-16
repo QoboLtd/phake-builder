@@ -1,41 +1,46 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Archive.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Archive.php';
 
 // Composer related tasks
-group('archive', function() {
+group(
+    'archive', function () {
 
-	desc('Extract ZIP or TAR archive');
-	task('extract', ':builder:init', function($app) {
-		printSeparator();
-		printInfo("Extract ZIP or TAR archive");
-		
-		$src = requireValue('EXTRACT_SRC', $app);
-		$dst = requireValue('EXTRACT_DST', $app);
+        desc('Extract ZIP or TAR archive');
+        task(
+            'extract', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo("Extract ZIP or TAR archive");
+ 
+                $src = requireValue('EXTRACT_SRC', $app);
+                $dst = requireValue('EXTRACT_DST', $app);
 
-		try {
-			\Phakebuilder\Archive::extract($src, $dst);
-		} catch (\Exception $e) {
-			throw new \RuntimeException($e->getMessage());
-		}
-	});
-	
-	desc('Create ZIP or TAR archive');
-	task('compress', ':builder:init', function($app) {
-		printSeparator();
-		printInfo("Create ZIP or TAR archive");
-		
-		$src = requireValue('COMPRESS_SRC', $app);
-		$dst = requireValue('COMPRESS_DST', $app);
+                try {
+                    \Phakebuilder\Archive::extract($src, $dst);
+                } catch (\Exception $e) {
+                    throw new \RuntimeException($e->getMessage());
+                }
+            }
+        );
+ 
+        desc('Create ZIP or TAR archive');
+        task(
+            'compress', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo("Create ZIP or TAR archive");
+ 
+                $src = requireValue('COMPRESS_SRC', $app);
+                $dst = requireValue('COMPRESS_DST', $app);
 
-		try {
-			\Phakebuilder\Archive::compress($src, $dst);
-		} catch (\Exception $e) {
-			throw new \RuntimeException($e->getMessage());
-		}
-	});
+                try {
+                    \Phakebuilder\Archive::compress($src, $dst);
+                } catch (\Exception $e) {
+                    throw new \RuntimeException($e->getMessage());
+                }
+            }
+        );
 
-});
+    }
+);
 
-# vi:ft=php
-?>
+// vi:ft=php

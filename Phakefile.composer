@@ -1,30 +1,34 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'System.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'Composer.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'System.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Composer.php';
 
 // Composer related tasks
-group('composer', function() {
+group(
+    'composer', function () {
 
-	desc('Install composer dependencies');
-	task('install', ':builder:init', function($app) {
-		printSeparator();
-		printInfo("Composer install");
+        desc('Install composer dependencies');
+        task(
+            'install', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo("Composer install");
 
-		$composer = new \Phakebuilder\Composer(getValue('SYSTEM_COMMAND_COMPOSER', $app));
-		doShellCommand($composer->install());
-	});
-	
-	desc('Update composer dependencies');
-	task('update', ':builder:init', function($app) {
-		printSeparator();
-		printInfo("Composer update");
-		
-		$composer = new \Phakebuilder\Composer(getValue('SYSTEM_COMMAND_COMPOSER', $app));
-		doShellCommand($composer->install());
-	});
-	
-});
+                $composer = new \Phakebuilder\Composer(getValue('SYSTEM_COMMAND_COMPOSER', $app));
+                doShellCommand($composer->install());
+            }
+        );
+ 
+        desc('Update composer dependencies');
+        task(
+            'update', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo("Composer update");
+ 
+                $composer = new \Phakebuilder\Composer(getValue('SYSTEM_COMMAND_COMPOSER', $app));
+                doShellCommand($composer->install());
+            }
+        );
+    }
+);
 
-# vi:ft=php
-?>
+// vi:ft=php
