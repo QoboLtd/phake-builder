@@ -1,9 +1,6 @@
 <?php
 namespace Phakebuilder\Tests;
 
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'FileSystem.php';
-
 class FileSystemTest extends \PHPUnit_Framework_TestCase
 {
 

@@ -1,9 +1,7 @@
 <?php
-namespace PhakeBuilder\Tests;
+namespace Phakebuilder\Tests;
 
-use PhakeBuilder\System;
-
-require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'System.php';
+use Phakebuilder\System;
 
 class SystemTest extends \PHPUnit_Framework_TestCase
 {
