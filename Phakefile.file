@@ -1,7 +1,5 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'FileSystem.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Template.php';
 
 // Filesystem related tasks
 group(
@@ -34,7 +32,7 @@ group(
                 printSuccess("SUCCESS! Processed $bytes bytes.");
             }
         );
- 
+
         desc('Create empty file or update timestamp of existing');
         task(
             'touch', ':builder:init', function ($app) {
@@ -100,7 +98,7 @@ group(
             'mkdir', ':builder:init', function ($app) {
                 printSeparator();
                 printInfo("Creating folder");
- 
+
                 $path = requireValue('MKDIR_PATH', $app);
                 $mode = getValue('MKDIR_MODE', $app);
                 $result = \PhakeBuilder\FileSystem::makeDir($path, $mode);
@@ -116,7 +114,7 @@ group(
             'chmod', ':builder:init', function ($app) {
                 printSeparator();
                 printInfo("Changing permissions");
- 
+
                 $path = requireValue('CHMOD_PATH', $app);
                 $dirMode = getValue('CHMOD_DIR_MODE', $app);
                 $fileMode = getValue('CHMOD_FILE_MODE', $app);

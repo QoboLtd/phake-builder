@@ -1,7 +1,5 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'System.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Git.php';
 
 // Git related tasks
 group(
@@ -13,7 +11,7 @@ group(
                 printSeparator();
                 printInfo("Git checkout");
 
-                $git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
+                $git = new \PhakeBuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
                 try {
                     $currentBranch = doShellCommand($git->getCurrentBranch(), null, true);
                     printDebug("Current branch: [$currentBranch]");
@@ -42,8 +40,8 @@ group(
                 $newHash = requireValue('GIT_NEW_HASH', $app);
                 printInfo("Old hash: $oldHash");
                 printInfo("New hash: $newHash");
-    
-                $git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
+
+                $git = new \PhakeBuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
 
                 $changelog = doShellCommand($git->changelog($oldHash, $newHash), null, true);
                 $changelog = $changelog ?: 'Not available';
@@ -60,7 +58,7 @@ group(
 
                 $changelog = '';
 
-                $git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
+                $git = new \PhakeBuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
                 $oldHash = doShellCommand($git->getCurrentHash(), null, true);
 
                 doShellCommand($git->pull());
@@ -83,7 +81,7 @@ group(
                 $remote = requireValue('GIT_REMOTE', $app);
                 $branch = requireValue('GIT_BRANCH', $app);
 
-                $git = new \Phakebuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
+                $git = new \PhakeBuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
                 doShellCommand($git->push($remote, $branch));
             }
         );

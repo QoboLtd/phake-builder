@@ -3,8 +3,6 @@ namespace PhakeBuilder\Tests;
 
 use PhakeBuilder\System;
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'System.php';
-
 class SystemTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -26,7 +24,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase
         $expected = ($uid == 0) ? false : true;
         $this->assertEquals($expected, $result);
     }
- 
+
     /**
      * @expectedException \RuntimeException
      */

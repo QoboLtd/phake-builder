@@ -21,6 +21,12 @@
 		"heartsentwined/file-system-manager": "~1.1",
 		"gorkalaucirica/hipchat-v2-api-client": "~1.5"
 	},
+	"autoload": {
+		"psr-4": {"PhakeBuilder\\": "src/"}
+	},
+	"autload-dev": {
+		"psr-4": {"PhakeBuilder\\Tests\\": "tests/"}
+	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.3",
 		"squizlabs/php_codesniffer": "~2.5"

@@ -1,5 +1,5 @@
 <?php
-namespace Phakebuilder;
+namespace PhakeBuilder;
 
 /**
  * Service class
@@ -35,7 +35,7 @@ class Service
         $result = $this->command . ' start ' . $service;
         return $result;
     }
- 
+
     /**
      * Stop system service
      *
