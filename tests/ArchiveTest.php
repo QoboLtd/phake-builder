@@ -8,7 +8,6 @@ class ArchiveTest extends \PHPUnit_Framework_TestCase
     {
         return [
         ['hello.zip', 'hello.txt'],
-        ['hello.tar.gz', 'hello.txt'],
         ['hello.tar.bz2', 'hello.txt'],
         ];
     }
@@ -20,12 +19,12 @@ class ArchiveTest extends \PHPUnit_Framework_TestCase
     {
         $srcDir = __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'Archive' . DIRECTORY_SEPARATOR;
         $src = $srcDir . $src;
-        
+
         $dstDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR;
-        
+
         $result = $dstDir . $expected;
         $expected = $srcDir . $expected;
-        
+
         $this->assertFileNotExists($result, "Result file [$result] already exists");
         \Phakebuilder\Archive::extract($src, $dstDir);
         $this->assertFileExists($result, "Result file [$result] was not extracted");
