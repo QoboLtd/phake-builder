@@ -17,3 +17,7 @@ install:
 script:
     - ./vendor/bin/phpunit
     - ./vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/
+
+notifications:
+    email:
+        - webdev@qobocloud.com
