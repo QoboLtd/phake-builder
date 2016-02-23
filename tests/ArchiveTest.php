@@ -1,5 +1,5 @@
 <?php
-namespace Phakebuilder\Tests;
+namespace PhakeBuilder\Tests;
 
 class ArchiveTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,7 +26,7 @@ class ArchiveTest extends \PHPUnit_Framework_TestCase
         $expected = $srcDir . $expected;
 
         $this->assertFileNotExists($result, "Result file [$result] already exists");
-        \Phakebuilder\Archive::extract($src, $dstDir);
+        \PhakeBuilder\Archive::extract($src, $dstDir);
         $this->assertFileExists($result, "Result file [$result] was not extracted");
         $this->assertFileEquals($expected, $result, "Extracted file [$result] does not match source file [$expected]");
         unlink($result);
@@ -37,6 +37,6 @@ class ArchiveTest extends \PHPUnit_Framework_TestCase
      */
     public function testCompress()
     {
-        $result = \Phakebuilder\Archive::compress('some', 'other');
+        $result = \PhakeBuilder\Archive::compress('some', 'other');
     }
 }

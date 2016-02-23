@@ -1,6 +1,5 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'System.php';
 
 ///////////////////////
 // Utility functions //
@@ -16,11 +15,11 @@ function getLogger()
 
     $formatter = getLogFormatter();
     $stdoutHandler = getLogHandler($formatter);
- 
+
     $result->pushHandler($stdoutHandler);
     $result->pushProcessor(
         function ($record) {
- 
+
             $colors = array(
             \Monolog\Logger::DEBUG     => 'purple',
             \Monolog\Logger::INFO      => 'white',
@@ -31,7 +30,7 @@ function getLogger()
             \Monolog\Logger::ALERT     => 'red',
             \Monolog\Logger::EMERGENCY => 'red',
             );
- 
+
             $record['color'] = $colors[ $record['level'] ] ?: 'blue';
             return $record;
         }
@@ -203,7 +202,7 @@ function getValue($param, $app = null)
         return $result;
     }
     $result = null;
- 
+
     // Default is third
     $default = \PhakeBuilder\System::getDefaultValue($param);
     if ($default !== null) {
@@ -247,7 +246,7 @@ function doShellCommand($command, $privateInfo = null, $silent = false)
     }
     $command = trim($command) . ' 2>&1';
     printDebug("Executing shell command: " . \PhakeBuilder\System::secureString($command, $privateInfo));
- 
+
     try {
         $result = \PhakeBuilder\System::doShellCommand($command);
         $result = \PhakeBuilder\system::secureString($result, $privateInfo);
@@ -282,7 +281,7 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
         $user = getValue('DB_USER', $app);
         $pass = getValue('DB_PASS', $app);
     }
- 
+
     // Not everything requires a known database name parameter
     $name = null;
     if ($requireDB) {

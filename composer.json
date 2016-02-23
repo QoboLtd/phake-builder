@@ -22,10 +22,10 @@
 		"gorkalaucirica/hipchat-v2-api-client": "~1.5"
 	},
 	"autoload": {
-		"psr-4": {"Phakebuilder\\": "src/"}
+		"psr-4": {"PhakeBuilder\\": "src/"}
 	},
 	"autload-dev": {
-		"psr-4": {"Phakebuilder\\Tests\\": "tests/"}
+		"psr-4": {"PhakeBuilder\\Tests\\": "tests/"}
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.3",

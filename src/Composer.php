@@ -1,5 +1,5 @@
 <?php
-namespace Phakebuilder;
+namespace PhakeBuilder;
 
 /**
  * Composer class
@@ -35,7 +35,7 @@ class Composer
         $result = $this->command . ' install';
         return $result;
     }
- 
+
     /**
      * Update composer dependecies
      *

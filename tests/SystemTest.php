@@ -1,7 +1,7 @@
 <?php
-namespace Phakebuilder\Tests;
+namespace PhakeBuilder\Tests;
 
-use Phakebuilder\System;
+use PhakeBuilder\System;
 
 class SystemTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase
         $expected = ($uid == 0) ? false : true;
         $this->assertEquals($expected, $result);
     }
- 
+
     /**
      * @expectedException \RuntimeException
      */

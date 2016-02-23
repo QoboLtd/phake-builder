@@ -1,5 +1,5 @@
 <?php
-namespace Phakebuilder;
+namespace PhakeBuilder;
 
 use \Heartsentwined\FileSystemManager\FileSystemManager;
 
@@ -46,7 +46,7 @@ class FileSystem
     public static function removePath($path)
     {
         $result = false;
- 
+
         if (is_dir($path)) {
             $it = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator(
@@ -62,7 +62,7 @@ class FileSystem
         } else {
             $result = unlink($path);
         }
- 
+
         return $result;
     }
 
@@ -78,10 +78,10 @@ class FileSystem
     public static function chmodPath($path, $dirMode = self::DEFAULT_DIR_MODE, $fileMode = self::DEFAULT_FILE_MODE, $recursive = true)
     {
         $result = false;
- 
+
         $dirMode = $dirMode ?: self::DEFAULT_DIR_MODE;
         $fileMode = $fileMode ?: self::DEFAULT_FILE_MODE;
- 
+
         $result = is_dir($path) ? chmod($path, self::valueToOct($dirMode)) : chmod($path, self::valueToOct($fileMode));
         if ($recursive && is_dir($path)) {
             // Folders first
@@ -108,7 +108,7 @@ class FileSystem
     public static function chownPath($path, $user, $recursive = true)
     {
         $result = false;
- 
+
         $user = $user ?: self::DEFAULT_USER;
         if ($recursive) {
             $result = FileSystemManager::rchown($path, $user);
@@ -130,7 +130,7 @@ class FileSystem
     public static function chgrpPath($path, $group, $recursive = true)
     {
         $result = false;
- 
+
         $group = $group ?: self::DEFAULT_GROUP;
         if ($recursive) {
             $result = FileSystemManager::rchown($path, $group);
@@ -203,7 +203,7 @@ class FileSystem
     protected static function getIteratorFromPath($path, $recursive = true)
     {
         $result = null;
- 
+
         if ($recursive && is_dir($path)) {
             $result = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator(
@@ -215,7 +215,7 @@ class FileSystem
         } else {
             $result = array(new \SplFileInfo($path));
         }
- 
+
         if (is_object($result) && !$result->valid()) {
             $result = array(new \SplFileInfo($path));
         }
