@@ -1,2 +1,3 @@
 vendor/
 .env
+tests/data/Archive/hello.tar.gz
