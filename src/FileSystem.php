@@ -14,8 +14,55 @@ class FileSystem
     const DEFAULT_DIR_MODE  = 0775;
     const DEFAULT_FILE_MODE = 0664;
 
-    const DEFAULT_USER  = 'nginx';
-    const DEFAULT_GROUP = 'nginx';
+    /**
+     * Get default directory mode
+     *
+     * Return a fallback default for directory mode
+     *
+     * @return numeric
+     */
+    protected static function getDefaultDirMode()
+    {
+        return self::DEFAULT_DIR_MODE;
+    }
+
+    /**
+     * Get default file mode
+     *
+     * Return a fallback default for file mode
+     *
+     * @return numeric
+     */
+    protected static function getDefaultFileMode()
+    {
+        return self::DEFAULT_FILE_MODE;
+    }
+
+    /**
+     * Get default user
+     *
+     * Return a fallback default for user (assumses owner of current process)
+     *
+     * @return string
+     */
+    protected static function getDefaultUser()
+    {
+        $processUser = posix_getpwuid(posix_geteuid());
+        return $processUser['name'];
+    }
+
+    /**
+     * Get default group
+     *
+     * Return a fallback default for group (assumses owner of current process)
+     *
+     * @return string
+     */
+    protected static function getDefaultGroup()
+    {
+        $processGroup = posix_getgrgid(posix_getegid());
+        return $processGroup['name'];
+    }
 
     /**
      * Make directory (recursively)
@@ -26,9 +73,9 @@ class FileSystem
      * @param  numeric $mode Permission mask
      * @return boolean True on success, false otherwise
      */
-    public static function makeDir($path, $mode = self::DEFAULT_DIR_MODE)
+    public static function makeDir($path, $mode = null)
     {
-        $mode = $mode ? self::valueToOct($mode) : self::DEFAULT_DIR_MODE;
+        $mode = $mode ? self::valueToOct($mode) : self::getDefaultDirMode();
         $oldUmask = umask(0);
         $result = mkdir($path, $mode, true);
         umask($oldUmask);
@@ -75,12 +122,12 @@ class FileSystem
      * @param  boolean $recursive Recurse into path or no (default: yes)
      * @return boolean True on success, false otherwise
      */
-    public static function chmodPath($path, $dirMode = self::DEFAULT_DIR_MODE, $fileMode = self::DEFAULT_FILE_MODE, $recursive = true)
+    public static function chmodPath($path, $dirMode = null, $fileMode = null, $recursive = true)
     {
         $result = false;
 
-        $dirMode = $dirMode ?: self::DEFAULT_DIR_MODE;
-        $fileMode = $fileMode ?: self::DEFAULT_FILE_MODE;
+        $dirMode = $dirMode ?: self::getDefaultDirMode();
+        $fileMode = $fileMode ?: self::getDefaultFileMode();
 
         $result = is_dir($path) ? chmod($path, self::valueToOct($dirMode)) : chmod($path, self::valueToOct($fileMode));
         if ($recursive && is_dir($path)) {
@@ -109,7 +156,7 @@ class FileSystem
     {
         $result = false;
 
-        $user = $user ?: self::DEFAULT_USER;
+        $user = $user ?: self::getDefaultUser();
         if ($recursive) {
             $result = FileSystemManager::rchown($path, $user);
         } else {
@@ -131,7 +178,7 @@ class FileSystem
     {
         $result = false;
 
-        $group = $group ?: self::DEFAULT_GROUP;
+        $group = $group ?: self::getDefaultGroup();
         if ($recursive) {
             $result = FileSystemManager::rchown($path, $group);
         } else {
