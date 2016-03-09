@@ -104,25 +104,7 @@ class FileSystem
      */
     public static function removePath($path)
     {
-        $result = false;
-
-        if (is_dir($path)) {
-            $it = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $path,
-                    \FilesystemIterator::SKIP_DOTS
-                ),
-                \RecursiveIteratorIterator::CHILD_FIRST
-            );
-            foreach ($it as $item) {
-                $result = $item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname());
-            }
-            $result = rmdir($path);
-        } else {
-            $result = unlink($path);
-        }
-
-        return $result;
+        return self::remove($path);
     }
 
     /**
