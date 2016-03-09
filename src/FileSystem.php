@@ -148,16 +148,7 @@ class FileSystem
      */
     public static function chownPath($path, $user, $recursive = true)
     {
-        $result = false;
-
-        $user = $user ?: self::getDefaultUser();
-        if ($recursive) {
-            $result = FileSystemManager::rchown($path, $user);
-        } else {
-            $result = chown($path, $user);
-        }
-
-        return $result;
+        return self::chmod($path, $user, $recursive);
     }
 
     /**
