@@ -215,34 +215,4 @@ class FileSystem
 
         return $value;
     }
-
-    /**
-     * Return iterator (iteratable) from path
-     *
-     * @param  string  $path      Path to file or folder
-     * @param  boolean $recursive Recurse into path or not
-     * @return RecursiveIteratorIterator|array
-     */
-    protected static function getIteratorFromPath($path, $recursive = true)
-    {
-        $result = null;
-
-        if ($recursive && is_dir($path)) {
-            $result = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $path,
-                    \FilesystemIterator::SKIP_DOTS
-                ),
-                \RecursiveIteratorIterator::SELF_FIRST
-            );
-        } else {
-            $result = array(new \SplFileInfo($path));
-        }
-
-        if (is_object($result) && !$result->valid()) {
-            $result = array(new \SplFileInfo($path));
-        }
-
-        return $result;
-    }
 }
