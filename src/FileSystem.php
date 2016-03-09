@@ -161,16 +161,7 @@ class FileSystem
      */
     public static function chgrpPath($path, $group, $recursive = true)
     {
-        $result = false;
-
-        $group = $group ?: self::getDefaultGroup();
-        if ($recursive) {
-            $result = FileSystemManager::rchown($path, $group);
-        } else {
-            $result = chgrp($path, $user);
-        }
-
-        return $result;
+        return self::chgrp($path, $group, $recursive);
     }
 
     /**
