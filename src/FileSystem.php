@@ -20,6 +20,13 @@ class FileSystem
      */
     protected static $fs;
 
+    /**
+     * Magic method __callStatic
+     *
+     * @param string $method Called method name
+     * @param mixed $args Arguments
+     * @return mixed
+     */
     public static function __callStatic($method, $args)
     {
         if (is_null(self::$fs)) {
