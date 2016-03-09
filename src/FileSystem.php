@@ -1,6 +1,7 @@
 <?php
 namespace PhakeBuilder;
 
+use \Symfony\Component\Filesystem\Filesystem as FS;
 use \Heartsentwined\FileSystemManager\FileSystemManager;
 
 /**
@@ -13,6 +14,20 @@ class FileSystem
 
     const DEFAULT_DIR_MODE  = 0775;
     const DEFAULT_FILE_MODE = 0664;
+
+    /**
+     * Symfony Filesystem component instance
+     */
+    protected static $fs;
+
+    public static function __callStatic($method, $args)
+    {
+        if (is_null(self::$fs)) {
+            self::$fs = new FS;
+        }
+
+        return call_user_func_array(array(self::$fs, $method), $args);
+    }
 
     /**
      * Get default directory mode
