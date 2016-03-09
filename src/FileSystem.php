@@ -91,10 +91,7 @@ class FileSystem
     public static function makeDir($path, $mode = null)
     {
         $mode = $mode ? self::valueToOct($mode) : self::getDefaultDirMode();
-        $oldUmask = umask(0);
-        $result = mkdir($path, $mode, true);
-        umask($oldUmask);
-        return $result;
+        return self::mkdir($path, $mode);
     }
 
     /**
