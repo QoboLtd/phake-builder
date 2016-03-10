@@ -1,7 +1,8 @@
 <?php
 namespace PhakeBuilder;
 
-use \Heartsentwined\FileSystemManager\FileSystemManager;
+use \Symfony\Component\Filesystem\Filesystem as FS;
+use \Symfony\Component\Finder\Finder;
 
 /**
  * File class
@@ -13,6 +14,27 @@ class FileSystem
 
     const DEFAULT_DIR_MODE  = 0775;
     const DEFAULT_FILE_MODE = 0664;
+
+    /**
+     * Symfony Filesystem component instance
+     */
+    protected static $fs;
+
+    /**
+     * Magic method __callStatic
+     *
+     * @param string $method Called method name
+     * @param mixed $args Arguments
+     * @return mixed
+     */
+    public static function __callStatic($method, $args)
+    {
+        if (is_null(self::$fs)) {
+            self::$fs = new FS;
+        }
+
+        return call_user_func_array(array(self::$fs, $method), $args);
+    }
 
     /**
      * Get default directory mode
@@ -76,10 +98,7 @@ class FileSystem
     public static function makeDir($path, $mode = null)
     {
         $mode = $mode ? self::valueToOct($mode) : self::getDefaultDirMode();
-        $oldUmask = umask(0);
-        $result = mkdir($path, $mode, true);
-        umask($oldUmask);
-        return $result;
+        return self::mkdir($path, $mode);
     }
 
     /**
@@ -92,25 +111,7 @@ class FileSystem
      */
     public static function removePath($path)
     {
-        $result = false;
-
-        if (is_dir($path)) {
-            $it = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $path,
-                    \FilesystemIterator::SKIP_DOTS
-                ),
-                \RecursiveIteratorIterator::CHILD_FIRST
-            );
-            foreach ($it as $item) {
-                $result = $item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname());
-            }
-            $result = rmdir($path);
-        } else {
-            $result = unlink($path);
-        }
-
-        return $result;
+        return self::remove($path);
     }
 
     /**
@@ -131,13 +132,14 @@ class FileSystem
 
         $result = is_dir($path) ? chmod($path, self::valueToOct($dirMode)) : chmod($path, self::valueToOct($fileMode));
         if ($recursive && is_dir($path)) {
+            $finder = new Finder();
             // Folders first
-            foreach (FileSystemManager::dirIterator($path) as $item) {
-                $result = chmod($item, self::valueToOct($dirMode));
+            foreach ($finder->directories()->in($path) as $item) {
+                $result = chmod($item->getRealPath(), self::valueToOct($dirMode));
             }
             // Files next
-            foreach (FileSystemManager::fileIterator($path) as $item) {
-                $result = chmod($item, self::valueToOct($fileMode));
+            foreach ($finder->files()->in($path) as $item) {
+                $result = chmod($item->getRealPath(), self::valueToOct($fileMode));
             }
         }
 
@@ -154,16 +156,7 @@ class FileSystem
      */
     public static function chownPath($path, $user, $recursive = true)
     {
-        $result = false;
-
-        $user = $user ?: self::getDefaultUser();
-        if ($recursive) {
-            $result = FileSystemManager::rchown($path, $user);
-        } else {
-            $result = chown($path, $user);
-        }
-
-        return $result;
+        return self::chmod($path, $user, $recursive);
     }
 
     /**
@@ -176,16 +169,7 @@ class FileSystem
      */
     public static function chgrpPath($path, $group, $recursive = true)
     {
-        $result = false;
-
-        $group = $group ?: self::getDefaultGroup();
-        if ($recursive) {
-            $result = FileSystemManager::rchown($path, $group);
-        } else {
-            $result = chgrp($path, $user);
-        }
-
-        return $result;
+        return self::chgrp($path, $group, $recursive);
     }
 
     /**
@@ -238,35 +222,5 @@ class FileSystem
         }
 
         return $value;
-    }
-
-    /**
-     * Return iterator (iteratable) from path
-     *
-     * @param  string  $path      Path to file or folder
-     * @param  boolean $recursive Recurse into path or not
-     * @return RecursiveIteratorIterator|array
-     */
-    protected static function getIteratorFromPath($path, $recursive = true)
-    {
-        $result = null;
-
-        if ($recursive && is_dir($path)) {
-            $result = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $path,
-                    \FilesystemIterator::SKIP_DOTS
-                ),
-                \RecursiveIteratorIterator::SELF_FIRST
-            );
-        } else {
-            $result = array(new \SplFileInfo($path));
-        }
-
-        if (is_object($result) && !$result->valid()) {
-            $result = array(new \SplFileInfo($path));
-        }
-
-        return $result;
     }
 }
