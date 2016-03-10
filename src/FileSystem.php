@@ -2,7 +2,7 @@
 namespace PhakeBuilder;
 
 use \Symfony\Component\Filesystem\Filesystem as FS;
-use \Heartsentwined\FileSystemManager\FileSystemManager;
+use \Symfony\Component\Finder\Finder;
 
 /**
  * File class
@@ -132,13 +132,14 @@ class FileSystem
 
         $result = is_dir($path) ? chmod($path, self::valueToOct($dirMode)) : chmod($path, self::valueToOct($fileMode));
         if ($recursive && is_dir($path)) {
+            $finder = new Finder();
             // Folders first
-            foreach (FileSystemManager::dirIterator($path) as $item) {
-                $result = chmod($item, self::valueToOct($dirMode));
+            foreach ($finder->directories()->in($path) as $item) {
+                $result = chmod($item->getRealPath(), self::valueToOct($dirMode));
             }
             // Files next
-            foreach (FileSystemManager::fileIterator($path) as $item) {
-                $result = chmod($item, self::valueToOct($fileMode));
+            foreach ($finder->files()->in($path) as $item) {
+                $result = chmod($item->getRealPath(), self::valueToOct($fileMode));
             }
         }
 
