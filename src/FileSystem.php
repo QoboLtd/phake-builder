@@ -154,9 +154,13 @@ class FileSystem
      * @param  boolean $recursive Recurse into path or no (default: yes)
      * @return boolean True on success, false otherwise
      */
-    public static function chownPath($path, $user, $recursive = true)
+    public static function chownPath($path, $user = null, $recursive = true)
     {
-        return self::chmod($path, $user, $recursive);
+        if (empty($user)) {
+            $user = self::getDefaultUser();
+        }
+        self::chown($path, $user, $recursive);
+        return true;
     }
 
     /**
@@ -167,9 +171,13 @@ class FileSystem
      * @param  boolean $recursive Recurse into path or no (default: yes)
      * @return boolean True on success, false otherwise
      */
-    public static function chgrpPath($path, $group, $recursive = true)
+    public static function chgrpPath($path, $group = null, $recursive = true)
     {
-        return self::chgrp($path, $group, $recursive);
+        if (empty($group)) {
+            $group = self::getDefaultGroup();
+        }
+        self::chgrp($path, $group, $recursive);
+        return true;
     }
 
     /**

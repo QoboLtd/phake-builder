@@ -67,4 +67,55 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         unlink($tmpFile);
         rmdir($tmpDir);
     }
+
+    /**
+     * Test chown() operation
+     *
+     * Since this operation requires super-user privileges or
+     * in-depth knowledge about current system's users, this
+     * method is here mostly for the code coverage reports.
+     */
+    public function testChownPath()
+    {
+        $dst = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'phakeTest_owner';
+        if (!file_exists($dst)) {
+            mkdir($dst);
+        }
+        $result = \PhakeBuilder\FileSystem::chownPath($dst);
+        $this->assertTrue($result, "Result is not true");
+        if (file_exists($dst)) {
+            rmdir($dst);
+        }
+    }
+
+    /**
+     * Test chgrp() operation
+     *
+     * Since this operation requires super-user privileges or
+     * in-depth knowledge about current system's users, this
+     * method is here mostly for the code coverage reports.
+     */
+    public function testChgrpPath()
+    {
+        $dst = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'phakeTest_owner';
+        if (!file_exists($dst)) {
+            mkdir($dst);
+        }
+        $result = \PhakeBuilder\FileSystem::chgrpPath($dst);
+        $this->assertTrue($result, "Result is not true");
+        if (file_exists($dst)) {
+            rmdir($dst);
+        }
+    }
+
+    public function testDownloadFile()
+    {
+        $src = 'https://wikipedia.org';
+        $dst = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'phakeTest_wikipedia.html';
+        $result = \PhakeBuilder\FileSystem::downloadFile($src, $dst);
+        $this->assertTrue($result, "Failed to download [$src] to [$dst]");
+        $this->assertTrue(file_exists($dst), "File [$dst] does not exist");
+        $this->assertTrue(filesize($dst) > 0, "File [$dst] is empty");
+        unlink($dst);
+    }
 }
