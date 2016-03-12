@@ -9,29 +9,13 @@ namespace PhakeBuilder;
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
-class Service
+class Service extends BaseCommand
 {
-
-    /**
-     * Default for service command location and arguments
-     */
-    const DEFAULT_COMMAND = 'service';
 
     /**
      * Service command string
      */
-    protected $command;
-
-    /**
-     * Constructor
-     *
-     * @param  string $command Path to executable
-     * @return object
-     */
-    public function __construct($command = self::DEFAULT_COMMAND)
-    {
-        $this->command = $command ?: self::DEFAULT_COMMAND;
-    }
+    protected $command = 'service';
 
     /**
      * Start system service

@@ -9,29 +9,13 @@ namespace PhakeBuilder;
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
-class Git
+class Git extends BaseCommand
 {
-
-    /**
-     * Default for git command location and arguments
-     */
-    const DEFAULT_COMMAND = 'git';
 
     /**
      * Git command string
      */
-    protected $command;
-
-    /**
-     * Constructor
-     *
-     * @param  string $command Path to git executable
-     * @return object
-     */
-    public function __construct($command = self::DEFAULT_COMMAND)
-    {
-        $this->command = $command ?: self::DEFAULT_COMMAND;
-    }
+    protected $command = 'git';
 
     /**
      * Get abbreviated hash of current commit
