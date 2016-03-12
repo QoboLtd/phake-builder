@@ -13,6 +13,16 @@ class Git extends BaseCommand
 {
 
     /**
+     * Log format for getting current commit hash
+     */
+    const LOG_FORMAT_HASH = '-1 --pretty=format:"%h"';
+
+   /**
+    * Log format for generating changelogs
+    */
+    const LOG_FORMAT_CHANGELOG = '--reverse --no-merges --pretty=format:"* %<(72,trunc)%s (%ad, %an)" --date=short';
+
+    /**
      * Git command string
      */
     protected $command = 'git';
@@ -27,7 +37,7 @@ class Git extends BaseCommand
      */
     public function getCurrentHash()
     {
-        $result = $this->command . ' log -1 --pretty=format:"%h"';
+        $result = $this->command . ' log ' . self::LOG_FORMAT_HASH;
         return $result;
     }
 
@@ -57,7 +67,7 @@ class Git extends BaseCommand
      * @param  string $format Format
      * @return string
      */
-    public function changelog($from, $to = 'HEAD', $format = '--reverse --no-merges --pretty=format:"* %<(72,trunc)%s (%ad, %an)" --date=short')
+    public function changelog($from, $to = 'HEAD', $format = self::LOG_FORMAT_CHANGELOG)
     {
         $result = $this->command . ' log ' . $from . '..' . $to . ' ' . $format;
         return $result;
