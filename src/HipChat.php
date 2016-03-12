@@ -7,14 +7,23 @@ use \GorkaLaucirica\HipchatAPIv2Client\API\RoomAPI;
 use \GorkaLaucirica\HipchatAPIv2Client\Model\Message;
 
 /**
- * HipChat class
+ * HipChat Helper Class
+ *
+ * This class helps with sending messages to HipChat
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
 class HipChat
 {
 
+    /**
+     * Default value from From
+     */
     const DEFAULT_FROM = 'PhakeBuilder';
+
+    /**
+     * Default value for color of the HipChat message
+     */
     const DEFAULT_COLOR = Message::COLOR_PURPLE;
 
     /**
@@ -33,7 +42,7 @@ class HipChat
 
         $from = $from ?: self::DEFAULT_FROM;
         $color = $color ?: self::DEFAULT_COLOR;
- 
+
         $auth = new OAuth2($token);
         $client = new Client($auth);
         $roomAPI = new RoomAPI($client);
