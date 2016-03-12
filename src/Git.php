@@ -9,29 +9,23 @@ namespace PhakeBuilder;
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
-class Git
+class Git extends BaseCommand
 {
 
     /**
-     * Default for git command location and arguments
+     * Log format for getting current commit hash
      */
-    const DEFAULT_COMMAND = 'git';
+    const LOG_FORMAT_HASH = '-1 --pretty=format:"%h"';
+
+   /**
+    * Log format for generating changelogs
+    */
+    const LOG_FORMAT_CHANGELOG = '--reverse --no-merges --pretty=format:"* %<(72,trunc)%s (%ad, %an)" --date=short';
 
     /**
      * Git command string
      */
-    protected $command;
-
-    /**
-     * Constructor
-     *
-     * @param  string $command Path to git executable
-     * @return object
-     */
-    public function __construct($command = self::DEFAULT_COMMAND)
-    {
-        $this->command = $command ?: self::DEFAULT_COMMAND;
-    }
+    protected $command = 'git';
 
     /**
      * Get abbreviated hash of current commit
@@ -43,7 +37,7 @@ class Git
      */
     public function getCurrentHash()
     {
-        $result = $this->command . ' log -1 --pretty=format:"%h"';
+        $result = $this->command . ' log ' . self::LOG_FORMAT_HASH;
         return $result;
     }
 
@@ -73,7 +67,7 @@ class Git
      * @param  string $format Format
      * @return string
      */
-    public function changelog($from, $to = 'HEAD', $format = '--reverse --no-merges --pretty=format:"* %<(72,trunc)%s (%ad, %an)" --date=short')
+    public function changelog($from, $to = 'HEAD', $format = self::LOG_FORMAT_CHANGELOG)
     {
         $result = $this->command . ' log ' . $from . '..' . $to . ' ' . $format;
         return $result;
