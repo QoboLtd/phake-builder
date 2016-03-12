@@ -5,14 +5,25 @@ use \Symfony\Component\Filesystem\Filesystem as FS;
 use \Symfony\Component\Finder\Finder;
 
 /**
- * File class
+ * Filesystem Helper Class
+ *
+ * This class helps with filesystem operations, like
+ * creating and removing directories and files, changing
+ * permissions, ownership, etc.
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
 class FileSystem
 {
 
+    /**
+     * Default directory mode
+     */
     const DEFAULT_DIR_MODE  = 0775;
+
+    /**
+     * Default file mode
+     */
     const DEFAULT_FILE_MODE = 0664;
 
     /**
@@ -22,6 +33,8 @@ class FileSystem
 
     /**
      * Magic method __callStatic
+     *
+     * Call Symfony\Filesystem methods
      *
      * @param string $method Called method name
      * @param mixed $args Arguments

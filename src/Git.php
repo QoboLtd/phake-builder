@@ -2,15 +2,24 @@
 namespace PhakeBuilder;
 
 /**
- * Git class
+ * Git Helper Class
+ *
+ * This class helps with running git commands.  The commands
+ * are not actually executed, but returned as strings.
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
 class Git
 {
 
+    /**
+     * Default for git command location and arguments
+     */
     const DEFAULT_COMMAND = 'git';
 
+    /**
+     * Git command string
+     */
     protected $command;
 
     /**
@@ -94,7 +103,7 @@ class Git
         $result = $this->command . ' pull ' . $remote . ' ' . $branch;
         return $result;
     }
- 
+
     /**
      * Push remote
      *

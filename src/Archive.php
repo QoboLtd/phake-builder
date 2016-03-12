@@ -2,7 +2,10 @@
 namespace PhakeBuilder;
 
 /**
- * Archive class
+ * Archive Helper Class
+ *
+ * This class helps with compressing and extracting archives.
+ * All the heavy lifting is done by the zetacomponents/archive library.
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
@@ -29,6 +32,8 @@ class Archive
 
     /**
      * Compress a ZIP or TAR archive
+     *
+     * This functionality is not implemented yet. This is just a placeholder.
      *
      * @todo   Populate this placeholder
      * @param  string $src Path to file or folder to be compressed

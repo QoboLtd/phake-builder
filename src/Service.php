@@ -2,15 +2,24 @@
 namespace PhakeBuilder;
 
 /**
- * Service class
+ * Service Helper Class
+ *
+ * This class helps with starting and stopping system services.
+ * The commands are not actually executed, but returned as strings.
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
 class Service
 {
 
+    /**
+     * Default for service command location and arguments
+     */
     const DEFAULT_COMMAND = 'service';
 
+    /**
+     * Service command string
+     */
     protected $command;
 
     /**

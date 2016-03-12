@@ -4,13 +4,19 @@ namespace PhakeBuilder;
 use \Qobo\Pattern\Pattern;
 
 /**
- * Tempalte class
+ * Tempalte Helper Class
+ *
+ * This class helps with rendering basic templates.  All the
+ * heavy lifting is done by qobo/pattern library.
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
 class Template
 {
 
+    /**
+     * Template source content
+     */
     protected $src;
 
     /**

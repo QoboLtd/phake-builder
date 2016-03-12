@@ -2,16 +2,24 @@
 namespace PhakeBuilder;
 
 /**
- * Composer class
+ * Composer Helper Class
+ *
+ * This class helps with running composer commands.  The commands
+ * are not actually executed, but returned as strings.
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
 class Composer
 {
 
-    // Shorter form of --no-interaction
+    /**
+     * Default for composer command location and arguments
+     */
     const DEFAULT_COMMAND = 'composer -n --no-dev';
 
+    /**
+     * Composer command string
+     */
     protected $command;
 
     /**
