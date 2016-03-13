@@ -153,7 +153,7 @@ Documentation
 To generate source code documentation, run the following:
 
 ```
-$ ./vendor/bin/sami.php update sami.config.php
+$ ./vendor/bin/sami.php update etc/sami.config.php
 ```
 
 Look for the `index.html` file in the `build/` folder.
