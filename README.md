@@ -13,6 +13,7 @@ If you find this useful, have a look at other project templates, based on this o
 
 * [project-template](https://github.com/QoboLtd/project-template) - generic PHP project template
 * [project-template-wordpress](https://github.com/QoboLtd/project-template-wordpress) - an automated setup for WordPress CMS
+* [project-template-cakephp](https://github.com/QoboLtd/project-template-cakephp) - a feature-rich setup of CakePHP framework
 
 Install
 -------
