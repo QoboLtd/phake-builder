@@ -106,25 +106,25 @@ class FileSystem
      *
      * @param  string  $path Path to make
      * @param  numeric $mode Permission mask
-     * @return boolean True on success, false otherwise
+     * @return boolean True on success, or exception on failure
      */
     public static function makeDir($path, $mode = null)
     {
         $mode = $mode ? self::valueToOct($mode) : self::getDefaultDirMode();
-        return self::mkdir($path, $mode);
+        self::mkdir($path, $mode);
+        return true;
     }
 
     /**
      * Remove file or folder (recursively)
      *
-     * Thanks to: http://stackoverflow.com/a/15111679/151647
-     *
      * @param  string $path Path to remove
-     * @return boolean True on success, false otherwise
+     * @return boolean True on success, or exception on failure
      */
     public static function removePath($path)
     {
-        return self::remove($path);
+        self::remove($path);
+        return true;
     }
 
     /**
@@ -165,7 +165,7 @@ class FileSystem
      * @param  string  $path      Path to chown
      * @param  string  $user      User to change ownership to
      * @param  boolean $recursive Recurse into path or no (default: yes)
-     * @return boolean True on success, false otherwise
+     * @return boolean True on success, or exception on failure
      */
     public static function chownPath($path, $user = null, $recursive = true)
     {
@@ -182,7 +182,7 @@ class FileSystem
      * @param  string  $path      Path to chgrp
      * @param  string  $group     Group to change ownership to
      * @param  boolean $recursive Recurse into path or no (default: yes)
-     * @return boolean True on success, false otherwise
+     * @return boolean True on success, or exception on failure
      */
     public static function chgrpPath($path, $group = null, $recursive = true)
     {
