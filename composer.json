@@ -18,8 +18,8 @@
 		"monolog/monolog": "~1.11",
 		"kmelia/monolog-stdout-handler": "~1.2",
 		"zetacomponents/archive": "1.5",
-		"symfony/filesystem": "~2.8",
-		"symfony/finder": "~2.8",
+		"symfony/filesystem": "~2.7",
+		"symfony/finder": "~2.7",
 		"gorkalaucirica/hipchat-v2-api-client": "~1.5"
 	},
 	"autoload": {
