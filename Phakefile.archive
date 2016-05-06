@@ -1,7 +1,7 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-// Composer related tasks
+// Archive related tasks
 group(
     'archive', function () {
 
@@ -38,7 +38,6 @@ group(
                 }
             }
         );
-
     }
 );
 
