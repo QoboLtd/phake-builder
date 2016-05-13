@@ -265,10 +265,12 @@ function doShellCommand($command, $privateInfo = null, $silent = false)
  *
  * @param  string $query MySQL query to execute
  * @return void
- * @depricated
+ * @deprecated
  */
 function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $command = 'SYSTEM_COMMAND_MYSQL')
 {
+
+    printWarning("doMySQLCommand() function is deprecated. Use \PhakeBuilder\MySQL instead.");
 
     // Host is never required, but always nice to have
     $host = getValue('DB_HOST', $app);
