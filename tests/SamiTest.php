@@ -26,5 +26,4 @@ class SamiTest extends \PHPUnit_Framework_TestCase
         $result = $sami->update();
         $this->assertEquals('foobar update etc/sami.config.php', $result, "Invalid sami command [$result]");
     }
-
 }
