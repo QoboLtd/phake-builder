@@ -89,4 +89,56 @@ class MySQL extends BaseCommand
 
         return $result;
     }
+
+    public function import($file)
+    {
+        return $this->query("SOURCE $file");
+    }
+
+    public function grant($tables, $user, $password = null, $access = 'ALL')
+    {
+        // If only the database name is given, apply grant to all tables
+        if (false === strpos($tables, '.')) {
+            $tables .= '.*';
+        }
+
+        // If only the username is given, apply grant to all hosts
+        if (false === strpos($user, '@')) {
+            $user = '"' . $user . '"@"%"';
+        }
+
+        $query = "GRANT $access ON $tables TO $user";
+        if (!empty($password)) {
+            $query .= ' IDENTIFIED BY "' . $password . '"';
+        }
+
+        return $this->query($query);
+    }
+
+    public function revoke($tables, $user, $access = 'ALL')
+    {
+        // If only the database name is given, apply revoke to all tables
+        if (false === strpos($tables, '.')) {
+            $tables .= '.*';
+        }
+
+        // If only the username is given, apply revoke to all hosts
+        if (false === strpos($user, '@')) {
+            $user = '"' . $user . '"@"%"';
+        }
+
+        $query = "REVOKE $access ON $tables FROM $user";
+
+        return $this->query($query);
+    }
+
+    public function fileAllow($user)
+    {
+        return $this->grant('*', $user, null, 'FILE');
+    }
+
+    public function fileDeny($user)
+    {
+        return $this->revoke('*', $user, 'FILE');
+    }
 }
