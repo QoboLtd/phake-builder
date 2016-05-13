@@ -255,7 +255,12 @@ function doShellCommand($command, $privateInfo = null, $silent = false)
         throw new RuntimeException(printError($result, true, true));
     }
     if (!$silent) {
-        printSuccess("SUCCESS! Output:\n" . $result);
+		if (!empty(trim($result))) {
+        	printSuccess("SUCCESS! Output:\n" . $result);
+		}
+		else {
+        	printSuccess("SUCCESS!");
+		}
     }
     return $result;
 }
