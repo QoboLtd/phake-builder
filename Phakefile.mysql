@@ -11,8 +11,18 @@ group(
                 printSeparator();
                 printInfo('Testing MySQL database connection');
 
-                $query = "SELECT NOW() AS ServerTime";
-                doMySQLCommand($app, $query);
+				$dsn = array(
+					'host' => getValue('DB_HOST', $app),
+					'user' => getValue('DB_USER', $app),
+					'pass' => getValue('DB_PASS', $app),
+					'name' => getValue('DB_NAME', $app),
+				);
+
+				$mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
+				$mysql->setDSN($dsn);
+				$command = $mysql->query('SELECT NOW() AS ServerTime');
+				$secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
+                doShellCommand($command, $secureStrings);
             }
         );
 
@@ -22,8 +32,17 @@ group(
                 printSeparator();
                 printInfo('Creating database');
 
-                $query = "CREATE DATABASE " . requireValue('DB_NAME', $app);
-                doMySQLCommand($app, $query, false, true);
+				$dsn = array(
+					'host' => getValue('DB_HOST', $app),
+					'user' => getValue('DB_ADMIN_USER', $app),
+					'pass' => getValue('DB_ADMIN_PASS', $app),
+				);
+
+				$mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
+				$mysql->setDSN($dsn);
+				$command = $mysql->query('CREATE DATABASE IF NOT EXISTS ' . requireValue('DB_NAME', $app));
+				$secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
+                doShellCommand($command, $secureStrings);
             }
         );
 
@@ -33,8 +52,17 @@ group(
                 printSeparator();
                 printInfo('Dropping database');
 
-                $query = "DROP DATABASE " . requireValue('DB_NAME', $app);
-                doMySQLCommand($app, $query, false, true);
+				$dsn = array(
+					'host' => getValue('DB_HOST', $app),
+					'user' => getValue('DB_ADMIN_USER', $app),
+					'pass' => getValue('DB_ADMIN_PASS', $app),
+				);
+
+				$mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
+				$mysql->setDSN($dsn);
+				$command = $mysql->query('DROP DATABASE IF EXISTS ' . requireValue('DB_NAME', $app));
+				$secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
+                doShellCommand($command, $secureStrings);
             }
         );
 
@@ -44,8 +72,18 @@ group(
                 printSeparator();
                 printInfo('Importing database');
 
-                $query = "SOURCE " . requireValue('DB_DUMP_PATH', $app);
-                doMySQLCommand($app, $query);
+				$dsn = array(
+					'host' => getValue('DB_HOST', $app),
+					'user' => getValue('DB_USER', $app),
+					'pass' => getValue('DB_PASS', $app),
+					'name' => getValue('DB_NAME', $app),
+				);
+
+				$mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
+				$mysql->setDSN($dsn);
+				$command = $mysql->import(requireValue('DB_DUMP_PATH', $app));
+				$secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
+                doShellCommand($command, $secureStrings);
             }
         );
 
@@ -55,7 +93,26 @@ group(
                 printSeparator();
                 printInfo('Finding and replacing');
 
-                doMySQLCommand($app, null, true, false, 'SYSTEM_COMMAND_MYSQL_REPLACE');
+				$find = getValue('DB_FIND', $app);
+				$replace = getValue('DB_REPLACE', $app);
+
+				if (empty($find)) {
+					printDebug("Nothing to find.  Skipping replace.");
+					return;
+				}
+
+				$dsn = array(
+					'host' => getValue('DB_HOST', $app),
+					'user' => getValue('DB_USER', $app),
+					'pass' => getValue('DB_PASS', $app),
+					'name' => getValue('DB_NAME', $app),
+				);
+
+				$mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL_REPLACE', $app));
+				$mysql->setDSN($dsn);
+				$command = $mysql->findReplace($find, $replace);
+				$secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
+                doShellCommand($command, $secureStrings);
             }
         );
 
@@ -65,31 +122,16 @@ group(
                 printSeparator();
                 printInfo('Granting access');
 
-                if (requireValue('DB_USER', $app) <> 'root') {
-                    $query = "GRANT ALL "
-                    . " ON " . requireValue('DB_NAME', $app) . ".*"
-                    . " TO '" . requireValue('DB_USER', $app) . "'@'%'"
-                    . " IDENTIFIED BY '" . requireValue('DB_PASS') . "'";
-                    doMySQLCommand($app, $query, false, true);
-                } else {
-                    printWarning("Skipping GRANT statement for root user");
-                }
-            }
-        );
-
-        desc('Allow file operation');
-        task(
-            'access-file-allow', ':builder:init', function ($app) {
-                printSeparator();
-                printInfo('Allowing file operations');
-
-                $query = "GRANT FILE "
-                . " ON *.*"
-                . " TO '" . requireValue('DB_USER', $app) . "'@'%'";
-                doMySQLCommand($app, $query, false, true);
-                if (requireValue('DB_USER', $app) <> 'root') {
-                    printWarning("File operations allowed to non-root user");
-                }
+				$dsn = array(
+					'host' => getValue('DB_HOST', $app),
+					'user' => getValue('DB_ADMIN_USER', $app),
+					'pass' => getValue('DB_ADMIN_PASS', $app),
+				);
+				$mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
+				$mysql->setDSN($dsn);
+				$command = $mysql->grant(requireValue('DB_NAME', $app), requireValue('DB_USER', $app), getValue('DB_PASS', $app));
+				$secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
+                doShellCommand($command, $secureStrings);
             }
         );
 
@@ -99,14 +141,35 @@ group(
                 printSeparator();
                 printInfo('Revoking access');
 
-                if (requireValue('DB_USER', $app) <> 'root') {
-                    $query = "REVOKE ALL "
-                    . " ON " . requireValue('DB_NAME', $app) . ".*"
-                    . " FROM '" . requireValue('DB_USER', $app) . "'@'%'";
-                    doMySQLCommand($app, $query, false, true);
-                } else {
-                    printWarning("Skipping REVOKE statement for root user");
-                }
+				$dsn = array(
+					'host' => getValue('DB_HOST', $app),
+					'user' => getValue('DB_ADMIN_USER', $app),
+					'pass' => getValue('DB_ADMIN_PASS', $app),
+				);
+				$mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
+				$mysql->setDSN($dsn);
+				$command = $mysql->revoke(requireValue('DB_NAME', $app), requireValue('DB_USER', $app));
+				$secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
+                doShellCommand($command, $secureStrings);
+            }
+        );
+
+        desc('Allow file operation');
+        task(
+            'access-file-allow', ':builder:init', function ($app) {
+                printSeparator();
+                printInfo('Allowing file operations');
+
+				$dsn = array(
+					'host' => getValue('DB_HOST', $app),
+					'user' => getValue('DB_ADMIN_USER', $app),
+					'pass' => getValue('DB_ADMIN_PASS', $app),
+				);
+				$mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
+				$mysql->setDSN($dsn);
+				$command = $mysql->fileAllow(requireValue('DB_USER', $app));
+				$secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
+                doShellCommand($command, $secureStrings);
             }
         );
 
@@ -116,10 +179,16 @@ group(
                 printSeparator();
                 printInfo('Denying file operations');
 
-                $query = "REVOKE FILE "
-                . " ON *.*"
-                . " FROM '" . requireValue('DB_USER', $app) . "'@'%'";
-                doMySQLCommand($app, $query, false, true);
+				$dsn = array(
+					'host' => getValue('DB_HOST', $app),
+					'user' => getValue('DB_ADMIN_USER', $app),
+					'pass' => getValue('DB_ADMIN_PASS', $app),
+				);
+				$mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
+				$mysql->setDSN($dsn);
+				$command = $mysql->fileDeny(requireValue('DB_USER', $app));
+				$secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
+                doShellCommand($command, $secureStrings);
             }
         );
     }

@@ -265,9 +265,12 @@ function doShellCommand($command, $privateInfo = null, $silent = false)
  *
  * @param  string $query MySQL query to execute
  * @return void
+ * @deprecated
  */
 function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $command = 'SYSTEM_COMMAND_MYSQL')
 {
+
+    printWarning("doMySQLCommand() function is deprecated. Use \PhakeBuilder\MySQL instead.");
 
     // Host is never required, but always nice to have
     $host = getValue('DB_HOST', $app);
@@ -288,6 +291,15 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
         $name = requireValue('DB_NAME', $app);
     }
 
+	$dsn = array(
+		'host' => $host,
+		'user' => $user,
+		'pass' => $pass,
+		'name' => $name,
+	);
+	$mysql = new \PhakeBuilder\MySQL(requireValue($command, $app));
+	$mysql->setDSN($dsn);
+
     // Build command line strings for different commands
     switch ($command) {
         // /usr/bin/mysql -u root -p foo -h localhost -e 'select now();'
@@ -295,14 +307,9 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
             if (empty($query)) {
                 throw new RuntimeException(printError("No SQL query given", true, true));
             }
-            $command = escapeshellcmd(requireValue($command, $app));
-            $command .= ($host) ? ' -h' . escapeshellarg($host) : '';
-            $command .= ($user) ? ' -u' . escapeshellarg($user) : '';
-            $command .= ($pass) ? ' -p' . escapeshellarg($pass) : '';
-            $command .= ($name) ? ' ' . escapeshellarg($name) : '';
-            $command .= ' -e ' . escapeshellarg($query);
+			$command = $mysql->query($query);
             break;
-        // ./vendor/bin/mysql-replace.php database=foo find=blah relace=bleh
+        // ./vendor/bin/srdb.cli.php -h localhost -h localhost -u root -p 'foo' -n dbname -s 'find' -r 'replace'
         case 'SYSTEM_COMMAND_MYSQL_REPLACE':
             $find = getValue('DB_FIND', $app);
             $replace = getValue('DB_REPLACE', $app);
@@ -312,13 +319,7 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
                 return;
             }
 
-            $command = requireValue($command, $app);
-            $command .= ' -h ' . $host ;
-            $command .= ' -u ' . $user;
-            $command .= " -p '" . $pass . "'";
-            $command .= ' -n ' . $name;
-            $command .= " -s '" . $find . "'";
-            $command .= " -r '" . $replace . "'";
+			$command = $mysql->findReplace($find, $replace);
             break;
         default:
             throw new RuntimeException(printError("$command is not supported", true, true));
