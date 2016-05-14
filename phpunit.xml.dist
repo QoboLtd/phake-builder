@@ -25,6 +25,7 @@
 
     <logging>
         <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
+		<log type="junit" target="build/log/phpunit.xml" logIncompleteSkipped="false"/>
     </logging>
 
 	<!-- Add any additional test suites you want to run here -->
