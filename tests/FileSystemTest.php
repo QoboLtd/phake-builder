@@ -14,6 +14,34 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         rmdir($dstDir);
     }
 
+    public function testMakeDirMode()
+    {
+        $dstDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'foobar_' . uniqid();
+        $this->assertFileNotExists($dstDir, "Destination directory [$dstDir] already exists");
+        \PhakeBuilder\FileSystem::makeDir($dstDir, 0400);
+        $this->assertFileExists($dstDir, "Failed to created destination directory [$dstDir]");
+        $this->assertTrue(is_dir($dstDir), "Destination [$dstDir] is not a directory");
+
+        $permissions = substr(sprintf('%o', fileperms($dstDir)), -4);
+        $this->assertEquals('0400', $permissions, "Destination directory [$dstDir] permissions [$permissions] are wrong");
+
+        rmdir($dstDir);
+    }
+
+    public function testMakeDirModeString()
+    {
+        $dstDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'foobar_' . uniqid();
+        $this->assertFileNotExists($dstDir, "Destination directory [$dstDir] already exists");
+        \PhakeBuilder\FileSystem::makeDir($dstDir, '0400');
+        $this->assertFileExists($dstDir, "Failed to created destination directory [$dstDir]");
+        $this->assertTrue(is_dir($dstDir), "Destination [$dstDir] is not a directory");
+
+        $permissions = substr(sprintf('%o', fileperms($dstDir)), -4);
+        $this->assertEquals('0400', $permissions, "Destination directory [$dstDir] permissions [$permissions] are wrong");
+
+        rmdir($dstDir);
+    }
+
     public function testRemovePath()
     {
         $dstDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'foobar_' . uniqid();
@@ -35,14 +63,19 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         // Readable only
         chmod($tmpDir, 0400);
 
-        $this->assertFalse(is_writeable($tmpDir), "Directory [$tmpDir] is writeable");
+        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0400', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+
         $result = \PhakeBuilder\FileSystem::chmodPath($tmpDir, 0600, 0600);
-        $this->assertTrue(is_writeable($tmpDir), "Directory [$tmpDir] was not made writeable");
+        clearstatcache();
+
+        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0600', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
 
         rmdir($tmpDir);
     }
 
-    public function testChmodDirectoryRecursive()
+    public function testChmodDefault()
     {
         $tmpDir = tempnam(sys_get_temp_dir(), 'phakeTest_');
         unlink($tmpDir);
@@ -50,21 +83,76 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         // Readable only
         chmod($tmpDir, 0400);
 
-        $this->assertFalse(is_writeable($tmpDir), "Directory [$tmpDir] is writeable");
-        $this->assertFalse(is_executable($tmpDir), "Directory [$tmpDir] is executable");
+        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0400', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+
+        $result = \PhakeBuilder\FileSystem::chmodPath($tmpDir);
+        clearstatcache();
+
+        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0775', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+
+        rmdir($tmpDir);
+    }
+
+    public function testChmodDirectoryRecursive()
+    {
+        $tmpDir = tempnam(sys_get_temp_dir(), 'phakeTest_');
+        $tmpDirNested = $tmpDir . DIRECTORY_SEPARATOR . 'nested';
+        if (file_exists($tmpDir)) {
+            unlink($tmpDir);
+        }
+        mkdir($tmpDir);
+        if (file_exists($tmpDirNested)) {
+            unlink($tmpDirNested);
+        }
+        mkdir($tmpDirNested);
+
+        // Nested check goes first
+        chmod($tmpDirNested, 0400);
+        $permissions = substr(sprintf('%o', fileperms($tmpDirNested)), -4);
+        $this->assertEquals('0400', $permissions, "Destination directory [$tmpDirNested] permissions [$permissions] are wrong");
+
+        // Parent check goes last
+        chmod($tmpDir, 0400);
+
+        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0400', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+
         $result = \PhakeBuilder\FileSystem::chmodPath($tmpDir, 0700, 0600);
-        $this->assertTrue(is_writeable($tmpDir), "Directory [$tmpDir] was not made writeable");
-        $this->assertTrue(is_executable($tmpDir), "Directory [$tmpDir] was not made executable");
+        clearstatcache();
+
+        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0700', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+
+        $permissions = substr(sprintf('%o', fileperms($tmpDirNested)), -4);
+        $this->assertEquals('0700', $permissions, "Destination directory [$tmpDirNested] permissions [$permissions] are wrong");
 
         $tmpFile = $tmpDir . DIRECTORY_SEPARATOR . 'foobar';
+        $tmpFileNested = $tmpDirNested . DIRECTORY_SEPARATOR . 'foobar';
         touch($tmpFile);
+        touch($tmpFileNested);
         chmod($tmpFile, 0400);
+        chmod($tmpFileNested, 0400);
 
-        $this->assertFalse(is_writeable($tmpFile), "File [$tmpFile] is writeable");
+        $permissions = substr(sprintf('%o', fileperms($tmpFile)), -4);
+        $this->assertEquals('0400', $permissions, "Destination file [$tmpFile] permissions [$permissions] are wrong");
+
+        $permissions = substr(sprintf('%o', fileperms($tmpFileNested)), -4);
+        $this->assertEquals('0400', $permissions, "Destination file [$tmpFileNested] permissions [$permissions] are wrong");
+
         $result = \PhakeBuilder\FileSystem::chmodPath($tmpDir, 0700, 0600);
-        $this->assertTrue(is_writeable($tmpFile), "File [$tmpFile] was not made writeable");
+        clearstatcache();
 
+        $permissions = substr(sprintf('%o', fileperms($tmpFile)), -4);
+        $this->assertEquals('0600', $permissions, "Destination file [$tmpFile] permissions [$permissions] are wrong");
+
+        $permissions = substr(sprintf('%o', fileperms($tmpFileNested)), -4);
+        $this->assertEquals('0600', $permissions, "Destination file [$tmpFileNested] permissions [$permissions] are wrong");
+
+        unlink($tmpFileNested);
         unlink($tmpFile);
+        rmdir($tmpDirNested);
         rmdir($tmpDir);
     }
 
@@ -116,6 +204,21 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result, "Failed to download [$src] to [$dst]");
         $this->assertTrue(file_exists($dst), "File [$dst] does not exist");
         $this->assertTrue(filesize($dst) > 0, "File [$dst] is empty");
-        unlink($dst);
+        if (file_exists($dst)) {
+            unlink($dst);
+        }
     }
+
+    public function testDownloadFileFailWrite()
+    {
+        $src = 'https://wikipedia.org';
+        $dst = DIRECTORY_SEPARATOR . 'phakeTest_fail.html';
+        $result = \PhakeBuilder\FileSystem::downloadFile($src, $dst);
+        $this->assertFalse($result, "Managed to write file from [$src] to [$dst]");
+        $this->assertFalse(file_exists($dst), "File [$dst] exists");
+        if (file_exists($dst)) {
+            unlink($dst);
+        }
+    }
+
 }
