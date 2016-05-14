@@ -81,5 +81,4 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
         }
         $template = new \PhakeBuilder\Template($file, true);
     }
-
 }

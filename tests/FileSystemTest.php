@@ -220,5 +220,4 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
             unlink($dst);
         }
     }
-
 }
