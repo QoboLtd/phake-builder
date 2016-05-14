@@ -1,14 +1,14 @@
 #!groovy
 
-stage 'Checkout'
 node {
-	checkout scm
-	sh "composer install"
-	sh "./vendor/bin/phake dotenv:create"
-}
+	// Checkout project and setup the project
+	stage 'Checkout'
+		checkout scm
+		sh "composer install"
+		sh "./vendor/bin/phake dotenv:create"
 
-stage 'Test'
-node {
-	sh "./vendor/bin/phpunit"
-    sh "./vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/"
+	// Run the tests
+	stage 'Test'
+		sh "./vendor/bin/phpunit"
+		sh "./vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/"
 }
