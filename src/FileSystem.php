@@ -204,7 +204,7 @@ class FileSystem
     {
         $result = false;
 
-        $fh = fopen($dst, 'w');
+        $fh = @fopen($dst, 'w');
         if (!is_resource($fh)) {
             return $result;
         }

@@ -1,6 +1,9 @@
 <?php
 namespace PhakeBuilder\Tests;
 
+require_once 'EmptyCommand.php';
+require_once 'GetCommand.php';
+
 class BaseCommandTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -9,7 +12,7 @@ class BaseCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorException()
     {
-        $testCommand = new EmptyCommand(null);
+        $testCommand = new EmptyCommand("");
     }
 
     public function testConstructor()
