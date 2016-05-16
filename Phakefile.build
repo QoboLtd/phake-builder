@@ -9,17 +9,35 @@ group(
 			'all', ':builder:init', function ($app) {
 				printSeparator();
 				printInfo("Build tasks");
+
+				$commands = array(
+					'phpunit' => './vendor/bin/phpunit',
+					'phpcs' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/',
+					'phpcs-ci' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/ --report=checkstyle --report-file=build/logs/checkstyle.xml',
+					'pdepend' => './vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependecies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src/',
+					'phploc' => './vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src/ tests/',
+					'phpmd' => './vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml',
+					'phpcpd' => './vendor/bin/phpcpd --log-pmd=build/logs/phpcpd.xml src/',
+				);
+
+				$failedCommands = array();
+				foreach ($commands as $name => $command) {
+					try {
+						doShellCommand($command);
+					}
+					catch (\Exception $e) {
+						$failedCommands[$name] = $e->getMessage();
+					}
+				}
+
+				if (!empty($failedCommands)) {
+					throw new \RuntimeException("The following failures occured during execution: \n" . print_r($failedCommands, true));
+				}
 			}
 		);
 		task('all', 'dotenv:create');
 		task('all', 'build:clean');
 		task('all', 'sami:update');
-		task('all', 'build:phpunit');
-		task('all', 'build:pdepend');
-		task('all', 'build:phpcs');
-		task('all', 'build:phploc');
-		task('all', 'build:phpmd');
-		task('all', 'build:phpcpd');
 
 		desc('Clean');
 		task(
