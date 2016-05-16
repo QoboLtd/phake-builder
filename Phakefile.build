@@ -1,7 +1,7 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-if (!function_exists('getBuildDirs')) {
+if (!function_exists('phakeGetBuildDirs')) {
 	/**
 	 * Get build directories
 	 * 
@@ -10,7 +10,7 @@ if (!function_exists('getBuildDirs')) {
 	 * 
 	 * @return array
 	 */
-	function getBuildDirs() {
+	function phakeGetBuildDirs() {
 		$result = array(
 			'build/coverage',
 			'build/logs',
@@ -21,13 +21,13 @@ if (!function_exists('getBuildDirs')) {
 	}
 }
 
-if (!function_exists('getBuildCommands')) {
+if (!function_exists('phakeGetBuildCommands')) {
 	/**
 	 * Get all test and build commands
 	 * 
 	 * @return array
 	 */
-	function getBuildCommands() {
+	function phakeGetBuildCommands() {
 		$result = array(
 			'phpunit' => './vendor/bin/phpunit',
 			'phpcs' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/',
@@ -51,7 +51,7 @@ group(
 				printSeparator();
 				printInfo("Build tasks");
 
-				$commands = getBuildCommands();
+				$commands = phakeGetBuildCommands();
 
 				$failedCommands = array();
 				foreach ($commands as $name => $command) {
@@ -77,7 +77,7 @@ group(
 				printSeparator();
 				printInfo("Clean");
 
-				$dirs = getBuildDirs();
+				$dirs = phakeGetBuildDirs();
 				foreach ($dirs as $dir) {
 					\PhakeBuilder\FileSystem::removePath($dir);
 					\PhakeBuilder\FileSystem::makeDir($dir);
@@ -91,7 +91,7 @@ group(
 				printSeparator();
 				printInfo("PHPUnit");
 
-				$commands = getBuildCommands();
+				$commands = phakeGetBuildCommands();
 				if (!empty($commands['phpunit'])) {
 					doShellCommand($commands['phpunit']);
 				}
@@ -104,7 +104,7 @@ group(
 				printSeparator();
 				printInfo("CodeSniffer");
 
-				$commands = getBuildCommands();
+				$commands = phakeGetBuildCommands();
 				if (!empty($commands['phpcs-ci'])) {
 					try {
 						// This time for the build/logs/checkstyle.xml
@@ -127,7 +127,7 @@ group(
 				printSeparator();
 				printInfo('PDepend');
 
-				$commands = getBuildCommands();
+				$commands = phakeGetBuildCommands();
 				if (!empty($commands['pdepend'])) {
 					doShellCommand($commands['pdepend']);
 				}
@@ -140,7 +140,7 @@ group(
 				printSeparator();
 				printInfo('PHPLoc');
 
-				$commands = getBuildCommands();
+				$commands = phakeGetBuildCommands();
 				if (!empty($commands['phploc'])) {
 					doShellCommand($commands['phploc']);
 				}
@@ -153,7 +153,7 @@ group(
 				printSeparator();
 				printInfo('PHPMD');
 
-				$commands = getBuildCommands();
+				$commands = phakeGetBuildCommands();
 				if (!empty($commands['phpmd'])) {
 					doShellCommand($commands['phpmd']);
 				}
@@ -166,7 +166,7 @@ group(
 				printSeparator();
 				printInfo('PHPCPD');
 
-				$commands = getBuildCommands();
+				$commands = phakeGetBuildCommands();
 				if (!empty($commands['phpcpd'])) {
 					doShellCommand($commands['phpcpd']);
 				}
