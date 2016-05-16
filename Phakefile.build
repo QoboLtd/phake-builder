@@ -1,6 +1,25 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
+/**
+ * Get all test and build commands
+ * 
+ * @return array
+ */
+function getBuildCommands() {
+	$result = array(
+		'phpunit' => './vendor/bin/phpunit',
+		'phpcs' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/',
+		'phpcs-ci' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/ --report=checkstyle --report-file=build/logs/checkstyle.xml',
+		'pdepend' => './vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependecies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src/',
+		'phploc' => './vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src/ tests/',
+		'phpmd' => './vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml',
+		'phpcpd' => './vendor/bin/phpcpd --log-pmd=build/logs/phpcpd.xml src/',
+	);
+
+	return $result;
+}
+
 // Build related tasks
 group(
 	'build', function() {
@@ -10,15 +29,7 @@ group(
 				printSeparator();
 				printInfo("Build tasks");
 
-				$commands = array(
-					'phpunit' => './vendor/bin/phpunit',
-					'phpcs' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/',
-					'phpcs-ci' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/ --report=checkstyle --report-file=build/logs/checkstyle.xml',
-					'pdepend' => './vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependecies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src/',
-					'phploc' => './vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src/ tests/',
-					'phpmd' => './vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml',
-					'phpcpd' => './vendor/bin/phpcpd --log-pmd=build/logs/phpcpd.xml src/',
-				);
+				$commands = getBuildCommands();
 
 				$failedCommands = array();
 				foreach ($commands as $name => $command) {
@@ -63,7 +74,10 @@ group(
 				printSeparator();
 				printInfo("PHPUnit");
 
-				doShellCommand('./vendor/bin/phpunit');
+				$commands = getBuildCommands();
+				if (!empty($commands['phpunit'])) {
+					doShellCommand($commands['phpunit']);
+				}
 			}
 		);
 
@@ -73,15 +87,20 @@ group(
 				printSeparator();
 				printInfo("CodeSniffer");
 
-				$phpcs = './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/';
-				try {
-					// This time for the build/logs/checkstyle.xml
-					doShellCommand($phpcs . ' --report=checkstyle --report-file=build/logs/checkstyle.xml');
-				}
-				catch (\Exception $e) {
+				$commands = getBuildCommands();
+				if (!empty($commands['phpcs-ci'])) {
+					try {
+						// This time for the build/logs/checkstyle.xml
+						doShellCommand($commands['phpcs-ci']);
+					}
+					catch (\Exception $e) {
+					}
+
 				}
 				// This time for the developer and human-friendly output
-				doShellCommand($phpcs);
+				if (!empty($commands['phpcs'])) {
+					doShellCommand($commands['phpcs']);
+				}
 			}
 		);
 
@@ -91,7 +110,10 @@ group(
 				printSeparator();
 				printInfo('PDepend');
 
-				doShellCommand('./vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependecies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src/');
+				$commands = getBuildCommands();
+				if (!empty($commands['pdepend'])) {
+					doShellCommand($commands['pdepend']);
+				}
 			}
 		);
 
@@ -101,7 +123,10 @@ group(
 				printSeparator();
 				printInfo('PHPLoc');
 
-				doShellCommand('./vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src/ tests/');
+				$commands = getBuildCommands();
+				if (!empty($commands['phploc'])) {
+					doShellCommand($commands['phploc']);
+				}
 			}
 		);
 
@@ -111,7 +136,10 @@ group(
 				printSeparator();
 				printInfo('PHPMD');
 
-				doShellCommand('./vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml');
+				$commands = getBuildCommands();
+				if (!empty($commands['phpmd'])) {
+					doShellCommand($commands['phpmd']);
+				}
 			}
 		);
 
@@ -121,7 +149,10 @@ group(
 				printSeparator();
 				printInfo('PHPCPD');
 
-				doShellCommand('./vendor/bin/phpcpd --log-pmd=build/logs/phpcpd.xml src/');
+				$commands = getBuildCommands();
+				if (!empty($commands['phpcpd'])) {
+					doShellCommand($commands['phpcpd']);
+				}
 			}
 		);
 
