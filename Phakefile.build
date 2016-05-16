@@ -12,6 +12,7 @@ group(
 			}
 		);
 		task('all', 'build:clean');
+		task('all', 'sami:update');
 		task('all', 'build:phpunit');
 		task('all', 'build:pdepend');
 		task('all', 'build:phpcs');
