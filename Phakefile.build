@@ -19,6 +19,7 @@ group(
 		task('all', 'build:phpcs');
 		task('all', 'build:phploc');
 		task('all', 'build:phpmd');
+		task('all', 'build:phpcpd');
 
 		desc('Clean');
 		task(
@@ -95,6 +96,17 @@ group(
 				doShellCommand('./vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml');
 			}
 		);
+
+		desc('PHPCPD');
+		task(
+			'phpcpd', ':builder:init', function($app) {
+				printSeparator();
+				printInfo('PHPCPD');
+
+				doShellCommand('./vendor/bin/phpcpd --log-pmd=build/logs/phpcpd.xml src/');
+			}
+		);
+
 	}
 );
 
