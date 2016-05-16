@@ -34,7 +34,8 @@ if (!function_exists('phakeGetBuildCommands')) {
 			'phpcs-ci' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/ --report=checkstyle --report-file=build/logs/checkstyle.xml',
 			'pdepend' => './vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependecies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src/',
 			'phploc' => './vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src/ tests/',
-			'phpmd' => './vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml',
+			'phpmd' => './vendor/bin/phpmd src/ text codesize,controversial,naming,unusedcode',
+			'phpmd-ci' => './vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml',
 			'phpcpd' => './vendor/bin/phpcpd --log-pmd=build/logs/phpcpd.xml src/',
 		);
 
@@ -152,6 +153,21 @@ group(
 			'phpmd', ':builder:init', function($app) {
 				printSeparator();
 				printInfo('PHPMD');
+
+				$commands = phakeGetBuildCommands();
+				if (!empty($commands['phpmd-ci'])) {
+					try {
+						// This time for the build/logs/phpmd.xml
+						doShellCommand($commands['phpmd-ci']);
+					}
+					catch (\Exception $e) {
+					}
+
+				}
+				// This time for the developer and human-friendly output
+				if (!empty($commands['phpmd'])) {
+					doShellCommand($commands['phpmd']);
+				}
 
 				$commands = phakeGetBuildCommands();
 				if (!empty($commands['phpmd'])) {
