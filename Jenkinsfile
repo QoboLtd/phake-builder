@@ -19,13 +19,7 @@ node {
 
 		// Archive PHPUnit report
 		step([$class: 'JUnitResultArchiver', testResults: 'build/logs/junit.xml'])
-		// Publish CheckStyle report
-		step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: 'build/logs/checkstyle.xml', unHealthy: ''])
-		// Publish PMD report
-		step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: 'build/logs/phpmd.xml', unHealthy: ''])
-		// Publish CPD report
-		step([$class: 'DryPublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: 'build/logs/phpcpd.xml', unHealthy: ''])
-		// Publish xUnit rport
-		step([$class: 'XUnitBuilder', testTimeMargin: '3000', thresholdMode: 1, thresholds: [[$class: 'FailedThreshold', failureNewThreshold: '', failureThreshold: '', unstableNewThreshold: '', unstableThreshold: ''], [$class: 'SkippedThreshold', failureNewThreshold: '', failureThreshold: '', unstableNewThreshold: '', unstableThreshold: '']], tools: [[$class: 'PHPUnitJunitHudsonTestType', deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/logs/junit.xml', skipNoTestFiles: true, stopProcessingIfError: true]]])
+		// Publish combined results for phpcs, phpmd, phpcpd, etc
+		step([$class: 'AnalysisPublisher', canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', unHealthy: ''])
 
 }
