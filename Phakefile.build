@@ -11,6 +11,7 @@ group(
 				printInfo("Build tasks");
 			}
 		);
+		task('all', 'dotenv:create');
 		task('all', 'build:clean');
 		task('all', 'sami:update');
 		task('all', 'build:phpunit');
