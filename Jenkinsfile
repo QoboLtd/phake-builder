@@ -9,7 +9,6 @@ node {
 
 	// Run the tests
 	stage 'Test'
-		sh "./vendor/bin/phpunit"
+		sh "./vendor/bin/phake build:all"
 		step([$class: 'JUnitResultArchiver', testResults: 'build/log/phpunit.xml'])
-		sh "./vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/"
 }
