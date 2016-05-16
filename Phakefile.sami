@@ -7,7 +7,7 @@ group(
 
         desc('Update API documentation');
         task(
-            'update', ':builder:init', function ($app) {
+            'update', ':builder:init', ':dotenv:create', function ($app) {
                 printSeparator();
                 printInfo("sami.php update");
 

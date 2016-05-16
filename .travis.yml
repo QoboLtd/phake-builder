@@ -14,8 +14,7 @@ install:
     - composer install
 
 script:
-    - ./vendor/bin/phpunit
-    - ./vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/
+    - ./vendor/bin/phake build:all
 
 notifications:
     email:
