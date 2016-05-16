@@ -42,6 +42,6 @@ class Archive
      */
     public static function compress($src, $dst)
     {
-        throw new \RuntimeException("This functionality is not implemented yet");
+        throw new \RuntimeException("Cannot compress [$src] to [$dst]. This functionality is not implemented yet");
     }
 }

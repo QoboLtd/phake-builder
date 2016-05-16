@@ -29,7 +29,7 @@ class FileSystem
     /**
      * Symfony Filesystem component instance
      */
-    protected static $fs;
+    protected static $symfonyFS;
 
     /**
      * Magic method __callStatic
@@ -42,11 +42,11 @@ class FileSystem
      */
     public static function __callStatic($method, $args)
     {
-        if (is_null(self::$fs)) {
-            self::$fs = new FS;
+        if (is_null(self::$symfonyFS)) {
+            self::$symfonyFS = new FS;
         }
 
-        return call_user_func_array(array(self::$fs, $method), $args);
+        return call_user_func_array(array(self::$symfonyFS, $method), $args);
     }
 
     /**
@@ -135,6 +135,7 @@ class FileSystem
      * @param  numeric $fileMode  Mode to set for files (octal)
      * @param  boolean $recursive Recurse into path or no (default: yes)
      * @return boolean True on success, false otherwise
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public static function chmodPath($path, $dirMode = null, $fileMode = null, $recursive = true)
     {
@@ -143,17 +144,56 @@ class FileSystem
         $dirMode = $dirMode ?: self::getDefaultDirMode();
         $fileMode = $fileMode ?: self::getDefaultFileMode();
 
-        $result = is_dir($path) ? chmod($path, self::valueToOct($dirMode)) : chmod($path, self::valueToOct($fileMode));
+        $result = self::chmodPathSingle($path, $dirMode, $fileMode);
         if ($recursive && is_dir($path)) {
-            $finder = new Finder();
-            // Folders first
-            foreach ($finder->directories()->in($path) as $item) {
-                $result = chmod($item->getRealPath(), self::valueToOct($dirMode));
-            }
-            // Files next
-            foreach ($finder->files()->in($path) as $item) {
-                $result = chmod($item->getRealPath(), self::valueToOct($fileMode));
-            }
+            $result = self::chmodPathRecursive($path, $dirMode, $fileMode);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Change permissions on a single file path
+     *
+     * @param string $path Path to chmod
+     * @param numeric $dirMode Mode to set for folder
+     * @param numeric $fileMode Mode to set for file
+     * @return boolean
+     */
+    protected static function chmodPathSingle($path, $dirMode, $fileMode)
+    {
+        $result = false;
+
+        $dirMode = self::valueToOct($dirMode);
+        $fileMode = self::valueToOct($fileMode);
+
+        $result = is_dir($path) ? chmod($path, $dirMode) : chmod($path, $fileMode);
+        return $result;
+    }
+
+    /**
+     * Change permissions recursively
+     *
+     * @param string $path Path to chmod
+     * @param numeric $dirMode Mode to set for folders
+     * @param numeric $fileMode Mode to set for files
+     * @return boolean
+     */
+    protected static function chmodPathRecursive($path, $dirMode, $fileMode)
+    {
+        $result = false;
+
+        $dirMode = self::valueToOct($dirMode);
+        $fileMode = self::valueToOct($fileMode);
+
+        $finder = new Finder();
+        // Folders first
+        foreach ($finder->directories()->in($path) as $item) {
+            $result = chmod($item->getRealPath(), $dirMode);
+        }
+        // Files next
+        foreach ($finder->files()->in($path) as $item) {
+            $result = chmod($item->getRealPath(), $fileMode);
         }
 
         return $result;
@@ -204,18 +244,18 @@ class FileSystem
     {
         $result = false;
 
-        $fh = @fopen($dst, 'w');
-        if (!is_resource($fh)) {
+        $fileHandler = @fopen($dst, 'w');
+        if (!is_resource($fileHandler)) {
             return $result;
         }
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $src);
-        curl_setopt($curl, CURLOPT_FILE, $fh);
+        curl_setopt($curl, CURLOPT_FILE, $fileHandler);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         $result = curl_exec($curl);
         curl_close($curl);
-        fclose($fh);
+        fclose($fileHandler);
 
         return $result;
     }
