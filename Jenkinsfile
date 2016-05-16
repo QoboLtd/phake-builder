@@ -9,7 +9,9 @@ node {
 
 	// Run the tests
 	stage 'Test'
-		sh "./vendor/bin/phake build:all"
+		catchError {
+			sh "./vendor/bin/phake build:all"
+		}
 		// Publish Code Coverage HTML report
 		publishHTML(target: [allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'build/coverage/', reportFiles: 'index.html,dashboard.html', reportName: 'Coverage Report'])
 		// Publish Source Code HTML documentation
