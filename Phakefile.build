@@ -1,41 +1,45 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-/**
- * Get build directories
- * 
- * Build directories will be removed and recreated during
- * the build:clean task.
- * 
- * @return array
- */
-function getBuildDirs() {
-	$result = array(
-		'build/coverage',
-		'build/logs',
-		'build/pdepend',
-	);
+if (!function_exists('getBuildDirs')) {
+	/**
+	 * Get build directories
+	 * 
+	 * Build directories will be removed and recreated during
+	 * the build:clean task.
+	 * 
+	 * @return array
+	 */
+	function getBuildDirs() {
+		$result = array(
+			'build/coverage',
+			'build/logs',
+			'build/pdepend',
+		);
 
-	return $result;
+		return $result;
+	}
 }
 
-/**
- * Get all test and build commands
- * 
- * @return array
- */
-function getBuildCommands() {
-	$result = array(
-		'phpunit' => './vendor/bin/phpunit',
-		'phpcs' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/',
-		'phpcs-ci' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/ --report=checkstyle --report-file=build/logs/checkstyle.xml',
-		'pdepend' => './vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependecies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src/',
-		'phploc' => './vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src/ tests/',
-		'phpmd' => './vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml',
-		'phpcpd' => './vendor/bin/phpcpd --log-pmd=build/logs/phpcpd.xml src/',
-	);
+if (!function_exists('getBuildCommands')) {
+	/**
+	 * Get all test and build commands
+	 * 
+	 * @return array
+	 */
+	function getBuildCommands() {
+		$result = array(
+			'phpunit' => './vendor/bin/phpunit',
+			'phpcs' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/',
+			'phpcs-ci' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/ --report=checkstyle --report-file=build/logs/checkstyle.xml',
+			'pdepend' => './vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependecies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src/',
+			'phploc' => './vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src/ tests/',
+			'phpmd' => './vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml',
+			'phpcpd' => './vendor/bin/phpcpd --log-pmd=build/logs/phpcpd.xml src/',
+		);
 
-	return $result;
+		return $result;
+	}
 }
 
 // Build related tasks
