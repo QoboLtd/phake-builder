@@ -46,7 +46,6 @@ group(
 				}
 			}
 		);
-		task('all', 'dotenv:create');
 		task('all', 'build:clean');
 		task('all', 'sami:update');
 
