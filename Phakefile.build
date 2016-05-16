@@ -1,0 +1,98 @@
+<?php
+require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+
+// Build related tasks
+group(
+	'build', function() {
+		desc('All build tasks');
+		task(
+			'all', ':builder:init', function ($app) {
+				printSeparator();
+				printInfo("Build tasks");
+			}
+		);
+		task('all', 'build:clean');
+		task('all', 'build:phpunit');
+		task('all', 'build:pdepend');
+		task('all', 'build:phpcs');
+		task('all', 'build:phploc');
+
+		desc('Clean');
+		task(
+			'clean', ':builder:init', function ($app) {
+				printSeparator();
+				printInfo("Clean");
+
+				$dirs = array(
+					'build/coverage',
+					'build/logs',
+					'build/pdepend',
+				);
+				foreach ($dirs as $dir) {
+					\PhakeBuilder\FileSystem::removePath($dir);
+					\PhakeBuilder\FileSystem::makeDir($dir);
+				}
+			}
+		);
+		
+		desc('PHPUnit');
+		task(
+			'phpunit', ':builder:init', function ($app) {
+				printSeparator();
+				printInfo("PHPUnit");
+
+				doShellCommand('./vendor/bin/phpunit');
+			}
+		);
+
+		desc('CodeSniffer');
+		task(
+			'phpcs', ':builder:init', function ($app) {
+				printSeparator();
+				printInfo("CodeSniffer");
+
+				$phpcs = './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/';
+				try {
+					// This time for the build/logs/checkstyle.xml
+					doShellCommand($phpcs . ' --report=checkstyle --report-file=build/logs/checkstyle.xml');
+				}
+				catch (\Exception $e) {
+				}
+				// This time for the developer and human-friendly output
+				doShellCommand($phpcs);
+			}
+		);
+
+		desc('PDepend');
+		task(
+			'pdepend', ':builder:init', function ($app) {
+				printSeparator();
+				printInfo('PDepend');
+
+				doShellCommand('./vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependecies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src/');
+			}
+		);
+
+		desc('PHPLoc');
+		task(
+			'phploc', ':builder:init', function ($app) {
+				printSeparator();
+				printInfo('PHPLoc');
+
+				doShellCommand('./vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src/ tests/');
+			}
+		);
+
+		desc('PHPMD');
+		task(
+			'phpmd', ':builder:init', function($app) {
+				printSeparator();
+				printInfo('PHPMD');
+
+				doShellCommand('./vendor/bin/phpmd src/ xml codesize --reportfile build/logs/pmd.xml');
+			}
+		);
+	}
+);
+
+// vi:ft=php
