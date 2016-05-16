@@ -91,6 +91,6 @@ class Template
     public function parseToFile($dst, $data)
     {
         $pattern = new Pattern($this->src);
-        return file_put_contents($dst, $this->parse($data));
+        return file_put_contents($dst, $pattern->parse($data));
     }
 }

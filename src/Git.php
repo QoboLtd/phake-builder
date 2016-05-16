@@ -62,14 +62,14 @@ class Git extends BaseCommand
      * * --no-merges --format=%B
      * * --pretty=%s
      *
-     * @param  string $from   From reference
-     * @param  string $to     (Optional) To reference, HEAD assumed
-     * @param  string $format Format
+     * @param  string $fromRef   From reference
+     * @param  string $toRef     (Optional) To reference, HEAD assumed
+     * @param  string $format    Format
      * @return string
      */
-    public function changelog($from, $to = 'HEAD', $format = self::LOG_FORMAT_CHANGELOG)
+    public function changelog($fromRef, $toRef = 'HEAD', $format = self::LOG_FORMAT_CHANGELOG)
     {
-        $result = $this->command . ' log ' . $from . '..' . $to . ' ' . $format;
+        $result = $this->command . ' log ' . $fromRef . '..' . $toRef . ' ' . $format;
         return $result;
     }
 
