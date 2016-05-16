@@ -18,6 +18,7 @@ group(
 		task('all', 'build:pdepend');
 		task('all', 'build:phpcs');
 		task('all', 'build:phploc');
+		task('all', 'build:phpmd');
 
 		desc('Clean');
 		task(
@@ -91,7 +92,7 @@ group(
 				printSeparator();
 				printInfo('PHPMD');
 
-				doShellCommand('./vendor/bin/phpmd src/ xml codesize --reportfile build/logs/pmd.xml');
+				doShellCommand('./vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml');
 			}
 		);
 	}
