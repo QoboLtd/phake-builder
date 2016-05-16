@@ -2,6 +2,24 @@
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 /**
+ * Get build directories
+ * 
+ * Build directories will be removed and recreated during
+ * the build:clean task.
+ * 
+ * @return array
+ */
+function getBuildDirs() {
+	$result = array(
+		'build/coverage',
+		'build/logs',
+		'build/pdepend',
+	);
+
+	return $result;
+}
+
+/**
  * Get all test and build commands
  * 
  * @return array
@@ -55,11 +73,7 @@ group(
 				printSeparator();
 				printInfo("Clean");
 
-				$dirs = array(
-					'build/coverage',
-					'build/logs',
-					'build/pdepend',
-				);
+				$dirs = getBuildDirs();
 				foreach ($dirs as $dir) {
 					\PhakeBuilder\FileSystem::removePath($dir);
 					\PhakeBuilder\FileSystem::makeDir($dir);
