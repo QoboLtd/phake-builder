@@ -10,5 +10,5 @@ node {
 	// Run the tests
 	stage 'Test'
 		sh "./vendor/bin/phake build:all"
-		step([$class: 'JUnitResultArchiver', testResults: 'build/log/phpunit.xml'])
+		step([$class: 'JUnitResultArchiver', testResults: 'build/logs/junit.xml'])
 }
