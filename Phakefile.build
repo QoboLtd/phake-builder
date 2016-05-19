@@ -67,11 +67,11 @@ if (!function_exists('phakeGetBuildCommands')) {
 		$hasTests = phakeDirHasPHPFiles('./tests');
 
 		if (!$hasTests) {
-			printDebug("No unit test files found. Skipping phpnit");
+			printWarning("No unit test files found. Skipping phpnit");
 			$result['phpunit'] = null;
 		}
 		if (!$hasSrc) {
-			printDebug("No src files found. Skipping pdepend, phpmd, phpmd-ci, phpcpd");
+			printWarning("No src files found. Skipping pdepend, phpmd, phpmd-ci, phpcpd");
 			$result['pdepend'] = null;
 			$result['phpmd'] = null;
 			$result['phpmd-ci'] = null;
@@ -79,7 +79,7 @@ if (!function_exists('phakeGetBuildCommands')) {
 		}
 
 		if (!$hasSrc && !$hasTests) {
-			printDebug("No unit test or source files found. Skipping phpcs, phpcs-ci, phploc");
+			printWarning("No unit test or source files found. Skipping phpcs, phpcs-ci, phploc");
 			$result['phpcs'] = null;
 			$result['phpcs-ci'] = null;
 			$result['phploc'] = null;
