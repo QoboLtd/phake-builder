@@ -148,13 +148,3 @@ $ ./vendor/bin/phake app:install
 For more information read the documentation for [Phake](https://github.com/jaz303/phake) 
 and [phpdotenv](https://github.com/vlucas/phpdotenv).
 
-Documentation
--------------
-
-To generate source code documentation, run the following:
-
-```
-$ ./vendor/bin/sami.php update etc/sami.config.php
-```
-
-Look for the `index.html` file in the `build/` folder.
