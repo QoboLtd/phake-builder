@@ -21,6 +21,30 @@ if (!function_exists('phakeGetBuildDirs')) {
 	}
 }
 
+if (!function_exists('phakeDirHasPHPFiles')) {
+	/**
+	 * Check if the directory has any .php files (recursively)
+	 * 
+	 * @param string $dir Directory to check
+	 * @return boolean True if at least one file is found, false otherwise
+	 */
+	function phakeDirHasPHPFiles($dir) {
+		$result = false;
+
+		try {
+			$dirIt = new RecursiveDirectoryIterator($dir);
+			$recIt = new RecursiveIteratorIterator($dirIt);
+			$regexIt = new RegexIterator($recIt, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
+			if (count($regexIt) > 0) {
+				$result = true;
+			}
+		} catch (\Exception $e) {
+			$result = false;
+		}
+
+		return $result;
+	}
+}
 if (!function_exists('phakeGetBuildCommands')) {
 	/**
 	 * Get all test and build commands
@@ -38,6 +62,28 @@ if (!function_exists('phakeGetBuildCommands')) {
 			'phpmd-ci' => './vendor/bin/phpmd src/ xml codesize,controversial,naming,unusedcode --reportfile build/logs/phpmd.xml',
 			'phpcpd' => './vendor/bin/phpcpd --log-pmd=build/logs/phpcpd.xml src/',
 		);
+
+		$hasSrc = phakeDirHasPHPFiles('./src');
+		$hasTests = phakeDirHasPHPFiles('./tests');
+
+		if (!$hasTests) {
+			printDebug("No unit test files found. Skipping phpnit");
+			$result['phpunit'] = null;
+		}
+		if (!$hasSrc) {
+			printDebug("No src files found. Skipping pdepend, phpmd, phpmd-ci, phpcpd");
+			$result['pdepend'] = null;
+			$result['phpmd'] = null;
+			$result['phpmd-ci'] = null;
+			$result['phpcpd'] = null;
+		}
+
+		if (!$hasSrc && !$hasTests) {
+			printDebug("No unit test or source files found. Skipping phpcs, phpcs-ci, phploc");
+			$result['phpcs'] = null;
+			$result['phpcs-ci'] = null;
+			$result['phploc'] = null;
+		}
 
 		return $result;
 	}
