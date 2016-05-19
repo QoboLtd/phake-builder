@@ -20,15 +20,7 @@
 		"zetacomponents/archive": "1.5",
 		"symfony/filesystem": "~2.7",
 		"symfony/finder": "~2.7",
-		"gorkalaucirica/hipchat-v2-api-client": "~1.5"
-	},
-	"autoload": {
-		"psr-4": {"PhakeBuilder\\": "src/"}
-	},
-	"autload-dev": {
-		"psr-4": {"PhakeBuilder\\Tests\\": "tests/"}
-	},
-	"require-dev": {
+		"gorkalaucirica/hipchat-v2-api-client": "~1.5",
 		"phpunit/phpunit": "~4.3",
 		"squizlabs/php_codesniffer": "~2.5",
 		"pdepend/pdepend": "~v2.2",
@@ -36,5 +28,12 @@
 		"phpmd/phpmd": "~2.4",
 		"sebastian/phpcpd": "~2.0",
 		"sami/sami": "~3.2"
+
+	},
+	"autoload": {
+		"psr-4": {"PhakeBuilder\\": "src/"}
+	},
+	"autload-dev": {
+		"psr-4": {"PhakeBuilder\\Tests\\": "tests/"}
 	}
 }
