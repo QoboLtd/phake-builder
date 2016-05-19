@@ -21,7 +21,7 @@
 		"symfony/filesystem": "~2.7",
 		"symfony/finder": "~2.7",
 		"gorkalaucirica/hipchat-v2-api-client": "~1.5",
-		"phpunit/phpunit": "~4.3",
+		"phpunit/phpunit": "~5.3",
 		"squizlabs/php_codesniffer": "~2.5",
 		"pdepend/pdepend": "~v2.2",
 		"phploc/phploc": "~v3.0",
