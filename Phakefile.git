@@ -61,7 +61,9 @@ group(
                 $git = new \PhakeBuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
                 $oldHash = doShellCommand($git->getCurrentHash(), null, true);
 
-                doShellCommand($git->pull());
+                $remote = getValue('GIT_REMOTE', $app);
+                $branch = getValue('GIT_BRANCH', $app);
+                doShellCommand($git->pull($remote, $branch));
 
                 $newHash = doShellCommand($git->getCurrentHash(), null, true);
                 $changelog = doShellCommand($git->changelog($oldHash, $newHash), null, true);
@@ -78,8 +80,8 @@ group(
                 printSeparator();
                 printInfo("Git push");
 
-                $remote = requireValue('GIT_REMOTE', $app);
-                $branch = requireValue('GIT_BRANCH', $app);
+                $remote = getValue('GIT_REMOTE', $app);
+                $branch = getValue('GIT_BRANCH', $app);
 
                 $git = new \PhakeBuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
                 doShellCommand($git->push($remote, $branch));
