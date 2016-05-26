@@ -31,7 +31,7 @@
 
 	},
 	"autoload": {
-		"psr-4": {"PhakeBuilder\\": "src/"}
+		"psr-4": {"PhakeBuilder\\": "src/PhakeBuilder/"}
 	},
 	"autload-dev": {
 		"psr-4": {"PhakeBuilder\\Tests\\": "tests/"}

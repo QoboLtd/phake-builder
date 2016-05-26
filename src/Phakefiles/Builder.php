@@ -1,6 +1,4 @@
 <?php
-require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
 ///////////////////////
 // Utility functions //
 ///////////////////////
@@ -255,12 +253,11 @@ function doShellCommand($command, $privateInfo = null, $silent = false)
         throw new RuntimeException(printError($result, true, true));
     }
     if (!$silent) {
-		if (!empty(trim($result))) {
-        	printSuccess("SUCCESS! Output:\n" . $result);
-		}
-		else {
-        	printSuccess("SUCCESS!");
-		}
+        if (!empty(trim($result))) {
+            printSuccess("SUCCESS! Output:\n" . $result);
+        } else {
+            printSuccess("SUCCESS!");
+        }
     }
     return $result;
 }
@@ -296,14 +293,14 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
         $name = requireValue('DB_NAME', $app);
     }
 
-	$dsn = array(
-		'host' => $host,
-		'user' => $user,
-		'pass' => $pass,
-		'name' => $name,
-	);
-	$mysql = new \PhakeBuilder\MySQL(requireValue($command, $app));
-	$mysql->setDSN($dsn);
+    $dsn = array(
+        'host' => $host,
+        'user' => $user,
+        'pass' => $pass,
+        'name' => $name,
+    );
+    $mysql = new \PhakeBuilder\MySQL(requireValue($command, $app));
+    $mysql->setDSN($dsn);
 
     // Build command line strings for different commands
     switch ($command) {
@@ -312,7 +309,7 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
             if (empty($query)) {
                 throw new RuntimeException(printError("No SQL query given", true, true));
             }
-			$command = $mysql->query($query);
+            $command = $mysql->query($query);
             break;
         // ./vendor/bin/srdb.cli.php -h localhost -h localhost -u root -p 'foo' -n dbname -s 'find' -r 'replace'
         case 'SYSTEM_COMMAND_MYSQL_REPLACE':
@@ -324,7 +321,7 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
                 return;
             }
 
-			$command = $mysql->findReplace($find, $replace);
+            $command = $mysql->findReplace($find, $replace);
             break;
         default:
             throw new RuntimeException(printError("$command is not supported", true, true));
@@ -341,37 +338,31 @@ function doMySQLCommand($app, $query, $requireDB = true, $asAdmin = false, $comm
 }
 
 // Generic phake-builder tasks
-group(
-    'builder', function () {
+group('builder', function () {
 
-        desc('Initialize builder configuration');
-        task(
-            'init', function ($app) {
+    desc('Initialize builder configuration');
+    task('init', function ($app) {
+        $hasDotEnv = false;
+        try {
+            Dotenv::load(getcwd());
+            $hasDotEnv = true;
+        } catch (Exception $e) {
+            $hasDotEnv = false;
+        }
 
-                $hasDotEnv = false;
-                try {
-                    Dotenv::load(getcwd());
-                    $hasDotEnv = true;
-                } catch (Exception $e) {
-                    $hasDotEnv = false;
-                }
+        // Special treatment of log level to avoid
+        // sending $app parameter to every log message
+        $logLevel = getValue('PHAKE_BUILDER_LOG_LEVEL', $app);
+        putenv("PHAKE_BUILDER_LOG_LEVEL=$logLevel");
 
-                // Special treatment of log level to avoid
-                // sending $app parameter to every log message
-                $logLevel = getValue('PHAKE_BUILDER_LOG_LEVEL', $app);
-                putenv("PHAKE_BUILDER_LOG_LEVEL=$logLevel");
+        printInfo('Welcome to phake-builder!', false);
+        printInfo('Use "phake -T" to list all commands.', false);
+        printInfo('More info at https://github.com/QoboLtd/phake-builder', false);
+        printSeparator();
+        if (!$hasDotEnv) {
+            printWarning("Failed to load .env configuration file");
+        }
+        printDebug('Phake-builder initialized');
+    });
 
-                printInfo('Welcome to phake-builder!', false);
-                printInfo('Use "phake -T" to list all commands.', false);
-                printInfo('More info at https://github.com/QoboLtd/phake-builder', false);
-                printSeparator();
-                if (!$hasDotEnv) {
-                    printWarning("Failed to load .env configuration file");
-                }
-                printDebug('Phake-builder initialized');
-            }
-        );
-
-    }
-);
-// vi:ft=php
+});

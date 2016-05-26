@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2a42562ce57cbff6e69c57a9ce164b2e",
+    "hash": "eeacf25191ca2aac7ae317ce1f3cca8b",
     "content-hash": "4f5eaef9a1dc3d3ef00fcbdd3ba857e1",
     "packages": [
         {
@@ -884,16 +884,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "3.3.1",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86"
+                "reference": "4862dac433cbdb4438b593fa7f79e07559ba157e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/2431befdd451fac43fbcde94d1a92fb3b8b68f86",
-                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/4862dac433cbdb4438b593fa7f79e07559ba157e",
+                "reference": "4862dac433cbdb4438b593fa7f79e07559ba157e",
                 "shasum": ""
             },
             "require": {
@@ -943,7 +943,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-04-08 08:14:53"
+            "time": "2016-05-25 06:48:21"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1765,16 +1765,16 @@
         },
         {
             "name": "sebastian/git",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/git.git",
-                "reference": "38638de3e94830a5cd7a5956135589b967609cd5"
+                "reference": "607dcc6003502acdd0e6199b60ba954ce00f3004"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/git/zipball/38638de3e94830a5cd7a5956135589b967609cd5",
-                "reference": "38638de3e94830a5cd7a5956135589b967609cd5",
+                "url": "https://api.github.com/repos/sebastianbergmann/git/zipball/607dcc6003502acdd0e6199b60ba954ce00f3004",
+                "reference": "607dcc6003502acdd0e6199b60ba954ce00f3004",
                 "shasum": ""
             },
             "require": {
@@ -1806,7 +1806,7 @@
             "keywords": [
                 "git"
             ],
-            "time": "2016-02-21 15:02:23"
+            "time": "2016-03-12 23:31:06"
         },
         {
             "name": "sebastian/global-state",

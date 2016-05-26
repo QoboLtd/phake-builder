@@ -23,7 +23,7 @@ Install with composer as so:
 ```json
 {
     "require": {
-      "qobo/phake-builder": "~1.0"
+      "qobo/phake-builder": "~2.0"
     }
 }
 ```
@@ -31,11 +31,11 @@ Install with composer as so:
 Usage
 -----
 
-In the root of your project, create a ```Phakefile``` with the following:
+In the root of your project, create a ```Phakefile``` (or ```Phakefile.php```) with the following:
 
 ```php
 <?php
-require_once 'vendor/qobo/phake-builder/Phakefile';
+require_once 'vendor/qobo/phake-builder/Phakefile.php';
 ?>
 ```
 
@@ -111,13 +111,13 @@ $ ./vendor/bin/phake mysql:connect DB_HOST=localhost DB_USER=root
 ```
 
 Look through the ```.env.example``` file for some examples and defaults for
-parameters.  Look through the task definitions in Phakefile.* in 
+parameters.  Look through the task definitions in src/Phakefiles/*.php in 
 ```vendor/qobo/phake-builder``` to see which tasks accept which parameters.
 
 For those cases where you need to run a task several times with different
 parameters, you can create your own task, either handling the parameters
 differently, or simply calling the PHP functionality directly.  Have a look
-at the classes in ```vendor/qobo/phake-builder/lib``` folder, and associated
+at the classes in ```vendor/qobo/phake-builder/src``` folder, and associated
 unit tests.
 
 Now you are ready to create your own build targets.  To keep these visually
@@ -126,7 +126,7 @@ group.  Here is an example of such target for your own Phakefile:
 
 ```php
 <?php
-require_once 'vendor/qobo/phake-builder/Phakefile';
+require_once 'vendor/qobo/phake-builder/Phakefile.php';
 
 group('app', function() {
 
