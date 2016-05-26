@@ -26,7 +26,7 @@ function setDefaultTimezone($timezone = 'UTC')
 /**
  * Load Phakefile parts
  *
- * Automatically include all Phakefile.* files
+ * Automatically include all Phakefiles files
  * from a given folder
  *
  * @param  string $folder Folder path
@@ -35,7 +35,7 @@ function setDefaultTimezone($timezone = 'UTC')
 function loadPhakefileParts($folder)
 {
     $dir = new DirectoryIterator($folder);
-    $regex = new RegexIterator($dir, '/^Phakefile\./');
+    $regex = new RegexIterator($dir, '/\.php$/');
     foreach ($regex as $item) {
         include_once $item->getRealpath();
     }
