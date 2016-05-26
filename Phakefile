@@ -46,6 +46,6 @@ function loadPhakefileParts($folder)
 setDefaultTimezone();
 
 // Load everything from the current folder
-loadPhakefileParts(__DIR__);
+loadPhakefileParts(__DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Phakefiles');
 
 // vi:ft=php
