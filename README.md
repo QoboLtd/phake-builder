@@ -23,7 +23,7 @@ Install with composer as so:
 ```json
 {
     "require": {
-      "qobo/phake-builder": "~1.0"
+      "qobo/phake-builder": "~2.0"
     }
 }
 ```
