@@ -1,6 +1,4 @@
 <?php
-require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
 // Operating system tasks
 group('system', function () {
 

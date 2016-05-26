@@ -1,6 +1,4 @@
 <?php
-require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
 // Archive related tasks
 group('archive', function () {
 

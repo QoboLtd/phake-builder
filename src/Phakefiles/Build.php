@@ -1,6 +1,4 @@
 <?php
-require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
 if (!function_exists('phakeGetBuildDirs')) {
     /**
      * Get build directories

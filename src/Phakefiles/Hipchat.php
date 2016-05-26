@@ -1,6 +1,4 @@
 <?php
-require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
 // HipChat related tasks
 group('hipchat', function () {
 
