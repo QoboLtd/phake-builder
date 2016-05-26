@@ -2,20 +2,17 @@
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 // Sami.php related tasks
-group(
-    'sami', function () {
+group('sami', function () {
 
-        desc('Update API documentation');
-        task(
-            'update', ':builder:init', ':dotenv:create', function ($app) {
-                printSeparator();
-                printInfo("sami.php update");
+    desc('Update API documentation');
+    task('update', ':builder:init', ':dotenv:create', function ($app) {
+        printSeparator();
+        printInfo("sami.php update");
 
-                $sami_command = getValue('SYSTEM_COMMAND_SAMI', $app);
-                $sami_config = getValue('SAMI_CONFIG', $app);
-                $sami = new \PhakeBuilder\Sami($sami_command);
-                doShellCommand($sami->update($sami_config));
-            }
-        );
-    }
-);
+        $sami_command = getValue('SYSTEM_COMMAND_SAMI', $app);
+        $sami_config = getValue('SAMI_CONFIG', $app);
+        $sami = new \PhakeBuilder\Sami($sami_command);
+        doShellCommand($sami->update($sami_config));
+    });
+
+});
