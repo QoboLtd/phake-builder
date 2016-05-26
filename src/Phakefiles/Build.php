@@ -4,10 +4,10 @@ require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 if (!function_exists('phakeGetBuildDirs')) {
 	/**
 	 * Get build directories
-	 * 
+	 *
 	 * Build directories will be removed and recreated during
 	 * the build:clean task.
-	 * 
+	 *
 	 * @return array
 	 */
 	function phakeGetBuildDirs() {
@@ -24,7 +24,7 @@ if (!function_exists('phakeGetBuildDirs')) {
 if (!function_exists('phakeDirHasPHPFiles')) {
 	/**
 	 * Check if the directory has any .php files (recursively)
-	 * 
+	 *
 	 * @param string $dir Directory to check
 	 * @return boolean True if at least one file is found, false otherwise
 	 */
@@ -48,7 +48,7 @@ if (!function_exists('phakeDirHasPHPFiles')) {
 if (!function_exists('phakeGetBuildCommands')) {
 	/**
 	 * Get all test and build commands
-	 * 
+	 *
 	 * @return array
 	 */
 	function phakeGetBuildCommands() {
@@ -131,7 +131,7 @@ group(
 				}
 			}
 		);
-		
+
 		desc('PHPUnit');
 		task(
 			'phpunit', ':builder:init', function ($app) {
@@ -237,5 +237,3 @@ group(
 
 	}
 );
-
-// vi:ft=php

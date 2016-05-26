@@ -374,4 +374,3 @@ group(
 
     }
 );
-// vi:ft=php

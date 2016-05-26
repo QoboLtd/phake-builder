@@ -13,7 +13,7 @@ group(
 
                 $envFile = getcwd() . DIRECTORY_SEPARATOR . '.env';
                 $templateFile = getcwd() . DIRECTORY_SEPARATOR . '.env.example';
- 
+
                 if (!file_exists($templateFile)) {
                     throw new \RuntimeException(".env template file ($templateFile) does not exist");
                 }
@@ -47,7 +47,7 @@ group(
                         $linesOut[] = $name . '=' . $value;
                         $processedParams[] = $name;
                     }
- 
+
                     // Remove current parameter from the all known parameters list
                     if (in_array($name, $appParams)) {
                         unset($appParams[$name]);
@@ -64,7 +64,7 @@ group(
                         }
                     }
                 }
- 
+
                 $bytes = file_put_contents($envFile, implode("\n", $linesOut));
                 if (!$bytes) {
                     throw new \RuntimeException("Failed to save $count lines to $envFile");
@@ -82,17 +82,17 @@ group(
                 Dotenv::makeMutable();
                 Dotenv::load(getcwd());
                 Dotenv::makeImmutable();
- 
+
                 printSuccess("SUCCESS!");
             }
         );
- 
+
         desc('Delete .env file');
         task(
             'delete', ':builder:init', function ($app) {
                 printSeparator();
                 printInfo("Deleting .env file");
- 
+
                 $envFile = getcwd() . DIRECTORY_SEPARATOR . '.env';
                 if (file_exists($envFile)) {
                     $result = unlink($envFile);
@@ -108,4 +108,3 @@ group(
         );
     }
 );
-// vi:ft=php

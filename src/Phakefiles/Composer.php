@@ -28,5 +28,3 @@ group(
         );
     }
 );
-
-// vi:ft=php

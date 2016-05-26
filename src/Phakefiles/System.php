@@ -37,4 +37,3 @@ group(
         task('service-restart', ':builder:init', ':system:service-stop', ':system:service-start');
     }
 );
-// vi:ft=php

@@ -89,4 +89,3 @@ group(
         );
     }
 );
-// vi:ft=php
