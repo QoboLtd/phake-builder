@@ -80,7 +80,7 @@ class MySQL extends BaseCommand
             $result .= ' -u ' . escapeshellarg($this->dsn['user']);
         }
         if (!empty($this->dsn['pass'])) {
-            $result .= ' -p ' . escapeshellarg($this->dsn['pass']);
+            $result .= ' -p' . escapeshellarg($this->dsn['pass']);
         }
         if (!empty($this->dsn['name'])) {
             $result .= ' ' . escapeshellarg($this->dsn['name']);
