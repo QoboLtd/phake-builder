@@ -3,68 +3,6 @@
 // Utility functions //
 ///////////////////////
 /**
- * Get logger object
- *
- * @return object
- */
-function getLogger()
-{
-    $result = new \Monolog\Logger("log");
-
-    $formatter = getLogFormatter();
-    $stdoutHandler = getLogHandler($formatter);
-
-    $result->pushHandler($stdoutHandler);
-    $result->pushProcessor(
-        function ($record) {
-
-            $colors = array(
-            \Monolog\Logger::DEBUG     => 'purple',
-            \Monolog\Logger::INFO      => 'white',
-            \Monolog\Logger::NOTICE    => 'green',
-            \Monolog\Logger::WARNING   => 'yellow',
-            \Monolog\Logger::ERROR     => 'red',
-            \Monolog\Logger::CRITICAL  => 'red',
-            \Monolog\Logger::ALERT     => 'red',
-            \Monolog\Logger::EMERGENCY => 'red',
-            );
-
-            $record['color'] = $colors[ $record['level'] ] ?: 'blue';
-            return $record;
-        }
-    );
-
-    return $result;
-}
-
-/**
- * Get log formatter object
- *
- * @rturn object
- */
-function getLogFormatter()
-{
-    return new \Monolog\Formatter\ColorLineFormatter("[c=%color%]%message%[/c]\n", null, true, true);
-}
-
-/**
- * Get log handler
- *
- * @param  object $formatter Formatter intance
- * @return object
- */
-function getLogHandler($formatter)
-{
-
-    $logLevel = getenv('PHAKE_BUILDER_LOG_LEVEL') ? getenv('PHAKE_BUILDER_LOG_LEVEL') : 'INFO';
-
-    $result = new \Monolog\Handler\StdoutHandler(constant("\Monolog\Logger::$logLevel"));
-    $result->setFormatter($formatter);
-
-    return $result;
-}
-
-/**
  * Print separator
  *
  * This is mighty useful in long outputs
@@ -114,7 +52,7 @@ function printError($message, $format = true, $returnNoPrint = false)
     if ($returnNoPrint) {
         return $message;
     }
-    getLogger()->error($message);
+    \PhakeBuilder\Logger::getLogger(getenv('PHAKE_BUILDER_LOG_LEVEL'))->error($message);
 }
 
 /**
@@ -129,7 +67,7 @@ function printWarning($message, $format = true)
     if ($format) {
         $message = formatMessage($message, ':WARN :');
     }
-    getLogger()->warning($message);
+    \PhakeBuilder\Logger::getLogger(getenv('PHAKE_BUILDER_LOG_LEVEL'))->warning($message);
 }
 
 /**
@@ -144,7 +82,7 @@ function printSuccess($message, $format = true)
     if ($format) {
         $message = formatMessage($message, ':OK   :');
     }
-    getLogger()->notice($message);
+    \PhakeBuilder\Logger::getLogger(getenv('PHAKE_BUILDER_LOG_LEVEL'))->notice($message);
 }
 
 /**
@@ -159,7 +97,7 @@ function printInfo($message, $format = true)
     if ($format) {
         $message = formatMessage($message, ':INFO :');
     }
-    getLogger()->info($message);
+    \PhakeBuilder\Logger::getLogger(getenv('PHAKE_BUILDER_LOG_LEVEL'))->info($message);
 }
 
 /**
@@ -174,7 +112,7 @@ function printDebug($message, $format = true)
     if ($format) {
         $message = formatMessage($message, ':DEBUG:');
     }
-    getLogger()->debug($message);
+    \PhakeBuilder\Logger::getLogger(getenv('PHAKE_BUILDER_LOG_LEVEL'))->debug($message);
 }
 
 /**
