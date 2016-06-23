@@ -8,7 +8,7 @@ namespace PhakeBuilder;
  */
 class System
 {
-    
+
     /**
      * Get default configuration value for given parameter
      *
@@ -36,6 +36,7 @@ class System
         'SYSTEM_COMMAND_MYSQL_REPLACE' => 'php vendor/interconnectit/search-replace-db/srdb.cli.php',
         'SYSTEM_COMMAND_SERVICE' => 'service',
         'SYSTEM_COMMAND_SUDO' => 'sudo',
+        'SYSTEM_COMMAND_LETSENCRYPT' => '/opt/letsencrypt/certbot-auto',
         );
 
         if (isset($defaults[$param])) {
