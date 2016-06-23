@@ -1,50 +1,14 @@
 <?php
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-/**
- * Set default timezone
- *
- * phake-builder is using date() functionality a lot, especially
- * for things like logs and output.  If the machine doesn't have
- * a date.timezone configured in its php.ini file, PHP generates
- * warnings and notices, messing up the output and logs.
- *
- * So, here we check if the setting is in, and if it's not, we
- * set the default timezone to UTC.
- *
- * @param  string $timezone Timezone to set as default (default: UTC)
- * @return void
- */
-function setDefaultTimezone($timezone = 'UTC')
-{
-    $dateTimezone = ini_get('date.timezone');
-    if (empty($dateTimezone)) {
-        date_default_timezone_set($timezone);
-    }
-}
-
-/**
- * Load Phakefile parts
- *
- * Automatically include all Phakefiles files
- * from a given folder
- *
- * @param  string $folder Folder path
- * @return void
- */
-function loadPhakefileParts($folder)
-{
-    $dir = new DirectoryIterator($folder);
-    $regex = new RegexIterator($dir, '/\.php$/');
-    foreach ($regex as $item) {
-        include_once $item->getRealpath();
-    }
-}
-
-
 // Set default timezone
-setDefaultTimezone();
+\PhakeBuilder\Utils::setDefaultTimezone();
 
-// Load everything from the current folder
-loadPhakefileParts(__DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Phakefiles');
-
+// Load Phakefiles
+$phakefilesPath = __DIR__ . DIRECTORY_SEPARATOR
+    . 'src' . DIRECTORY_SEPARATOR
+    . 'Phakefiles';
+$phakefiles = \PhakeBuilder\Utils::findPhakefileParts($phakefilesPath);
+foreach ($phakefiles as $phakefile) {
+    require_once $phakefile;
+}
