@@ -32,8 +32,12 @@ class Logger
      * @param string $level Log level
      * @return object
      */
-    public static function getLogger($level = self::DEFAULT_LEVEL)
+    public static function getLogger($level = null)
     {
+        if (empty($level)) {
+            $level = static::DEFAULT_LEVEL;
+        }
+
         if (empty(static::$logger)) {
             static::setLogger($level);
         }
@@ -50,8 +54,12 @@ class Logger
      * @param object $logger Logger object
      * @return void
      */
-    public static function setLogger($level = self::DEFAULT_LEVEL, $logger = null)
+    public static function setLogger($level = null, $logger = null)
     {
+        if (empty($level)) {
+            $level = static::DEFAULT_LEVEL;
+        }
+
         if (!empty($logger)) {
             static::$logger = $logger;
             return;
@@ -67,7 +75,7 @@ class Logger
 
                 $colors = static::getColors();
 
-                $record['color'] = $colors[ $record['level'] ] ?: self::DEFAULT_COLOR;
+                $record['color'] = $colors[ $record['level'] ] ?: static::DEFAULT_COLOR;
                 return $record;
             }
         );
@@ -148,8 +156,12 @@ class Logger
      * @param string $level Log level
      * @return object
      */
-    public static function getHandler($level = self::DEFAULT_LEVEL)
+    public static function getHandler($level = null)
     {
+        if (empty($level)) {
+            $level = static::DEFAULT_LEVEL;
+        }
+
         if (empty(static::$handler)) {
             static::setHandler($level);
         }
@@ -165,8 +177,11 @@ class Logger
      * @param  object $formatter Formatter intance
      * @return object
      */
-    public static function setHandler($level = self::DEFAULT_LEVEL, $handler = null)
+    public static function setHandler($level = null, $handler = null)
     {
+        if (empty($level)) {
+            $level = static::DEFAULT_LEVEL;
+        }
 
         if (!empty($handler)) {
             static::$handler = $handler;
