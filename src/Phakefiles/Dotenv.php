@@ -5,7 +5,7 @@ group('dotenv', function () {
     desc('Create .env file');
     task('create', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Creating .env file");
+        printInfo("Task: dotenv:create (Create .env file)");
 
         $envFile = getcwd() . DIRECTORY_SEPARATOR . '.env';
         $templateFile = getcwd() . DIRECTORY_SEPARATOR . '.env.example';
@@ -68,10 +68,10 @@ group('dotenv', function () {
         printSuccess("SUCCESS! Saved $count lines to $envFile");
     });
 
-    desc('Reload settings from .env');
+    desc('Reload settings from .env file');
     task('reload', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Reloading .env configuration");
+        printInfo("Task: dotenv:reload (Reload settings from .env file)");
 
         Dotenv::makeMutable();
         Dotenv::load(getcwd());
@@ -83,7 +83,7 @@ group('dotenv', function () {
     desc('Delete .env file');
     task('delete', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Deleting .env file");
+        printInfo("Task: dotenv:delete (Delete .env file)");
 
         $envFile = getcwd() . DIRECTORY_SEPARATOR . '.env';
         if (file_exists($envFile)) {

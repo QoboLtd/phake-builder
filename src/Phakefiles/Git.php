@@ -5,7 +5,7 @@ group('git', function () {
     desc('Git checkout');
     task('checkout', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Git checkout");
+        printInfo("Task: git:checkout (Git checkout)");
 
         $git = new \PhakeBuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
         try {
@@ -28,7 +28,7 @@ group('git', function () {
     desc('Git changelog');
     task('changelog', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Git changelog");
+        printInfo("Task: git:changelog (Git changelog)");
 
         $oldHash = requireValue('GIT_OLD_HASH', $app);
         $newHash = requireValue('GIT_NEW_HASH', $app);
@@ -46,7 +46,7 @@ group('git', function () {
     desc('Git pull');
     task('pull', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Git pull");
+        printInfo("Task: git:pull (Git pull)");
 
         $changelog = '';
 
@@ -68,7 +68,7 @@ group('git', function () {
     desc('Git push');
     task('push', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Git push");
+        printInfo("Task: git:push (Git push)");
 
         $remote = getValue('GIT_REMOTE', $app);
         $branch = getValue('GIT_BRANCH', $app);

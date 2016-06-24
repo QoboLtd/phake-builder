@@ -5,7 +5,7 @@ group('mysql', function () {
     desc('Test MySQL database connection');
     task('connect', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Testing MySQL database connection');
+        printInfo("Task: mysql:connect (Test MySQL database connection)");
 
         $dsn = array(
             'host' => getValue('DB_HOST', $app),
@@ -24,7 +24,7 @@ group('mysql', function () {
     desc('Create database');
     task('database-create', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Creating database');
+        printInfo("Task: mysql:database-create (Create database)");
 
         $dsn = array(
             'host' => getValue('DB_HOST', $app),
@@ -42,7 +42,7 @@ group('mysql', function () {
     desc('Drop database');
     task('database-drop', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Dropping database');
+        printInfo("Task: mysql:database-drop (Drop database)");
 
         $dsn = array(
             'host' => getValue('DB_HOST', $app),
@@ -60,7 +60,7 @@ group('mysql', function () {
     desc('Import database');
     task('database-import', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Importing database');
+        printInfo("Task: mysql:database-import (Import database)");
 
         $dsn = array(
             'host' => getValue('DB_HOST', $app),
@@ -79,7 +79,7 @@ group('mysql', function () {
     desc('Find and replace across the database');
     task('find-replace', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Finding and replacing');
+        printInfo("Task: mysql:find-replace (Find and replace across the database)");
 
         $find = getValue('DB_FIND', $app);
         $replace = getValue('DB_REPLACE', $app);
@@ -106,7 +106,7 @@ group('mysql', function () {
     desc('Grant access');
     task('access-grant', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Granting access');
+        printInfo("Task: mysql:access-grant (Grant access)");
 
         $dsn = array(
             'host' => getValue('DB_HOST', $app),
@@ -123,7 +123,7 @@ group('mysql', function () {
     desc('Revoke access');
     task('access-revoke', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Revoking access');
+        printInfo("Task: mysql:access-revoke (Revoke access)");
 
         $dsn = array(
             'host' => getValue('DB_HOST', $app),
@@ -140,7 +140,7 @@ group('mysql', function () {
     desc('Allow file operation');
     task('access-file-allow', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Allowing file operations');
+        printInfo("Task: mysql:access-file-allow (Allow file operation)");
 
         $dsn = array(
             'host' => getValue('DB_HOST', $app),
@@ -157,7 +157,7 @@ group('mysql', function () {
     desc('Deny file operation');
     task('access-file-deny', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Denying file operations');
+        printInfo("Task: mysql:access-file-deny (Deny file operation)");
 
         $dsn = array(
             'host' => getValue('DB_HOST', $app),

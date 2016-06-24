@@ -5,7 +5,7 @@ group('archive', function () {
     desc('Extract ZIP or TAR archive');
     task('extract', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Extract ZIP or TAR archive");
+        printInfo("Task: archive:extract (Extract ZIP or TAR archive)");
 
         $src = requireValue('EXTRACT_SRC', $app);
         $dst = requireValue('EXTRACT_DST', $app);
@@ -20,7 +20,7 @@ group('archive', function () {
     desc('Create ZIP or TAR archive');
     task('compress', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Create ZIP or TAR archive");
+        printInfo("Task: archive:compress (Create ZIP or TAR archive)");
 
         $src = requireValue('COMPRESS_SRC', $app);
         $dst = requireValue('COMPRESS_DST', $app);

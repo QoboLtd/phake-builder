@@ -5,7 +5,7 @@ group('system', function () {
     desc('Start system service');
     task('service-start', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Starting system service");
+        printInfo("Task: system:service-start (Start system service)");
 
         $serviceCommand = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
         $serviceCommand .= ' ' . requireValue('SYSTEM_COMMAND_SERVICE', $app);
@@ -17,7 +17,7 @@ group('system', function () {
     desc('Stop system service');
     task('service-stop', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Stopping system service");
+        printInfo("Task: system:service-stop (Stop system service)");
 
         $serviceCommand = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
         $serviceCommand .= ' ' . requireValue('SYSTEM_COMMAND_SERVICE', $app);

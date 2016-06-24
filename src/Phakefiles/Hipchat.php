@@ -5,7 +5,7 @@ group('hipchat', function () {
     desc('Send message to HipChat room');
     task('message', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Sending message');
+        printInfo("Task: hipchat:message (Send message to HipChat room)");
 
         $token = requireValue('HIPCHAT_TOKEN', $app);
         $room = requireValue('HIPCHAT_ROOM', $app);
