@@ -59,10 +59,9 @@ class Logger
 
         static::$logger = new \Monolog\Logger("log");
 
-        $formatter = static::getFormatter();
         $handler = static::getHandler($level);
-
         static::$logger->pushHandler($handler);
+
         static::$logger->pushProcessor(
             function ($record) {
 
