@@ -297,6 +297,7 @@ group('builder', function () {
         printInfo('Use "phake -T" to list all commands.', false);
         printInfo('More info at https://github.com/QoboLtd/phake-builder', false);
         printSeparator();
+        printInfo("Task: builder:init (Initialize builder configuration)");
         if (!$hasDotEnv) {
             printWarning("Failed to load .env configuration file");
         }

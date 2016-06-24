@@ -5,7 +5,7 @@ group('letsencrypt', function () {
     desc('Get webroot certonly');
     task('certonly', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Getting webroot certonly");
+        printInfo("Task: letsencrypt:certonly (Get webroot certonly)");
 
         $command = \PhakeBuilder\System::needsSudo() ? requireValue('SYSTEM_COMMAND_SUDO', $app) : '';
         $command .= ' ' . getValue('SYSTEM_COMMAND_LETSENCRYPT', $app);

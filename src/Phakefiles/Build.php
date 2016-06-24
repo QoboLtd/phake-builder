@@ -97,13 +97,14 @@ group('build', function () {
     desc('All build tasks');
     task('all', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Build tasks");
+        printInfo("Task: build:all (All build tasks)");
 
         $commands = phakeGetBuildCommands();
 
         $failedCommands = array();
         foreach ($commands as $name => $command) {
             try {
+                printInfo("Task: build:$name");
                 doShellCommand($command);
             } catch (\Exception $e) {
                 $failedCommands[$name] = $e->getMessage();
@@ -117,10 +118,10 @@ group('build', function () {
     task('all', 'build:clean');
     task('all', 'sami:update');
 
-    desc('Clean');
+    desc('Clean build files');
     task('clean', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Clean");
+        printInfo("Task: build:clean (Clean build files)");
 
         $dirs = phakeGetBuildDirs();
         foreach ($dirs as $dir) {
@@ -129,10 +130,10 @@ group('build', function () {
         }
     });
 
-    desc('PHPUnit');
+    desc('PHP unit tests (PHPUnit)');
     task('phpunit', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("PHPUnit");
+        printInfo("Task: build:phpunit (PHP unit tests (PHPUnit))");
 
         $commands = phakeGetBuildCommands();
         if (!empty($commands['phpunit'])) {
@@ -140,10 +141,10 @@ group('build', function () {
         }
     });
 
-    desc('CodeSniffer');
+    desc('PHP coding style check (CodeSniffer)');
     task('phpcs', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("CodeSniffer");
+        printInfo("Task: build:phpcs (PHP coding style check (CodeSniffer))");
 
         $commands = phakeGetBuildCommands();
         if (!empty($commands['phpcs-ci'])) {
@@ -159,10 +160,10 @@ group('build', function () {
         }
     });
 
-    desc('PDepend');
+    desc('PHP coding metrics (PDepend)');
     task('pdepend', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('PDepend');
+        printInfo("Task: build:pdepend (PHP coding metrics (PDepend))");
 
         $commands = phakeGetBuildCommands();
         if (!empty($commands['pdepend'])) {
@@ -170,10 +171,10 @@ group('build', function () {
         }
     });
 
-    desc('PHPLoc');
+    desc('PHP lines of code metrics (PHPLOC)');
     task('phploc', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('PHPLoc');
+        printInfo("Task: build:phploc (PHP lines of code metrics (PHPLOC))");
 
         $commands = phakeGetBuildCommands();
         if (!empty($commands['phploc'])) {
@@ -181,10 +182,10 @@ group('build', function () {
         }
     });
 
-    desc('PHPMD');
+    desc('PHP mess detection (PHPMD)');
     task('phpmd', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('PHPMD');
+        printInfo("Task: build:phpmd (PHP mess detection (PHPMD))");
 
         $commands = phakeGetBuildCommands();
         if (!empty($commands['phpmd-ci'])) {
@@ -206,10 +207,10 @@ group('build', function () {
         }
     });
 
-    desc('PHPCPD');
+    desc('PHP copy-paste detection (PHPCPD)');
     task('phpcpd', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('PHPCPD');
+        printInfo("Task: build:phpcpd (PHP copy-paste detection (PHPCPD))");
 
         $commands = phakeGetBuildCommands();
         if (!empty($commands['phpcpd'])) {

@@ -5,7 +5,7 @@ group('composer', function () {
     desc('Install composer dependencies');
     task('install', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Composer install");
+        printInfo("Task: composer:install (Install composer dependencies)");
 
         $composer = new \PhakeBuilder\Composer(getValue('SYSTEM_COMMAND_COMPOSER', $app));
         doShellCommand($composer->install());
@@ -14,7 +14,7 @@ group('composer', function () {
     desc('Update composer dependencies');
     task('update', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Composer update");
+        printInfo("Task: composer:update (Update composer dependencies)");
 
         $composer = new \PhakeBuilder\Composer(getValue('SYSTEM_COMMAND_COMPOSER', $app));
         doShellCommand($composer->install());

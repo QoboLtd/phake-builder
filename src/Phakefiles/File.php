@@ -5,7 +5,7 @@ group('file', function () {
     desc('Process template file');
     task('process', ':builder:init', function ($app) {
         printSeparator();
-        printInfo('Processing template');
+        printInfo("Task: file:process (Processing template file)");
 
         $src = requireValue('TEMPLATE_SRC', $app);
         $dst = requireValue('TEMPLATE_DST', $app);
@@ -31,7 +31,7 @@ group('file', function () {
     desc('Create empty file or update timestamp of existing');
     task('touch', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Touching file");
+        printInfo("Task: file:touch (Create empty file or update timestamp of existing)");
 
         $file = requireValue('TOUCH_PATH', $app);
         $result = touch($file);
@@ -44,7 +44,8 @@ group('file', function () {
     desc('Create symbolic link');
     task('link', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Creating link");
+        printInfo("Task: file:link (Create symlink link)");
+
         $src = requireValue('LINK_SRC', $app);
         $dst = requireValue('LINK_DST', $app);
         $result = symlink($src, $dst);
@@ -57,7 +58,7 @@ group('file', function () {
     desc('Rename file or folder');
     task('mv', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Renaming file or folder");
+        printInfo("Task: file:mv (Rename file or folder)");
 
         $src = requireValue('MV_SRC', $app);
         $dst = requireValue('MV_DST', $app);
@@ -71,7 +72,8 @@ group('file', function () {
     desc('Recursively remove file or folder');
     task('rm', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Removing file or folder");
+        printInfo("Task: file:rm (Recursively remove file or folder)");
+
         $path = requireValue('RM_PATH', $app);
         $result = \PhakeBuilder\FileSystem::removePath($path);
         if (!$result) {
@@ -83,7 +85,7 @@ group('file', function () {
     desc('Create folder');
     task('mkdir', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Creating folder");
+        printInfo("Task: file:mkdir (Create folder)");
 
         $path = requireValue('MKDIR_PATH', $app);
         $mode = getValue('MKDIR_MODE', $app);
@@ -97,7 +99,7 @@ group('file', function () {
     desc('Change permissions on path');
     task('chmod', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Changing permissions");
+        printInfo("Task: file:chmod (Change permissions on path)");
 
         $path = requireValue('CHMOD_PATH', $app);
         $dirMode = getValue('CHMOD_DIR_MODE', $app);
@@ -112,7 +114,7 @@ group('file', function () {
     desc('Change user ownership on path');
     task('chown', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Changing user ownership");
+        printInfo("Task: file:chown (Change user ownership on path)");
 
         $path = requireValue('CHOWN_PATH', $app);
         $user = getValue('CHOWN_USER', $app);
@@ -126,7 +128,7 @@ group('file', function () {
     desc('Change group ownership on path');
     task('chgrp', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Changing group ownership");
+        printInfo("Task: file:chgrp (Change group ownership on path)");
 
         $path = requireValue('CHGRP_PATH', $app);
         $group = getValue('CHGRP_GROUP', $app);
@@ -140,7 +142,7 @@ group('file', function () {
     desc('Download file from URL');
     task('download', ':builder:init', function ($app) {
         printSeparator();
-        printInfo("Download file");
+        printInfo("Task: file:download (Download file from URL)");
 
         $src = requireValue('DOWNLOAD_SRC', $app);
         $dst = requireValue('DOWNLOAD_DST', $app);
