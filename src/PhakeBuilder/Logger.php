@@ -110,7 +110,7 @@ class Logger
         }
         static::$colors = array(
             \Monolog\Logger::DEBUG     => 'purple',
-            \Monolog\Logger::INFO      => 'white',
+            \Monolog\Logger::INFO      => 'cyan',
             \Monolog\Logger::NOTICE    => 'green',
             \Monolog\Logger::WARNING   => 'yellow',
             \Monolog\Logger::ERROR     => 'red',
