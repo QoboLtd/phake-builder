@@ -18,8 +18,10 @@
 			<exclude>
 				<directory>./build/</directory>
 				<directory>./etc/</directory>
-				<directory>./vendor/</directory>
+				<directory>./src/Phakefiles/</directory>
 				<directory>./tests/</directory>
+				<directory>./vendor/</directory>
+				<file>./Phakefile.php</file>
 			</exclude>
 		</whitelist>
 	</filter>
