@@ -16,6 +16,11 @@ install:
 script:
     - ./vendor/bin/phake build:all
 
+after_success:
+    - curl -s https://codecov.io/bash > /tmp/codecov.sh
+    - chmod +x /tmp/codecov.sh
+    - /tmp/codecov.sh -s build/logs
+
 notifications:
     email:
         - webdev@qobocloud.com
