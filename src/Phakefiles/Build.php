@@ -114,6 +114,7 @@ group('build', function () {
         if (!empty($failedCommands)) {
             throw new \RuntimeException("The following failures occured during execution: \n" . print_r($failedCommands, true));
         }
+        printInfo("SUCCESS!");
     });
     task('all', 'build:clean');
     task('all', 'sami:update');
@@ -128,6 +129,7 @@ group('build', function () {
             \PhakeBuilder\FileSystem::removePath($dir);
             \PhakeBuilder\FileSystem::makeDir($dir);
         }
+        printInfo("SUCCESS!");
     });
 
     desc('PHP unit tests (PHPUnit)');

@@ -64,8 +64,11 @@ group('letsencrypt', function () {
                 $result = symlink("/etc/letsencrypt/live/$sslDomain/$sslCert", "etc/ssl/$sslDomain.$sslCert");
                 if (!$result) {
                     throw new \RuntimeException("Failed to link certificate $sslCert for domain $sslDomain");
+                } else {
+                    printInfo("Linked etc/ssl/$sslDomain.$sslCert to /etc/letsencrypt/live/$sslDomain/$sslCert");
                 }
             }
         }
+        printSuccess("SUCCESS!");
     });
 });
