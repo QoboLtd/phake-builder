@@ -15,6 +15,7 @@ group('archive', function () {
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage());
         }
+        printSuccess("SUCCESS!");
     });
 
     desc('Create ZIP or TAR archive');
@@ -30,6 +31,7 @@ group('archive', function () {
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage());
         }
+        printSuccess("SUCCESS!");
     });
 
 });
