@@ -12,8 +12,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 
     public function testFindPhakefileParts()
     {
-        $phakefilesPath = __DIR__ . DIRECTORY_SEPARATOR
-            . '..' . DIRECTORY_SEPARATOR
+        $phakefilesPath = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR
             . 'src' . DIRECTORY_SEPARATOR
             . 'Phakefiles';
         $result = \PhakeBuilder\Utils::findPhakefileParts($phakefilesPath);
