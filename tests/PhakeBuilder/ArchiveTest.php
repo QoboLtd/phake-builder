@@ -17,7 +17,7 @@ class ArchiveTest extends \PHPUnit_Framework_TestCase
      */
     public function testExtract($src, $expected)
     {
-        $srcDir = __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'Archive' . DIRECTORY_SEPARATOR;
+        $srcDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'Archive' . DIRECTORY_SEPARATOR;
         $src = $srcDir . $src;
 
         $dstDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR;
