@@ -17,6 +17,7 @@
 			<directory suffix=".php">.</directory>
 			<exclude>
 				<directory>./build/</directory>
+				<directory>./etc/</directory>
 				<directory>./vendor/</directory>
 				<directory>./tests/</directory>
 			</exclude>
