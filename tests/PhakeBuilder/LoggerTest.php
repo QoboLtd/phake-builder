@@ -3,6 +3,23 @@ namespace PhakeBuilder\Tests;
 
 class LoggerTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        \PhakeBuilder\Logger::resetAll();
+    }
+
+    public function testResetAll()
+    {
+        $colors = array('debug' => 'black-and-white');
+        \PhakeBuilder\Logger::setColors($colors);
+        $result = \PhakeBuilder\Logger::getColors();
+        $this->assertEquals($colors, $result, "Setting colors is broken");
+
+        \PhakeBuilder\Logger::resetAll();
+
+        $result = \PhakeBuilder\Logger::getColors();
+        $this->assertFalse($colors == $result, "resetAll() is broken");
+    }
 
     public function testDefaultProcessor()
     {

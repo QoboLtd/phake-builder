@@ -27,6 +27,15 @@ class Logger
     protected static $processor;
     protected static $colors;
 
+    public static function resetAll()
+    {
+        static::$logger = null;
+        static::$formatter = null;
+        static::$handler = null;
+        static::$processor = null;
+        static::$colors = null;
+    }
+
     /**
      * Get logger object
      *
