@@ -106,6 +106,18 @@ class HipChatTest extends \PHPUnit_Framework_TestCase
         \PhakeBuilder\HipChat::setMessage($message);
         $result = \PhakeBuilder\HipChat::getMessage();
         $this->assertTrue(is_object($result), "Setting message is broken");
+
+        $from = 'some from';
+        $color = 'some color';
+        \PhakeBuilder\HipChat::setMessage($message, $from, $color);
+        $result = \PhakeBuilder\HipChat::getMessage();
+        $this->assertTrue(is_object($result), "Setting message is broken");
+
+        $message = new \StdClass();
+        \PhakeBuilder\HipChat::setMessage($message);
+        $result = \PhakeBuilder\HipChat::getMessage();
+        $this->assertTrue(is_object($result), "Setting message object is broken");
+        $this->assertEquals($message, $result, "Set message object is modified");
     }
 
     public function testGetMessageDefault()
