@@ -16,6 +16,14 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($record['color'] == $result['color'], 'Default processor does not handle color');
     }
 
+    public function testSetProcessor()
+    {
+        $processor = '\\PhakeBuilder\\Logger::defaultProcessor';
+        \PhakeBuilder\Logger::setProcessor($processor);
+        $result = \PhakeBuilder\Logger::getProcessor();
+        $this->assertEquals($processor, $result, "Setting default processor is broken");
+    }
+
     public function testGetLogger()
     {
         $result = \PhakeBuilder\Logger::getLogger();
@@ -26,7 +34,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         \PhakeBuilder\Logger::setLogger();
         $result = \PhakeBuilder\Logger::getLogger();
-        $this->assertTrue(is_object($result), 'Setting logger is broker');
+        $this->assertTrue(is_object($result), 'Setting logger is broken');
     }
 
     public function testSetLoggerObject()
@@ -34,7 +42,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $expected = new \StdClass();
         \PhakeBuilder\Logger::setLogger(null, $expected);
         $result = \PhakeBuilder\Logger::getLogger();
-        $this->assertTrue(is_object($result), 'Setting logger is broker');
+        $this->assertTrue(is_object($result), 'Setting logger is broken');
         $this->assertEquals($expected, $result, 'Set logger is modified');
     }
 
@@ -49,6 +57,14 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $result = \PhakeBuilder\Logger::getHandler();
         $this->assertInstanceOf('Monolog\Handler\HandlerInterface', $result, "Result does not implement Monolog\Handler\HandlerInterface");
     }
+
+    public function testSetHandlerDefault()
+    {
+        \PhakeBuilder\Logger::setHandler();
+        $result = \PhakeBuilder\Logger::getHandler();
+        $this->assertTrue(is_object($result), 'Setting handler is broken');
+    }
+
 
     public function testGetColors()
     {
