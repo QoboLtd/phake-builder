@@ -10,6 +10,22 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Psr\Log\LoggerInterface', $result, "Result does not implement Psr\Log\LoggerInterface");
     }
 
+    public function testSetLoggerDefault()
+    {
+        \PhakeBuilder\Logger::setLogger();
+        $result = \PhakeBuilder\Logger::getLogger();
+        $this->assertTrue(is_object($result), 'Setting logger is broker');
+    }
+
+    public function testSetLoggerObject()
+    {
+        $expected = new \StdClass();
+        \PhakeBuilder\Logger::setLogger(null, $expected);
+        $result = \PhakeBuilder\Logger::getLogger();
+        $this->assertTrue(is_object($result), 'Setting logger is broker');
+        $this->assertEquals($expected, $result, 'Set logger is modified');
+    }
+
     public function testGetFormatter()
     {
         $result = \PhakeBuilder\Logger::getFormatter();
