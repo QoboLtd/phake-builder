@@ -106,13 +106,20 @@ class HipChatTest extends \PHPUnit_Framework_TestCase
         \PhakeBuilder\HipChat::setMessage($message);
         $result = \PhakeBuilder\HipChat::getMessage();
         $this->assertTrue(is_object($result), "Setting message is broken");
+    }
 
+    public function testSetMessageWithParams()
+    {
+        $message = 'some message';
         $from = 'some from';
         $color = 'some color';
         \PhakeBuilder\HipChat::setMessage($message, $from, $color);
         $result = \PhakeBuilder\HipChat::getMessage();
-        $this->assertTrue(is_object($result), "Setting message is broken");
+        $this->assertTrue(is_object($result), "Setting message with params is broken");
+    }
 
+    public function testSetMessageObject()
+    {
         $message = new \StdClass();
         \PhakeBuilder\HipChat::setMessage($message);
         $result = \PhakeBuilder\HipChat::getMessage();
@@ -133,6 +140,6 @@ class HipChatTest extends \PHPUnit_Framework_TestCase
     public function testMessage()
     {
         $result = \PhakeBuilder\HipChat::message('token', 'room', 'msg');
-        $this->assertNul($result, "Non-null result from message");
+        $this->assertNull($result, "Non-null result from message");
     }
 }
