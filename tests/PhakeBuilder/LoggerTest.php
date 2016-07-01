@@ -16,12 +16,25 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($record['color'] == $result['color'], 'Default processor does not handle color');
     }
 
+    public function testSetProcessorDefault()
+    {
+        \PhakeBuilder\Logger::setProcessor();
+        $result = \PhakeBuilder\Logger::getProcessor();
+        $this->assertTrue(is_callable($result), "setProcessor() sets a non-callable processor");
+    }
+
     public function testSetProcessor()
     {
         $processor = '\\PhakeBuilder\\Logger::defaultProcessor';
         \PhakeBuilder\Logger::setProcessor($processor);
         $result = \PhakeBuilder\Logger::getProcessor();
         $this->assertEquals($processor, $result, "Setting default processor is broken");
+    }
+
+    public function testGetProcessor()
+    {
+        $result = \PhakeBuilder\Logger::getProcessor();
+        $this->assertTrue(is_callable($result), "getProcessor() returns a non-callable");
     }
 
     public function testGetLogger()
@@ -46,6 +59,14 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result, 'Set logger is modified');
     }
 
+    public function testSetFormatter()
+    {
+        $expected = new \StdClass();
+        \PhakeBuilder\Logger::setFormatter($expected);
+        $result = \PhakeBuilder\Logger::getFormatter();
+        $this->assertEquals($expected, $result, "Set formatter is broken");
+    }
+
     public function testGetFormatter()
     {
         $result = \PhakeBuilder\Logger::getFormatter();
@@ -63,6 +84,14 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         \PhakeBuilder\Logger::setHandler();
         $result = \PhakeBuilder\Logger::getHandler();
         $this->assertTrue(is_object($result), 'Setting handler is broken');
+    }
+
+    public function testSetHandlerObject()
+    {
+        $expected = new \StdClass();
+        \PhakeBuilder\Logger::setHandler(null, $expected);
+        $result = \PhakeBuilder\Logger::getHandler();
+        $this->assertEquals($expected, $result, 'Setting handler object is broken');
     }
 
 
