@@ -4,6 +4,18 @@ namespace PhakeBuilder\Tests;
 class LoggerTest extends \PHPUnit_Framework_TestCase
 {
 
+    public function testDefaultProcessor()
+    {
+        $record = array(
+            'color' => 'black-and-white',
+            'level' => 'debug',
+        );
+        $result = \PhakeBuilder\Logger::defaultProcessor($record);
+        $this->assertTrue(is_array($result), 'Default processor is broken');
+        $this->assertEquals($record['level'], $result['level'], 'Default processor breaks record');
+        $this->assertFalse($record['color'] == $result['color'], 'Default processor does not handle color');
+    }
+
     public function testGetLogger()
     {
         $result = \PhakeBuilder\Logger::getLogger();

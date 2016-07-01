@@ -24,6 +24,7 @@ class Logger
     protected static $logger;
     protected static $formatter;
     protected static $handler;
+    protected static $processor;
     protected static $colors;
 
     /**
@@ -70,15 +71,46 @@ class Logger
         $handler = static::getHandler($level);
         static::$logger->pushHandler($handler);
 
-        static::$logger->pushProcessor(
-            function ($record) {
+        $processor = static::getProcessor();
+        static::$logger->pushProcessor($processor);
+    }
 
-                $colors = static::getColors();
+    /**
+     * Get log processor object
+     *
+     * @rturn callable
+     */
+    public static function getProcessor()
+    {
+        if (empty(static::$processor)) {
+            static::setProcessor();
+        }
+        return static::$processor;
+    }
 
-                $record['color'] = $colors[ $record['level'] ] ?: static::DEFAULT_COLOR;
-                return $record;
-            }
-        );
+    /**
+     * Set log processor
+     *
+     * If processor is not given, we assume a sensible default
+     *
+     * @param object $formatter Formatter object to use
+     * @return void
+     */
+    public static function setProcessor($processor = null)
+    {
+        if (!empty($processor)) {
+            static::$processor = $processor;
+            return;
+        }
+        static::$processor = __CLASS__ . '::defaultProcessor';
+    }
+
+    public static function defaultProcessor($record)
+    {
+        $colors = static::getColors();
+
+        $record['color'] = empty($colors[ $record['level'] ]) ? static::DEFAULT_COLOR : $colors[ $record['level'] ];
+        return $record;
     }
 
     /**
