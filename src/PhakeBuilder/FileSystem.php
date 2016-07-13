@@ -123,8 +123,15 @@ class FileSystem
      */
     public static function removePath($path)
     {
-        self::remove($path);
-        return true;
+        $result = false;
+
+        $path = realpath($path);
+        if ($path) {
+            self::remove($path);
+            $result = true;
+        }
+
+        return $result;
     }
 
     /**
@@ -140,6 +147,11 @@ class FileSystem
     public static function chmodPath($path, $dirMode = null, $fileMode = null, $recursive = true)
     {
         $result = false;
+
+        $path = realpath($path);
+        if (empty($path)) {
+            return false;
+        }
 
         $dirMode = $dirMode ?: self::getDefaultDirMode();
         $fileMode = $fileMode ?: self::getDefaultFileMode();
@@ -209,6 +221,11 @@ class FileSystem
      */
     public static function chownPath($path, $user = null, $recursive = true)
     {
+        $path = realpath($path);
+        if (empty($path)) {
+            return false;
+        }
+
         if (empty($user)) {
             $user = self::getDefaultUser();
         }
@@ -226,6 +243,11 @@ class FileSystem
      */
     public static function chgrpPath($path, $group = null, $recursive = true)
     {
+        $path = realpath($path);
+        if (empty($path)) {
+            return false;
+        }
+
         if (empty($group)) {
             $group = self::getDefaultGroup();
         }
