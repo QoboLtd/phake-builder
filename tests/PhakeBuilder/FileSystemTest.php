@@ -55,6 +55,12 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         $this->assertFileNotExists($dstFile, "Failed to remove destination file [$dstFile]");
     }
 
+    public function testRemoveReal()
+    {
+        $result = \PhakeBuilder\FileSystem::removePath('/this-path-does-not-exist');
+        $this->assertFalse($result, "removePath() not bailing early when path is not real");
+    }
+
     public function testChmodDirectory()
     {
         $tmpDir = tempnam(sys_get_temp_dir(), 'phakeTest_');
@@ -93,6 +99,12 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('0775', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
 
         rmdir($tmpDir);
+    }
+
+    public function testChmodReal()
+    {
+        $result = \PhakeBuilder\FileSystem::chmodPath('/this-path-does-not-exist');
+        $this->assertFalse($result, "chmodPath() not bailing early when path is not real");
     }
 
     public function testChmodDirectoryRecursive()
@@ -176,6 +188,12 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testChownReal()
+    {
+        $result = \PhakeBuilder\FileSystem::chownPath('/this-path-does-not-exist');
+        $this->assertFalse($result, "chownPath() not bailing early when path is not real");
+    }
+
     /**
      * Test chgrp() operation
      *
@@ -194,6 +212,12 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         if (file_exists($dst)) {
             rmdir($dst);
         }
+    }
+
+    public function testChgrpReal()
+    {
+        $result = \PhakeBuilder\FileSystem::chgrpPath('/this-path-does-not-exist');
+        $this->assertFalse($result, "chgrpPath() not bailing early when path is not real");
     }
 
     public function testDownloadFile()
