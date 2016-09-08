@@ -19,6 +19,9 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testNeedsSudo()
     {
+        if (!extension_loaded('posix')) {
+            $this->markTestSkipped('The POSIX extension is not available');
+        }
         $uid = posix_getuid();
         $result = System::needsSudo();
         $expected = ($uid == 0) ? false : true;

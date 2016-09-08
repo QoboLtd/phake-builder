@@ -177,6 +177,10 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
      */
     public function testChownPath()
     {
+        if (!extension_loaded('posix')) {
+            $this->markTestSkipped('The POSIX extension is not available');
+        }
+
         $dst = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'phakeTest_owner';
         if (!file_exists($dst)) {
             mkdir($dst);
@@ -203,6 +207,10 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
      */
     public function testChgrpPath()
     {
+        if (!extension_loaded('posix')) {
+            $this->markTestSkipped('The POSIX extension is not available');
+        }
+
         $dst = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'phakeTest_owner';
         if (!file_exists($dst)) {
             mkdir($dst);

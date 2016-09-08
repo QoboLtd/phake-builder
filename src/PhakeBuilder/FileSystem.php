@@ -78,10 +78,15 @@ class FileSystem
      *
      * Return a fallback default for user (assumses owner of current process)
      *
+     * @throws \RuntimeException when php-posix is not installed
      * @return string
      */
     protected static function getDefaultUser()
     {
+        if (!extension_loaded('posix')) {
+            throw new \RuntimeException("PHP extension posix is not installed.");
+        }
+
         $processUser = posix_getpwuid(posix_geteuid());
         return $processUser['name'];
     }
@@ -91,10 +96,15 @@ class FileSystem
      *
      * Return a fallback default for group (assumses owner of current process)
      *
+     * @throws \RuntimeException when php-posix is not installed
      * @return string
      */
     protected static function getDefaultGroup()
     {
+        if (!extension_loaded('posix')) {
+            throw new \RuntimeException("PHP extension posix is not installed.");
+        }
+
         $processGroup = posix_getgrgid(posix_getegid());
         return $processGroup['name'];
     }
