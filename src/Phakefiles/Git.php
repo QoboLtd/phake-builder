@@ -76,5 +76,4 @@ group('git', function () {
         $git = new \PhakeBuilder\Git(getValue('SYSTEM_COMMAND_GIT', $app));
         doShellCommand($git->push($remote, $branch));
     });
-
 });

@@ -11,6 +11,7 @@
 		}
 	],
 	"require": {
+		"pyrech/composer-changelogs": "~1.4",
 		"jaz303/phake": "~0.6",
 		"vlucas/phpdotenv": "~1.1",
 		"interconnectit/search-replace-db": "3.1",

@@ -28,5 +28,4 @@ group('system', function () {
 
     desc('Restart system service');
     task('service-restart', ':builder:init', ':system:service-stop', ':system:service-start');
-
 });

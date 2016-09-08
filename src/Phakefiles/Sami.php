@@ -12,5 +12,4 @@ group('sami', function () {
         $sami = new \PhakeBuilder\Sami($sami_command);
         doShellCommand($sami->update($sami_config));
     });
-
 });
