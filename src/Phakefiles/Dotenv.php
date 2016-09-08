@@ -97,5 +97,4 @@ group('dotenv', function () {
             printWarning("File $envFile does not exist");
         }
     });
-
 });

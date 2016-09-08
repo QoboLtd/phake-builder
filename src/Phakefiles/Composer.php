@@ -19,5 +19,4 @@ group('composer', function () {
         $composer = new \PhakeBuilder\Composer(getValue('SYSTEM_COMMAND_COMPOSER', $app));
         doShellCommand($composer->install());
     });
-
 });

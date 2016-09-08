@@ -170,5 +170,4 @@ group('mysql', function () {
         $secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
         doShellCommand($command, $secureStrings);
     });
-
 });

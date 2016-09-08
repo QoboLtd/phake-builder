@@ -16,5 +16,4 @@ group('hipchat', function () {
         \PhakeBuilder\HipChat::message($token, $room, $msg, $from, $color);
         printSuccess("SUCCESS!");
     });
-
 });

@@ -219,5 +219,4 @@ group('build', function () {
             doShellCommand($commands['phpcpd']);
         }
     });
-
 });

@@ -152,5 +152,4 @@ group('file', function () {
         }
         printSuccess("SUCCESS!");
     });
-
 });
