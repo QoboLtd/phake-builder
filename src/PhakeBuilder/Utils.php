@@ -59,4 +59,24 @@ class Utils
 
         return $result;
     }
+
+    /**
+     * Get current working directory
+     *
+     * @param bool $addTrailingSep Whether or not add trailing directory separator
+     * @return string
+     */
+    public static function getCurrentDir($addTrailingSep = true)
+    {
+        $result = getcwd();
+        if (empty($result)) {
+            $result = '.';
+        }
+
+        if ($addTrailingSep) {
+            $result .= DIRECTORY_SEPARATOR;
+        }
+
+        return $result;
+    }
 }

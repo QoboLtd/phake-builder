@@ -7,8 +7,8 @@ group('dotenv', function () {
         printSeparator();
         printInfo("Task: dotenv:create (Create .env file)");
 
-        $envFile = getcwd() . DIRECTORY_SEPARATOR . '.env';
-        $templateFile = getcwd() . DIRECTORY_SEPARATOR . '.env.example';
+        $envFile = \PhakeBuilder\Utils::getCurrentDir() . '.env';
+        $templateFile = \PhakeBuilder\Utils::getCurrentDir() . '.env.example';
 
         if (!file_exists($templateFile)) {
             throw new \RuntimeException(".env template file ($templateFile) does not exist");
@@ -74,7 +74,7 @@ group('dotenv', function () {
         printInfo("Task: dotenv:reload (Reload settings from .env file)");
 
         Dotenv::makeMutable();
-        Dotenv::load(getcwd());
+        Dotenv::load(\PhakeBuilder\Utils::getCurrentDir());
         Dotenv::makeImmutable();
 
         printSuccess("SUCCESS!");
@@ -85,7 +85,7 @@ group('dotenv', function () {
         printSeparator();
         printInfo("Task: dotenv:delete (Delete .env file)");
 
-        $envFile = getcwd() . DIRECTORY_SEPARATOR . '.env';
+        $envFile = \PhakeBuilder\Utils::getCurrentDir() . '.env';
         if (file_exists($envFile)) {
             $result = unlink($envFile);
             if ($result) {

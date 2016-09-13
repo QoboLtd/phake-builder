@@ -7,8 +7,8 @@ group('archive', function () {
         printSeparator();
         printInfo("Task: archive:extract (Extract ZIP or TAR archive)");
 
-        $src = requireValue('EXTRACT_SRC', $app);
-        $dst = requireValue('EXTRACT_DST', $app);
+        $src = \PhakeBuilder\Utils::getCurrentDir() . requireValue('EXTRACT_SRC', $app);
+        $dst = \PhakeBuilder\Utils::getCurrentDir() . requireValue('EXTRACT_DST', $app);
 
         try {
             \PhakeBuilder\Archive::extract($src, $dst);
@@ -23,8 +23,8 @@ group('archive', function () {
         printSeparator();
         printInfo("Task: archive:compress (Create ZIP or TAR archive)");
 
-        $src = requireValue('COMPRESS_SRC', $app);
-        $dst = requireValue('COMPRESS_DST', $app);
+        $src = \PhakeBuilder\Utils::getCurrentDir() . requireValue('COMPRESS_SRC', $app);
+        $dst = \PhakeBuilder\Utils::getCurrentDir() . requireValue('COMPRESS_DST', $app);
 
         try {
             \PhakeBuilder\Archive::compress($src, $dst);

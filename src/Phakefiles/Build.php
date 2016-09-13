@@ -11,9 +11,9 @@ if (!function_exists('phakeGetBuildDirs')) {
     function phakeGetBuildDirs()
     {
         $result = array(
-            'build/coverage',
-            'build/logs',
-            'build/pdepend',
+            \PhakeBuilder\Utils::getCurrentDir() . 'build/coverage',
+            \PhakeBuilder\Utils::getCurrentDir() . 'build/logs',
+            \PhakeBuilder\Utils::getCurrentDir() . 'build/pdepend',
         );
 
         return $result;
