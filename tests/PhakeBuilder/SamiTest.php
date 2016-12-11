@@ -24,13 +24,13 @@ class SamiTest extends \PHPUnit_Framework_TestCase
     {
         $sami = new \PhakeBuilder\Sami('foobar');
         $result = $sami->update();
-        $this->assertEquals('foobar update etc/sami.config.php', $result, "Invalid sami command [$result]");
+        $this->assertEquals('foobar update etc/sami/source.php', $result, "Invalid sami command [$result]");
     }
 
     public function testUpdateEmptyConfig()
     {
         $sami = new \PhakeBuilder\Sami('foobar');
         $result = $sami->update(array());
-        $this->assertEquals('foobar update etc/sami.config.php', $result, "Invalid sami command [$result]");
+        $this->assertEquals('foobar update etc/sami/source.php', $result, "Invalid sami command [$result]");
     }
 }

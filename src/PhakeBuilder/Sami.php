@@ -13,9 +13,19 @@ class Sami extends BaseCommand
 {
 
     /**
-     * Default location for configuration file
+     * Folder with Sami configuration files
      */
-    const DEFAULT_CONFIG = 'etc/sami.config.php';
+    const CONFIG_DIR = 'etc/sami/';
+
+    /**
+     * Configuration file extension
+     */
+    const CONFIG_EXT = '.php';
+
+    /**
+     * Name of the default configuration file
+     */
+    const CONFIG_DEFAULT = 'source';
 
     /**
      * Sami command string
@@ -23,16 +33,35 @@ class Sami extends BaseCommand
     protected $command = './vendor/bin/sami.php';
 
     /**
-     * Update documentation
+     * Construct config path from the name
      *
-     * @throws InvalidArgumentException
-     * @param string $config Path to sami.php configuration to use
+     * @param string $configName Name of the configuration to use
      * @return string
      */
-    public function update($config = self::DEFAULT_CONFIG)
+    protected function getConfigByName($configName)
+    {
+        $result = self::CONFIG_DIR . $configName . self::CONFIG_EXT;
+
+        return $result;
+    }
+
+    /**
+     * Update documentation
+     *
+     * @throws InvalidArgumentException When configuration file does not exist
+     * @param string $config Configuration to use (either name or full path)
+     * @param bool $full Whether to treat $config as a full path or name
+     * @return string
+     */
+    public function update($config = '', $fullPath = true)
     {
         if (empty($config)) {
-            $config = self::DEFAULT_CONFIG;
+            $config = self::CONFIG_DEFAULT;
+            $fullPath = false;
+        }
+
+        if (!$fullPath) {
+            $config = $this->getConfigByName($config);
         }
 
         if (!file_exists($config)) {
@@ -40,6 +69,7 @@ class Sami extends BaseCommand
         }
 
         $result = $this->command . ' update ' . $config;
+
         return $result;
     }
 }
