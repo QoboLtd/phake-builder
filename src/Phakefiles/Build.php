@@ -56,8 +56,7 @@ if (!function_exists('phakeGetBuildCommands')) {
     {
         $result = array(
             'phpunit' => './vendor/bin/phpunit',
-            'phpcs' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/',
-            'phpcs-ci' => './vendor/bin/phpcs -n -p --extensions=php --standard=PSR2 src/ tests/ --report=checkstyle --report-file=build/logs/checkstyle.xml',
+            'phpcs' => './vendor/bin/phpcs',
             'pdepend' => './vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependecies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src/',
             'phploc' => './vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src/ tests/',
             'phpmd' => './vendor/bin/phpmd src/ text codesize,controversial,naming,unusedcode',
@@ -81,9 +80,8 @@ if (!function_exists('phakeGetBuildCommands')) {
         }
 
         if (!$hasSrc && !$hasTests) {
-            printWarning("No unit test or source files found. Skipping phpcs, phpcs-ci, phploc");
+            printWarning("No unit test or source files found. Skipping phpcs, phploc");
             $result['phpcs'] = null;
-            $result['phpcs-ci'] = null;
             $result['phploc'] = null;
         }
 
@@ -149,13 +147,6 @@ group('build', function () {
         printInfo("Task: build:phpcs (PHP coding style check (CodeSniffer))");
 
         $commands = phakeGetBuildCommands();
-        if (!empty($commands['phpcs-ci'])) {
-            try {
-                // This time for the build/logs/checkstyle.xml
-                doShellCommand($commands['phpcs-ci']);
-            } catch (\Exception $e) {
-            }
-        }
         // This time for the developer and human-friendly output
         if (!empty($commands['phpcs'])) {
             doShellCommand($commands['phpcs']);
