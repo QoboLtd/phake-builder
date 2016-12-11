@@ -22,8 +22,8 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists($dstDir, "Failed to created destination directory [$dstDir]");
         $this->assertTrue(is_dir($dstDir), "Destination [$dstDir] is not a directory");
 
-        $permissions = substr(sprintf('%o', fileperms($dstDir)), -4);
-        $this->assertEquals('0400', $permissions, "Destination directory [$dstDir] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($dstDir)), -4);
+        $this->assertEquals('0400', $access, "Destination directory [$dstDir] permissions [$access] are wrong");
 
         rmdir($dstDir);
     }
@@ -36,8 +36,8 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists($dstDir, "Failed to created destination directory [$dstDir]");
         $this->assertTrue(is_dir($dstDir), "Destination [$dstDir] is not a directory");
 
-        $permissions = substr(sprintf('%o', fileperms($dstDir)), -4);
-        $this->assertEquals('0400', $permissions, "Destination directory [$dstDir] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($dstDir)), -4);
+        $this->assertEquals('0400', $access, "Destination directory [$dstDir] permissions [$access] are wrong");
 
         rmdir($dstDir);
     }
@@ -69,14 +69,14 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         // Readable only
         chmod($tmpDir, 0400);
 
-        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
-        $this->assertEquals('0400', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0400', $access, "Destination directory [$tmpDir] permissions [$access] are wrong");
 
         $result = \PhakeBuilder\FileSystem::chmodPath($tmpDir, 0600, 0600);
         clearstatcache();
 
-        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
-        $this->assertEquals('0600', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0600', $access, "Destination directory [$tmpDir] permissions [$access] are wrong");
 
         rmdir($tmpDir);
     }
@@ -89,14 +89,14 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         // Readable only
         chmod($tmpDir, 0400);
 
-        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
-        $this->assertEquals('0400', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0400', $access, "Destination directory [$tmpDir] permissions [$access] are wrong");
 
         $result = \PhakeBuilder\FileSystem::chmodPath($tmpDir);
         clearstatcache();
 
-        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
-        $this->assertEquals('0775', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0775', $access, "Destination directory [$tmpDir] permissions [$access] are wrong");
 
         rmdir($tmpDir);
     }
@@ -122,23 +122,23 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
 
         // Nested check goes first
         chmod($tmpDirNested, 0400);
-        $permissions = substr(sprintf('%o', fileperms($tmpDirNested)), -4);
-        $this->assertEquals('0400', $permissions, "Destination directory [$tmpDirNested] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpDirNested)), -4);
+        $this->assertEquals('0400', $access, "Destination directory [$tmpDirNested] permissions [$access] are wrong");
 
         // Parent check goes last
         chmod($tmpDir, 0400);
 
-        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
-        $this->assertEquals('0400', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0400', $access, "Destination directory [$tmpDir] permissions [$access] are wrong");
 
         $result = \PhakeBuilder\FileSystem::chmodPath($tmpDir, 0700, 0600);
         clearstatcache();
 
-        $permissions = substr(sprintf('%o', fileperms($tmpDir)), -4);
-        $this->assertEquals('0700', $permissions, "Destination directory [$tmpDir] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpDir)), -4);
+        $this->assertEquals('0700', $access, "Destination directory [$tmpDir] permissions [$access] are wrong");
 
-        $permissions = substr(sprintf('%o', fileperms($tmpDirNested)), -4);
-        $this->assertEquals('0700', $permissions, "Destination directory [$tmpDirNested] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpDirNested)), -4);
+        $this->assertEquals('0700', $access, "Destination directory [$tmpDirNested] permissions [$access] are wrong");
 
         $tmpFile = $tmpDir . DIRECTORY_SEPARATOR . 'foobar';
         $tmpFileNested = $tmpDirNested . DIRECTORY_SEPARATOR . 'foobar';
@@ -147,20 +147,20 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
         chmod($tmpFile, 0400);
         chmod($tmpFileNested, 0400);
 
-        $permissions = substr(sprintf('%o', fileperms($tmpFile)), -4);
-        $this->assertEquals('0400', $permissions, "Destination file [$tmpFile] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpFile)), -4);
+        $this->assertEquals('0400', $access, "Destination file [$tmpFile] permissions [$access] are wrong");
 
-        $permissions = substr(sprintf('%o', fileperms($tmpFileNested)), -4);
-        $this->assertEquals('0400', $permissions, "Destination file [$tmpFileNested] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpFileNested)), -4);
+        $this->assertEquals('0400', $access, "Destination file [$tmpFileNested] permissions [$access] are wrong");
 
         $result = \PhakeBuilder\FileSystem::chmodPath($tmpDir, 0700, 0600);
         clearstatcache();
 
-        $permissions = substr(sprintf('%o', fileperms($tmpFile)), -4);
-        $this->assertEquals('0600', $permissions, "Destination file [$tmpFile] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpFile)), -4);
+        $this->assertEquals('0600', $access, "Destination file [$tmpFile] permissions [$access] are wrong");
 
-        $permissions = substr(sprintf('%o', fileperms($tmpFileNested)), -4);
-        $this->assertEquals('0600', $permissions, "Destination file [$tmpFileNested] permissions [$permissions] are wrong");
+        $access = substr(sprintf('%o', fileperms($tmpFileNested)), -4);
+        $this->assertEquals('0600', $access, "Destination file [$tmpFileNested] permissions [$access] are wrong");
 
         unlink($tmpFileNested);
         unlink($tmpFile);

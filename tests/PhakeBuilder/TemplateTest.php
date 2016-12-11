@@ -22,7 +22,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
     public function testParseFromFile()
     {
-        $file = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'Template' . DIRECTORY_SEPARATOR . 'small.txt';
+        $file = join(DIRECTORY_SEPARATOR, [dirname(__DIR__), 'data', 'Template', 'small.txt']);
         $template = new \PhakeBuilder\Template($file, true);
         $result = trim($template->parse(['name' => 'Leonid']));
 

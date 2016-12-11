@@ -115,7 +115,11 @@ group('mysql', function () {
         );
         $mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
         $mysql->setDSN($dsn);
-        $command = $mysql->grant(requireValue('DB_NAME', $app), requireValue('DB_USER', $app), getValue('DB_PASS', $app));
+        $command = $mysql->grant(
+            requireValue('DB_NAME', $app),
+            requireValue('DB_USER', $app),
+            getValue('DB_PASS', $app)
+        );
         $secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
         doShellCommand($command, $secureStrings);
     });

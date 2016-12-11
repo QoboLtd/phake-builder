@@ -56,8 +56,9 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetLogger()
     {
+        $expected = 'Psr\Log\LoggerInterface';
         $result = \PhakeBuilder\Logger::getLogger();
-        $this->assertInstanceOf('Psr\Log\LoggerInterface', $result, "Result does not implement Psr\Log\LoggerInterface");
+        $this->assertInstanceOf($expected, $result, "Result does not implement $expected");
     }
 
     public function testSetLoggerDefault()
@@ -86,14 +87,16 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFormatter()
     {
+        $expected = 'Monolog\Formatter\FormatterInterface';
         $result = \PhakeBuilder\Logger::getFormatter();
-        $this->assertInstanceOf('Monolog\Formatter\FormatterInterface', $result, "Result does not implement Monolog\Formatter\FormatterInterface");
+        $this->assertInstanceOf($expected, $result, "Result does not implement $expected");
     }
 
     public function testGetHandler()
     {
+        $expected = 'Monolog\Handler\HandlerInterface';
         $result = \PhakeBuilder\Logger::getHandler();
-        $this->assertInstanceOf('Monolog\Handler\HandlerInterface', $result, "Result does not implement Monolog\Handler\HandlerInterface");
+        $this->assertInstanceOf($expected, $result, "Result does not implement $expected");
     }
 
     public function testSetHandlerDefault()
