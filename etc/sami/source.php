@@ -11,6 +11,7 @@
  */
 
 use Sami\Parser\Filter\TrueFilter;
+use Symfony\Component\Finder\Finder;
 
 $projectRoot = dirname(dirname(__DIR__));
 try {
@@ -20,6 +21,15 @@ catch (\Exception $e) {
     echo $e->getMessage();
     exit(1);
 }
+
+# Find PHP files to document
+$iterator = Finder::create()
+    ->files()
+    ->name('*.php')
+    ->exclude('tests')
+    ->exclude('Test')
+    ->in(['./src'])
+;
 
 # If PROJECT_NAME is not set, use the project folder
 $projectName = getenv('PROJECT_NAME');
@@ -33,7 +43,7 @@ if (empty($buildDir)) {
     $buildDir = $projectRoot . DIRECTORY_SEPARATOR . 'build';
 }
 
-$sami = new Sami\Sami('./src', array(
+$sami = new Sami\Sami($iterator, array(
     'title'     => $projectName,
     'build_dir' => $buildDir . DIRECTORY_SEPARATOR . 'doc' . DIRECTORY_SEPARATOR . 'source',
     'cache_dir' => $buildDir . DIRECTORY_SEPARATOR . 'doc' . DIRECTORY_SEPARATOR . 'source' . DIRECTORY_SEPARATOR . 'cache',
