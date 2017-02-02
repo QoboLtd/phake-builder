@@ -24,13 +24,13 @@ class Composer extends BaseSimpleCommand
         'install' => [
             '--no-dev',
             '--no-progress',
-            '--nosuggest',
+            '--no-suggest',
             '--optimize-autoloader',
         ],
         'update' => [
             '--no-dev',
             '--no-progress',
-            '--nosuggest',
+            '--no-suggest',
             '--optimize-autoloader',
         ],
     ];
