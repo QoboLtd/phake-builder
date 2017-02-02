@@ -15,7 +15,7 @@ class Composer extends BaseCommand
     /**
      * Composer command string
      */
-    protected $command = 'composer -n --no-dev';
+    protected $command = 'composer --no-interaction --no-dev';
 
     /**
      * Install composer dependecies
