@@ -9,35 +9,10 @@ namespace PhakeBuilder;
  *
  * @author Leonid Mamchenkov <l.mamchenkov@qobo.biz>
  */
-class Service extends BaseCommand
+class Service extends BaseSimpleCommand
 {
-
     /**
      * Service command string
      */
     protected $command = 'service';
-
-    /**
-     * Start system service
-     *
-     * @param  string $service Service to start
-     * @return string
-     */
-    public function start($service)
-    {
-        $result = $this->command . ' start ' . $service;
-        return $result;
-    }
-
-    /**
-     * Stop system service
-     *
-     * @param  string $service Service to stop
-     * @return string
-     */
-    public function stop($service)
-    {
-        $result = $this->command . ' stop ' . $service;
-        return $result;
-    }
 }
