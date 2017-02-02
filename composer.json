@@ -28,8 +28,8 @@
 		"phploc/phploc": "~v3.0",
 		"phpmd/phpmd": "~2.4",
 		"sebastian/phpcpd": "~2.0",
-		"sami/sami": "~3.2"
-
+		"sami/sami": "~3.2",
+		"twig/twig": "~1.2"
 	},
 	"autoload": {
 		"psr-4": {"PhakeBuilder\\": "src/PhakeBuilder/"}

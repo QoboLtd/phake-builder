@@ -15,27 +15,54 @@ class Composer extends BaseCommand
     /**
      * Composer command string
      */
-    protected $command = 'composer -n --no-dev';
+    protected $command = 'composer --no-interaction';
 
     /**
-     * Install composer dependecies
-     *
-     * @return string
+     * Default options for commands
      */
-    public function install()
-    {
-        $result = $this->command . ' install';
-        return $result;
-    }
+    protected $defaultOptions = [
+        'install' => [
+            '--no-dev',
+            '--no-progress',
+            '--nosuggest',
+            '--optimize-autoloader',
+        ],
+        'update' => [
+            '--no-dev',
+            '--no-progress',
+            '--nosuggest',
+            '--optimize-autoloader',
+        ],
+    ];
 
     /**
-     * Update composer dependecies
+     * Dynamic support for composer commands
      *
+     * @throws \InvalidArgumentException when options are not an array
+     * @param string $name Function to call
+     * @param array $arguments Arguments to pass to function
      * @return string
      */
-    public function update()
+    public function __call($name, array $arguments)
     {
-        $result = $this->command . ' update';
+        $result = $this->command . ' ' . $name;
+
+        $options = [];
+
+        if (!empty($arguments)) {
+            $options = $arguments[0];
+        }
+
+        if (empty($options) && !empty($this->defaultOptions[$name])) {
+            $options = $this->defaultOptions[$name];
+        }
+
+        if (!is_array($options)) {
+            throw new \InvalidArgumentException("$name() only accepts an array of options");
+        }
+
+        $result = $this->command . ' ' . $name . ' ' . implode(' ', $options);
+
         return $result;
     }
 }
