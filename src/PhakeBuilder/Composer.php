@@ -15,27 +15,54 @@ class Composer extends BaseCommand
     /**
      * Composer command string
      */
-    protected $command = 'composer --no-interaction --no-dev';
+    protected $command = 'composer --no-interaction';
+
+    /**
+     * Default options for commands
+     */
+    protected $defaultOptions = [
+        'install' => [
+            '--no-dev',
+            '--no-progress',
+            '--nosuggest',
+            '--optimize-autoloader',
+        ],
+        'update' => [
+            '--no-dev',
+            '--no-progress',
+            '--nosuggest',
+            '--optimize-autoloader',
+        ],
+    ];
 
     /**
      * Install composer dependecies
      *
+     * @param array $options Options
      * @return string
      */
-    public function install()
+    public function install(array $options = [])
     {
-        $result = $this->command . ' install';
+        if (empty($options) && !empty($this->defaultOptions[__FUNCTION__])) {
+            $options = $this->defaultOptions[__FUNCTION__];
+        }
+        $result = $this->command . ' install ' . implode(' ', $options);
         return $result;
     }
 
     /**
      * Update composer dependecies
      *
+     * @param array $options Options
      * @return string
      */
-    public function update()
+    public function update(array $options = [])
     {
-        $result = $this->command . ' update';
+        if (empty($options) && !empty($this->defaultOptions[__FUNCTION__])) {
+            $options = $this->defaultOptions[__FUNCTION__];
+        }
+        $result = $this->command . ' update ' . implode(' ', $options);
+
         return $result;
     }
 }
