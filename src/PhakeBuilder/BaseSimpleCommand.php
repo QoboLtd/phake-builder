@@ -22,7 +22,15 @@ abstract class BaseSimpleCommand extends BaseCommand
     /**
      * Dynamic support for commands
      *
-     * @throws \InvalidArgumentException when options are not an array
+     * Example usage:
+     *
+     * ```
+     * $composer = new Composer('/bin/composer');
+     * $command = $composer->update(); // 'composer update' + default options
+     * $command = $composer->update('foo bar'); // 'composer update foo bar'
+     * $command = $composer->update(['foo', 'bar']); // same as above
+     * ```
+     *
      * @param string $name Function to call
      * @param array $arguments Arguments to pass to function
      * @return string
@@ -31,8 +39,7 @@ abstract class BaseSimpleCommand extends BaseCommand
     {
         $result = $this->command . ' ' . $name;
 
-        $options = [];
-
+        $options = null;
         if (!empty($arguments)) {
             $options = $arguments[0];
         }
@@ -41,11 +48,24 @@ abstract class BaseSimpleCommand extends BaseCommand
             $options = $this->defaultOptions[$name];
         }
 
-        if (!is_array($options)) {
-            throw new \InvalidArgumentException("$name() only accepts an array of options");
+        if (is_array($options)) {
+            $options = implode(' ', $options);
         }
 
-        $result = $this->command . ' ' . $name . ' ' . implode(' ', $options);
+        /**
+         * This should be fine for:
+         *
+         * * Empty options
+         * * Scalar options
+         * * Array options, that we've converted to string above
+         * * Objects that can be cast to string via implemented __toString() method
+         *
+         * So pretty much the only time it will break is if options are
+         * an object that cannot be cast to string.  You've been warned!
+         */
+        $options = (string)$options;
+
+        $result = trim($this->command . ' ' . $name . ' ' . $options);
 
         return $result;
     }
