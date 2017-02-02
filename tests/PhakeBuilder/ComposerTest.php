@@ -4,6 +4,15 @@ namespace PhakeBuilder\Tests;
 class ComposerTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testException()
+    {
+        $composer = new \PhakeBuilder\Composer('foobar');
+        $result = $composer->install('this is not an array');
+    }
+
     public function testInstall()
     {
         $composer = new \PhakeBuilder\Composer('foobar');

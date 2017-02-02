@@ -36,32 +36,32 @@ class Composer extends BaseCommand
     ];
 
     /**
-     * Install composer dependecies
+     * Dynamic support for composer commands
      *
-     * @param array $options Options
+     * @throws \InvalidArgumentException when options are not an array
+     * @param string $name Function to call
+     * @param array $arguments Arguments to pass to function
      * @return string
      */
-    public function install(array $options = [])
+    public function __call($name, array $arguments)
     {
-        if (empty($options) && !empty($this->defaultOptions[__FUNCTION__])) {
-            $options = $this->defaultOptions[__FUNCTION__];
-        }
-        $result = $this->command . ' install ' . implode(' ', $options);
-        return $result;
-    }
+        $result = $this->command . ' ' . $name;
 
-    /**
-     * Update composer dependecies
-     *
-     * @param array $options Options
-     * @return string
-     */
-    public function update(array $options = [])
-    {
-        if (empty($options) && !empty($this->defaultOptions[__FUNCTION__])) {
-            $options = $this->defaultOptions[__FUNCTION__];
+        $options = [];
+
+        if (!empty($arguments)) {
+            $options = $arguments[0];
         }
-        $result = $this->command . ' update ' . implode(' ', $options);
+
+        if (empty($options) && !empty($this->defaultOptions[$name])) {
+            $options = $this->defaultOptions[$name];
+        }
+
+        if (!is_array($options)) {
+            throw new \InvalidArgumentException("$name() only accepts an array of options");
+        }
+
+        $result = $this->command . ' ' . $name . ' ' . implode(' ', $options);
 
         return $result;
     }
