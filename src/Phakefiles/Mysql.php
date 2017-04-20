@@ -71,7 +71,7 @@ group('mysql', function () {
 
         $mysql = new \PhakeBuilder\MySQL(requireValue('SYSTEM_COMMAND_MYSQL', $app));
         $mysql->setDSN($dsn);
-        $command = $mysql->import(requireValue('DB_DUMP_PATH', $app));
+        $command = $mysql->import(\PhakeBuilder\Utils::getCurrentDir() . requireValue('DB_DUMP_PATH', $app));
         $secureStrings = array('DB_PASS', 'DB_ADMIN_PASS');
         doShellCommand($command, $secureStrings);
     });

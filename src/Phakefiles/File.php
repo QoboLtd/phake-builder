@@ -7,8 +7,8 @@ group('file', function () {
         printSeparator();
         printInfo("Task: file:process (Processing template file)");
 
-        $src = requireValue('TEMPLATE_SRC', $app);
-        $dst = requireValue('TEMPLATE_DST', $app);
+        $src = \PhakeBuilder\Utils::getCurrentDir() . requireValue('TEMPLATE_SRC', $app);
+        $dst = \PhakeBuilder\Utils::getCurrentDir() . requireValue('TEMPLATE_DST', $app);
 
         $template = new \PhakeBuilder\Template($src);
         $placeholders = $template->getPlaceholders();
@@ -33,7 +33,7 @@ group('file', function () {
         printSeparator();
         printInfo("Task: file:touch (Create empty file or update timestamp of existing)");
 
-        $file = requireValue('TOUCH_PATH', $app);
+        $file = \PhakeBuilder\Utils::getCurrentDir() . requireValue('TOUCH_PATH', $app);
         $result = touch($file);
         if (!$result) {
             throw new \RuntimeException("Failed to touch file");
@@ -46,8 +46,8 @@ group('file', function () {
         printSeparator();
         printInfo("Task: file:link (Create symlink link)");
 
-        $src = requireValue('LINK_SRC', $app);
-        $dst = requireValue('LINK_DST', $app);
+        $src = \PhakeBuilder\Utils::getCurrentDir() . requireValue('LINK_SRC', $app);
+        $dst = \PhakeBuilder\Utils::getCurrentDir() . requireValue('LINK_DST', $app);
         $result = symlink($src, $dst);
         if (!$result) {
             throw new \RuntimeException("Failed to create symbolic link");
@@ -60,8 +60,8 @@ group('file', function () {
         printSeparator();
         printInfo("Task: file:mv (Rename file or folder)");
 
-        $src = requireValue('MV_SRC', $app);
-        $dst = requireValue('MV_DST', $app);
+        $src = \PhakeBuilder\Utils::getCurrentDir() . requireValue('MV_SRC', $app);
+        $dst = \PhakeBuilder\Utils::getCurrentDir() . requireValue('MV_DST', $app);
         $result = rename($src, $dst);
         if (!$result) {
             throw new \RuntimeException("Failed to rename file or folder");
@@ -74,7 +74,7 @@ group('file', function () {
         printSeparator();
         printInfo("Task: file:rm (Recursively remove file or folder)");
 
-        $path = requireValue('RM_PATH', $app);
+        $path = \PhakeBuilder\Utils::getCurrentDir() . requireValue('RM_PATH', $app);
         $result = \PhakeBuilder\FileSystem::removePath($path);
         if (!$result) {
             throw new \RuntimeException("Failed to remove path");
@@ -87,7 +87,7 @@ group('file', function () {
         printSeparator();
         printInfo("Task: file:mkdir (Create folder)");
 
-        $path = requireValue('MKDIR_PATH', $app);
+        $path = \PhakeBuilder\Utils::getCurrentDir() . requireValue('MKDIR_PATH', $app);
         $mode = getValue('MKDIR_MODE', $app);
         $result = \PhakeBuilder\FileSystem::makeDir($path, $mode);
         if (!$result) {
@@ -101,7 +101,7 @@ group('file', function () {
         printSeparator();
         printInfo("Task: file:chmod (Change permissions on path)");
 
-        $path = requireValue('CHMOD_PATH', $app);
+        $path = \PhakeBuilder\Utils::getCurrentDir() . requireValue('CHMOD_PATH', $app);
         $dirMode = getValue('CHMOD_DIR_MODE', $app);
         $fileMode = getValue('CHMOD_FILE_MODE', $app);
         $result = \PhakeBuilder\FileSystem::chmodPath($path, $dirMode, $fileMode);
@@ -116,7 +116,7 @@ group('file', function () {
         printSeparator();
         printInfo("Task: file:chown (Change user ownership on path)");
 
-        $path = requireValue('CHOWN_PATH', $app);
+        $path = \PhakeBuilder\Utils::getCurrentDir() . requireValue('CHOWN_PATH', $app);
         $user = getValue('CHOWN_USER', $app);
         $result = \PhakeBuilder\FileSystem::chownPath($path, $user);
         if (!$result) {
@@ -130,7 +130,7 @@ group('file', function () {
         printSeparator();
         printInfo("Task: file:chgrp (Change group ownership on path)");
 
-        $path = requireValue('CHGRP_PATH', $app);
+        $path = \PhakeBuilder\Utils::getCurrentDir() . requireValue('CHGRP_PATH', $app);
         $group = getValue('CHGRP_GROUP', $app);
         $result = \PhakeBuilder\FileSystem::chgrpPath($path, $group);
         if (!$result) {
@@ -145,7 +145,7 @@ group('file', function () {
         printInfo("Task: file:download (Download file from URL)");
 
         $src = requireValue('DOWNLOAD_SRC', $app);
-        $dst = requireValue('DOWNLOAD_DST', $app);
+        $dst = \PhakeBuilder\Utils::getCurrentDir() . requireValue('DOWNLOAD_DST', $app);
         $result = \PhakeBuilder\FileSystem::downloadFile($src, $dst);
         if (!$result) {
             throw new \RuntimeException("Failed to download file");

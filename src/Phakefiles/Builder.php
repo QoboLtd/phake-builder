@@ -282,7 +282,7 @@ group('builder', function () {
     task('init', function ($app) {
         $hasDotEnv = false;
         try {
-            Dotenv::load(getcwd());
+            Dotenv::load(\PhakeBuilder\Utils::getCurrentDir());
             $hasDotEnv = true;
         } catch (Exception $e) {
             $hasDotEnv = false;
