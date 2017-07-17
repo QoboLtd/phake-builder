@@ -16,11 +16,9 @@ group('dotenv', function () {
         foreach ($app as $key => $value) {
             $appParams[$key] = $value;
         }
-        // System defaults
-        $defaults = \PhakeBuilder\System::getDefaultValue();
 
         $dotenv = new \PhakeBuilder\Dotenv();
-        $result = $dotenv->generate($envFile, $templateFile, $appParams, $defaults);
+        $result = $dotenv->generate($envFile, $templateFile, $appParams);
 
         if (!$result) {
             throw new \RuntimeException("Failed to save $envFile");
