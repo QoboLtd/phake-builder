@@ -293,6 +293,31 @@ class FileSystem
     }
 
     /**
+     * Check if the file is missing or is not readable
+     *
+     * @param string $file Path to file
+     * @return bool True on success, false otherwise
+     */
+    public static function isFileReadable($file)
+    {
+        $result = false;
+
+        if (!file_exists($file)) {
+            return $result;
+        }
+        if (!is_file($file)) {
+            return $result;
+        }
+        if (!is_readable($file)) {
+            return $result;
+        }
+
+        $result = true;
+
+        return $result;
+    }
+
+    /**
      * Convert a given value to octal
      *
      * Thanks to: http://stackoverflow.com/questions/13112934/ishex-and-isocta-functions
