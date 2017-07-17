@@ -252,4 +252,23 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
             unlink($dst);
         }
     }
+
+    public function testIsFileReadable()
+    {
+        // File does not exist
+        $result = \PhakeBuilder\FileSystem::isFileReadable('/this/file/will/never/exist.for.sure');
+        $this->assertFalse($result);
+
+        // Directory is not a file
+        $result = \PhakeBuilder\FileSystem::isFileReadable(__DIR__);
+        $this->assertFalse($result);
+
+        // Not readable file
+        $result = \PhakeBuilder\FileSystem::isFileReadable('/etc/shadow');
+        $this->assertFalse($result);
+
+        // Everything is fine
+        $result = \PhakeBuilder\FileSystem::isFileReadable(__FILE__);
+        $this->assertTrue($result);
+    }
 }

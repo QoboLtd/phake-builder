@@ -7,65 +7,25 @@ group('dotenv', function () {
         printSeparator();
         printInfo("Task: dotenv:create (Create .env file)");
 
+        // .env
         $envFile = getcwd() . DIRECTORY_SEPARATOR . '.env';
+        // .env.example
         $templateFile = getcwd() . DIRECTORY_SEPARATOR . '.env.example';
-
-        if (!file_exists($templateFile)) {
-            throw new \RuntimeException(".env template file ($templateFile) does not exist");
-        }
-        if (!is_file($templateFile)) {
-            throw new \RuntimeException(".env template file ($templateFile) is not a file");
-        }
-        if (!is_readable($templateFile)) {
-            throw new \RuntimeException(".env template file ($templateFile) is not readable");
-        }
-        $linesIn = file($templateFile);
-        $linesOut = array();
-
-        // Know all available parameters via App
-        $appParams = array();
+        // Command line arguments
+        $appParams = [];
         foreach ($app as $key => $value) {
-            $appParams[] = $key;
+            $appParams[$key] = $value;
         }
+        // System defaults
+        $defaults = \PhakeBuilder\System::getDefaultValue();
 
-        $count = 0;
-        $processedParams = array();
-        foreach ($linesIn as $line) {
-            $count++;
-            trim($line);
-            if (!preg_match('#^(.*)?=(.*)?$#', $line, $matches)) {
-                $linesOut[] = $line;
-                continue;
-            }
-            $name = $matches[1];
-            if (!in_array($name, $processedParams)) {
-                $value = getValue($name, $app) ? getValue($name, $app) : $matches[2];
-                $linesOut[] = $name . '=' . $value;
-                $processedParams[] = $name;
-            }
+        $dotenv = new \PhakeBuilder\Dotenv();
+        $result = $dotenv->generate($envFile, $templateFile, $appParams, $defaults);
 
-            // Remove current parameter from the all known parameters list
-            if (in_array($name, $appParams)) {
-                unset($appParams[$name]);
-            }
+        if (!$result) {
+            throw new \RuntimeException("Failed to save $envFile");
         }
-
-        // If anything is left in known parameters list, append it to the file
-        if (!empty($appParams)) {
-            foreach ($appParams as $param) {
-                $linesOut[] = '';
-                if (!in_array($param, $processedParams)) {
-                    $value = getValue($param, $app);
-                    $linesOut[] = $param . '=' . $value;
-                }
-            }
-        }
-
-        $bytes = file_put_contents($envFile, implode("\n", $linesOut));
-        if (!$bytes) {
-            throw new \RuntimeException("Failed to save $count lines to $envFile");
-        }
-        printSuccess("SUCCESS! Saved $count lines to $envFile");
+        printSuccess("SUCCESS! Generated $envFile");
     });
 
     desc('Reload settings from .env file');

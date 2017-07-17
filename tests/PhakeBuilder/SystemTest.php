@@ -15,6 +15,12 @@ class SystemTest extends \PHPUnit_Framework_TestCase
         // Unknown value
         $result = System::getDefaultValue('THIS_VALUE_WILL_NEVER_EXIST');
         $this->assertNull($result);
+
+        // All values
+        $result = System::getDefaultValue();
+        $this->assertTrue(is_array($result));
+        $this->assertFalse(empty($result));
+        $this->assertTrue(in_array('GIT_REMOTE', array_keys($result)));
     }
 
     public function testNeedsSudo()
