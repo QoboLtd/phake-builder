@@ -10,16 +10,9 @@ class System
 {
 
     /**
-     * Get default configuration value for given parameter
-     *
-     * @param  string $param Parameter to get default value for
-     * @return string|null String if found, null otherwise
+     * @var array $defaults Parameter defaults
      */
-    public static function getDefaultValue($param)
-    {
-        $result = null;
-
-        $defaults = array(
+    public static $defaults = [
         'PHAKE_BUILDER_LOG_LEVEL' => 'INFO',
 
         'GIT_REMOTE' => 'origin',
@@ -37,10 +30,26 @@ class System
         'SYSTEM_COMMAND_SERVICE' => 'service',
         'SYSTEM_COMMAND_SUDO' => 'sudo',
         'SYSTEM_COMMAND_LETSENCRYPT' => '/opt/letsencrypt/certbot-auto',
-        );
+    ];
 
-        if (isset($defaults[$param])) {
-            $result = $defaults[$param];
+    /**
+     * Get default configuration value for given parameter
+     *
+     * If parameter is omitted, then all defaults are returned
+     *
+     * @param  string $param Parameter to get default value for
+     * @return array|string|null All values, string if found, null otherwise
+     */
+    public static function getDefaultValue($param = null)
+    {
+        $result = null;
+
+        if (empty($param)) {
+            return static::$defaults;
+        }
+
+        if (isset(static::$defaults[$param])) {
+            $result = static::$defaults[$param];
         }
 
         return $result;
