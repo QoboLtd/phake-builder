@@ -1,12 +1,12 @@
 {
 	"name": "qobo/phake-builder",
 	"description": "A set of build and deploy files, based on jaz303/phake",
-	"license": "GPL-2.0",
+	"license": "MIT",
 	"authors": [
 		{
-			"name": "Leonid Mamchenkov",
-			"email": "leonid@mamchenkov.net",
-			"homepage": "http://mamchenkov.net",
+			"name": "Qobo Ltd",
+			"email": "info@qobo.biz",
+			"homepage": "https://www.qobo.biz",
 			"role": "Developer"
 		}
 	],
